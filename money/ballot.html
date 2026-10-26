@@ -1,0 +1,571 @@
+<!doctype html>
+<!--
+  Copyright 2026 DayBalancer LLC. All rights reserved.
+
+  The code and the content here power Creating.Works, DayBalancer, Appear Network,
+  and 2Gather. They are published so they can be read, audited, and dated.
+
+  Running either as a separate offering requires a license, whether you brand it as
+  ours or as your own, and whether or not money changes hands.
+
+  hello@creating.works
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta property="og:site_name" content="2Balance">
+<meta property="og:title" content="Where my money goes">
+<title>Where my money goes · 2Balance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700;6..12,800&family=DM+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--brand:#1F699E;--ink:#1A2E42;--soft:#4B5A6D;--line:#DDE3EA;--panel:#F7FBFF;--panel-line:#C9DFF3;
+    --bg:#F7FBFF;--surface:#ffffff;--fg:#1A2E42;--muted:#4B5A6D;--accent:#7F77DD;--accent-ink:#ffffff;
+    --fed:#2b5fd9;--state:#0e7c73;--local:#a35f00;--bring-bg:#fbecd0;--seek-bg:#fbe9df;--seek:#C4501A;}
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--brand);color:var(--ink);font-family:'Nunito Sans','DM Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-size:15px;line-height:1.5;}
+  .wrap{max-width:900px;margin:0 auto;padding:24px 18px 60px;}
+  .card{background:#fff;border-radius:16px;padding:30px;display:flex;flex-direction:column;gap:24px;}
+  h1,h2,h3{margin:0;text-wrap:balance;}
+  h1{font-size:30px;font-weight:800;line-height:1.2;}
+  h2{font-size:21px;font-weight:800;}
+  h3{font-size:16px;font-weight:800;}
+  p{margin:0;}
+  .lede{font-size:17px;line-height:1.6;color:var(--soft);max-width:62ch;margin-top:8px;}
+  .panel{background:var(--panel);border:1px solid var(--panel-line);border-radius:14px;padding:20px 22px;display:flex;flex-direction:column;gap:18px;min-width:0;}
+  .sub{color:var(--muted);font-size:14px;}
+  .fields{display:flex;flex-wrap:wrap;gap:14px;}
+  .field{display:flex;flex-direction:column;gap:4px;flex:1 1 200px;min-width:0;}
+  .field label{font-size:13px;color:var(--muted);}
+  input[type="number"],select{font:inherit;color:var(--fg);background:#fff;border:1px solid var(--line);border-radius:8px;padding:9px 12px;min-width:0;width:100%;}
+  input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+  .layers{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;}
+  .layer{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:2px;border-top:4px solid var(--line);}
+  .layer.fed{border-top-color:var(--fed);}
+  .layer.state{border-top-color:var(--state);}
+  .layer.local{border-top-color:var(--local);}
+  .layer .lab{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);}
+  .layer .amt{font-size:24px;font-weight:800;font-variant-numeric:tabular-nums;}
+  .layer .share{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;}
+  .total{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline;}
+  .total strong{font-size:20px;font-weight:800;font-variant-numeric:tabular-nums;}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--muted);}
+  .legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;background:var(--c);}
+  .rows{display:flex;flex-direction:column;gap:14px;}
+  .row-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;}
+  .row-top .nm{font-weight:700;}
+  .row-top .nm small{font-weight:400;color:var(--muted);margin-left:6px;}
+  .row-top .val{font-variant-numeric:tabular-nums;}
+  .bar{display:flex;height:14px;background:#fff;border:1px solid var(--line);border-radius:4px;overflow:hidden;margin-top:6px;}
+  .bar i{display:block;height:100%;}
+  .bar .f{background:var(--fed);}
+  .bar .s{background:var(--state);}
+  .bar .l{background:var(--local);}
+  .incbody{font-size:12.5px;line-height:1.45;color:var(--muted);margin-top:3px;}
+  .incbody strong{font-weight:800;color:var(--ink);}
+  .divider{border:0;border-top:1px solid var(--panel-line);margin:0;}
+  .need{display:flex;flex-direction:column;gap:6px;padding:14px;margin-top:12px;border:1px solid var(--panel-line);border-radius:12px;}
+  .partbox{border:0;border-top:1px solid var(--panel-line);padding:12px 0;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);}
+  .nm + .partbox{border-top:0;}
+  .partline{font-size:13.5px;line-height:1.45;}
+  .srow{display:flex;flex-direction:column;gap:6px;}
+  .srow{padding:0 12px;justify-content:space-between;}
+  .srow + .srow{border-left:1px solid var(--panel-line);}
+  .srow:first-child{padding-left:0;}
+  .srow:last-child{padding-right:0;}
+  .partbox .dots{gap:3px;}
+  .partbox .dot{width:28px;height:28px;font-size:12.5px;}
+  .ratepair{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px 16px;}
+  .need .nm{font-weight:700;}
+  .need .nm small{display:block;font-weight:400;font-size:12.5px;line-height:1.45;color:var(--muted);}
+  .rate{display:flex;flex-direction:column;gap:4px;min-width:0;}
+  .rate .who{font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:#8A96A6;}
+  .dots{display:flex;gap:4px;}
+  .dot{font:inherit;font-size:13px;width:34px;height:34px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--fg);cursor:pointer;}
+  .dot[aria-pressed="true"]{background:#2E7D32;border-color:#2E7D32;color:#fff;font-weight:700;}
+  .dot.low[aria-pressed="true"]{background:var(--seek);border-color:var(--seek);color:#fff;}
+  .gap{--c:var(--seek);--cbg:var(--seek-bg);background:#fff;border:1px solid var(--line);border-left:4px solid var(--c);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;}
+  .gap-head{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:baseline;}
+  .gap-head strong{font-size:18px;font-weight:800;color:var(--c);}
+  .gap.n-connect{--c:#B83280;--cbg:#FBE4F1;}
+  .gap.n-create{--c:#6B4FC8;--cbg:#ECE6FA;}
+  .gap.n-eat{--c:#2E7D32;--cbg:#E1F3E2;}
+  .gap.n-move{--c:#1F699E;--cbg:#DCEBFA;}
+  .gap.n-play{--c:#B7791F;--cbg:#FBEFCB;}
+  .gap.n-rest{--c:#3C5A99;--cbg:#E3EAF8;}
+  .gap.n-open{--c:#4B5A6D;--cbg:#E6EBF1;}
+  .gap-head.issue-head{align-items:flex-start;flex-wrap:nowrap;}
+  .gap-head.issue-head strong{font-size:15px;color:var(--ink);}
+  .gap-head.issue-head .pill{flex:none;font-weight:700;}
+  .otherrow{display:flex;gap:8px;}
+  .otherin{font:inherit;font-size:13.5px;color:var(--fg);background:#fff;border:1px solid var(--line);border-radius:8px;padding:5px 10px;flex:1 1 auto;min-width:0;}
+  .lowfor{font-size:12.5px;color:var(--muted);text-align:right;margin-left:auto;}
+  .askline{font-size:14px;}
+  #issueOut > p{font-size:14px;margin:0 0 10px;}
+  #issueOut .gap{margin-bottom:10px;}
+  .myplace{margin:12px 0 0;font-size:14px;color:var(--muted);}
+  .myplace strong{color:var(--fg);}
+  .myplace a{color:var(--brand);font-weight:700;}
+  .lifeq{display:flex;flex-direction:column;gap:6px;margin-bottom:12px;}
+  .lifeq select,.lifeq .otherin{max-width:320px;}
+  .closerow{display:flex;justify-content:flex-end;}
+  .closebtn{font:inherit;font-size:14px;font-weight:700;color:var(--brand);background:none;border:0;padding:6px 0;cursor:pointer;text-decoration:underline;}
+  .who-pills{display:flex;gap:6px;flex-wrap:wrap;}
+  .pill{font-size:12px;border-radius:999px;padding:2px 10px;background:var(--cbg);color:var(--c);}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{font:inherit;color:var(--fg);background:#fff;border:1px solid var(--panel-line);border-radius:999px;padding:4px 10px;font-size:13.5px;cursor:pointer;min-height:28px;}
+  .chip[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:700;}
+  .empty{color:var(--muted);}
+  @media(max-width:700px){.card{padding:22px 20px;}h1{font-size:25px;}}
+</style>
+<script>window.CW_SIGNIN="/signin/?next="+encodeURIComponent(location.pathname+location.search);window.CW_SIGNUP="/signup/?next="+encodeURIComponent(location.pathname+location.search);</script>
+<script src="https://2gather.network/nav/topbar.js?v=6.69" defer></script>
+</head>
+<body>
+<div class="wrap">
+ <div class="card">
+  <header>
+    <h1>Where my money goes</h1>
+    <p class="lede">Follow my taxes through federal, state and local government. See how they meet the needs we all share. Take stock of how each need is met for me and for my community. Find where I want to be involved.</p>
+    <p class="myplace" id="myPlace" hidden></p>
+  </header>
+
+
+  <section class="panel" aria-labelledby="h-comm">
+    <div>
+      <h2 id="h-comm">Define my community</h2>
+      <p class="sub">A few statements about where I work and how I live. I pick the ones that fit me.</p>
+    </div>
+    <div id="lifeQs"></div>
+    <p class="sub" id="lifeSummary"></p>
+  </section>
+
+  <section class="panel" aria-labelledby="h-follow">
+    <div>
+      <h2 id="h-follow">Follow my money</h2>
+      <p class="sub"><span id="followWhere">Edmonds, Snohomish County, Washington.</span> Washington has no state income tax, so the state share comes from sales tax. Sales and property rates are estimates from public pages, not a tax bill. The state business tax is paid by businesses and reaches me through prices and sales tax, so it is not a separate line.</p>
+    </div>
+    <div class="fields">
+      <div class="field">
+        <label for="income">Yearly income before tax</label>
+        <input type="number" id="income" min="0" step="1000" value="85000" inputmode="numeric">
+      </div>
+      <div class="field">
+        <label for="home">Home value for property tax</label>
+        <input type="number" id="home" min="0" step="10000" value="700000" inputmode="numeric">
+      </div>
+      <div class="field">
+        <label for="spend">Yearly spending that carries sales tax</label>
+        <input type="number" id="spend" min="0" step="1000" value="25000" inputmode="numeric">
+      </div>
+    </div>
+    <div class="total"><span>Estimated yearly taxes across all three layers</span><strong id="totalAmt"></strong></div>
+    <div class="layers" id="layers"></div>
+    <hr class="divider">
+    <div>
+      <h3>How each layer meets our needs</h3>
+      <p class="sub">Each bar shows dollars from my taxes, split by layer.</p>
+    </div>
+    <div class="legend" aria-hidden="true"><span style="--c:var(--fed)">Federal</span><span style="--c:var(--state)">State</span><span style="--c:var(--local)">Local</span></div>
+    <div class="rows" id="flows"></div>
+  </section>
+
+  <section class="panel" aria-labelledby="h-issue">
+    <div>
+      <h2 id="h-issue">On my ballot</h2>
+      <p class="sub">General election, November 3, 2026. Pick a measure to see which needs it touches. The page shows what a measure touches, not how to vote.</p>
+    </div>
+    <div class="fields"><div class="field"><label for="issue">Ballot measure</label><select id="issue"></select></div></div>
+    <div id="issueOut"></div>
+  </section>
+
+  <section class="panel" aria-labelledby="h-inv">
+    <div>
+      <h2 id="h-inv">Needs inventory</h2>
+      <p class="sub">Rate how well each need is met. 1 is barely met and 4 is fully met. My ratings stay in this browser.</p>
+    </div>
+    <div id="needs"></div>
+  </section>
+
+  <section class="panel" aria-labelledby="h-gaps">
+    <div>
+      <h2 id="h-gaps">Gaps and gifts</h2>
+      <p class="sub">Needs that I or my community rate 1 or 2 appear here.</p>
+    </div>
+    <div class="rows" id="gaps"></div>
+  </section>
+ </div>
+</div>
+
+<script>
+(function () {
+  var NEEDS = [
+    { k: "connect", askMe: "connect with people", askCom: "build friendship and belonging", can: "I can connect with myself, other people, nature and something larger than myself.", time: "I make time for connecting with who or what is important to me.", exp: "I experience friendship and belonging.", ex: "a block grant that helps run a community center, and school clubs and student programs.", inc: "Connecting with people to build friendship and belonging: getting to know neighbors, building social skills, listening and being listened to, and having people to turn to. Includes learning to be with others: school clubs and being part of a class.", name: "Connect", sub: "", gifts: ["Host a gathering","Listen","Make introductions","Translate"] },
+    { k: "create", askMe: "make and build things", askCom: "make, build and express ourselves", can: "I can make and create anything: science, technology, architecture, art, writing and ideas.", time: "I make time for creating.", exp: "I experience creativity and expression.", ex: "libraries, labs and maker spaces, science and technology programs, public design and art, and school classes in reading, math, science, art and trades.", inc: "Making and building anything: science, technology, architecture, art, writing and ideas. Expressing what you say, do, feel and create, with the tools, labs, studios and shop space to do it. Includes learning to make and build: reading, math, science, art and trades.", name: "Create", sub: "", gifts: ["Share a craft","Lend tools","Share studio space"] },
+    { k: "eat", askMe: "eat and drink well", askCom: "eat and drink well", can: "I can eat and drink what I choose, with the food and clean water I need.", time: "I make time for eating and drinking healthily.", exp: "I experience nourishment.", ex: "food safety inspections, clean drinking water, and pantry and meal programs.", inc: "Eating and drinking what you choose, with the food and clean water to do it: growing, buying, cooking and sharing meals.", name: "Eat and drink", sub: "", gifts: ["Cook for others","Grow food","Take a pantry shift","Share a meal"] },
+    { k: "move", askMe: "get where I need to go", askCom: "get where we need to go", can: "I can get around to do what I need to do: walk, bike, ride, drive or roll.", time: "I make time for moving.", exp: "I experience freedom of movement.", ex: "local roads and potholes, bus service, and the interstate that carries your groceries.", inc: "Moving around so you can do what you need to do: walking, biking, riding, driving or rolling to work, school, care and the people you love.", name: "Move", sub: "", gifts: ["Walk with someone","Offer rides","Host a class","Fix bikes"] },
+    { k: "play", askMe: "play", askCom: "play", can: "I can play: games, sports, music, time outdoors and unstructured fun.", time: "I make time for play.", exp: "I experience play.", ex: "parks, trails, recreation centers and ball fields.", inc: "Playing for the sake of recreation: games, sports, music, time outdoors and unstructured fun, on your own or with others.", name: "Play", sub: "", gifts: ["Organize a game night","Coach","Open a space for kids"] },
+    { k: "rest", askMe: "feel safe and rested", askCom: "feel safe and rested", can: "I can rest, with a safe and stable place to live.", time: "I make time to rest, heal and recover.", exp: "I experience rest and safety.", ex: "housing help, emergency rooms, doctors, and mental health care.", inc: "Resting as a result of feeling safe and recovering from the day or situation you're in: sleep, a stable place to live, quiet, healing and recovery, mental health and preventative care.", name: "Rest", sub: "", gifts: ["Offer a spare room","Help with repairs","Mind kids so someone can sleep","Open quiet hours"] }
+  ];
+  var COM = {
+    connect: { can: "My community offers opportunities to connect with each other, with nature and with something larger than ourselves.", time: "My community offers opportunities to make time for connecting with who and what matters.", exp: "My community offers opportunities to experience friendship and belonging." },
+    create: { can: "My community offers opportunities to make and create anything: science, technology, architecture, art, writing and ideas.", time: "My community offers opportunities to make time for creating.", exp: "My community offers opportunities to experience creativity and expression." },
+    eat: { can: "My community offers opportunities to eat and drink what we choose, with the food and clean water we need.", time: "My community offers opportunities to make time for eating and drinking healthily.", exp: "My community offers opportunities to experience nourishment." },
+    move: { can: "My community offers opportunities to get around to do what we need to do: walk, bike, ride, drive or roll.", time: "My community offers opportunities to make time for moving.", exp: "My community offers opportunities to experience freedom of movement." },
+    play: { can: "My community offers opportunities to play: games, sports, music, time outdoors and unstructured fun.", time: "My community offers opportunities to make time for play.", exp: "My community offers opportunities to experience play." },
+    rest: { can: "My community offers opportunities to rest, with a safe and stable place to live.", time: "My community offers opportunities to make time to rest, heal and recover.", exp: "My community offers opportunities to experience rest and safety." }
+  };
+  var EXTRA = [
+    { k: "open", name: "Infrastructure and operations", sub: "", inc: "Administration, transportation, buildings, hospitals, defense and public safety, and the space to learn: school buildings, buses and upkeep.", ex: "streetlights and street upkeep, public buildings, school and hospital buildings and equipment, school buses, and police, fire and defense." }
+  ];
+  var SPLIT = {
+    fed:   { connect: 15, create: 7, eat: 6, move: 3, play: 1, rest: 33, open: 35 },
+    state: { connect: 12, create: 10, eat: 3, move: 12, play: 1, rest: 32, open: 30 },
+    local: { connect: 24, create: 7, eat: 4, move: 18, play: 8, rest: 18, open: 21 }
+  };
+  var ISSUES = [
+    { id: "ip645", label: "IP26-645 · Tax on income over $1,000,000", sum: "Initiative Measure IP26-645 concerns state and local taxes. It would repeal a 9.9% tax on annual individual income over $1,000,000. The ballot summary says funding would decrease for public K-12 education, higher education (including universities and community colleges), and human services (primarily healthcare).", extra: function (inc) { return inc > 1000000 ? "At the income I entered, this tax may apply to me." : "This measure concerns a tax on income over $1,000,000, so at the income I entered I would not pay it. What it touches for me is what it funds."; }, parts: [{ k: "create", what: "K-12 and higher education: the learning itself" }, { k: "open", what: "School and college buildings and upkeep" }, { k: "rest", what: "Human services, primarily healthcare" }] },
+    { id: "il001", label: "IL26-001 · Parental rights in public school", sum: "Initiative Measure IL26-001 concerns parental rights relating to children in public school. It would repeal amendments to a statute listing certain rights of parents and guardians, and re-enact the law as it was first passed by Initiative to the Legislature 2081.", parts: [{ k: "open", what: "How public schools are run and how parents take part" }, { k: "connect", what: "The relationship between families and schools" }] },
+    { id: "il638", label: "IL26-638 · Participation in school athletics", sum: "Initiative Measure IL26-638 concerns participation in athletics at K-12 schools. It would bar students the measure defines as biologically male from certain school athletic activities intended for female students only, and require verification of biological sex by a student's healthcare provider.", parts: [{ k: "play", what: "School sports and athletic activities" }, { k: "connect", what: "Belonging on a team" }] }
+  ];
+  var KEY = "where-my-money-goes-v2";
+
+  function tri(n) { return { can: n, time: n, exp: n }; }
+  var PARTS = [["can", "I can"], ["time", "I make time"], ["exp", "I experience it"]];
+  var saved = load();
+  var st = {
+    me: { connect: tri(2), create: tri(4), eat: tri(4), move: tri(2), play: tri(3), rest: tri(2) },
+    com: { connect: tri(4), create: tri(4), eat: tri(3), move: tri(3), play: tri(2), rest: tri(2) },
+    lend: {},
+    custom: {},
+    help: {},
+    life: {}
+  };
+  if (saved) { st.me = clampRatings(saved.me) || st.me; st.com = clampRatings(saved.com) || st.com; st.lend = saved.lend || st.lend; st.custom = saved.custom || st.custom; st.help = saved.help || st.help; st.life = saved.life || st.life; }
+  var openOther = {};
+
+  function clampRatings(o) { if (!o) return null; var r = {}; function c(v) { return Math.max(1, Math.min(4, parseInt(v, 10) || 1)); } for (var k in o) { var v = o[k]; r[k] = (v && typeof v === "object") ? { can: c(v.can), time: c(v.time), exp: c(v.exp) } : tri(c(v)); } return r; }
+  function load() { try { return JSON.parse(localStorage.getItem(KEY)); } catch (e) { return null; } }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} }
+  function usd(n) { return "$" + Math.round(n).toLocaleString("en-US"); }
+  function el(tag, attrs, kids) {
+    var n = document.createElement(tag);
+    for (var k in (attrs || {})) {
+      if (k === "text") n.textContent = attrs[k];
+      else if (k === "class") n.className = attrs[k];
+      else n.setAttribute(k, attrs[k]);
+    }
+    (kids || []).forEach(function (c) { if (c) n.appendChild(c); });
+    return n;
+  }
+  function fedRate(inc) { return inc < 30000 ? 0.06 : inc < 60000 ? 0.11 : inc < 120000 ? 0.16 : 0.22; }
+
+  var incomeEl = document.getElementById("income");
+  var homeEl = document.getElementById("home");
+  var spendEl = document.getElementById("spend");
+
+  var issueEl = document.getElementById("issue");
+  issueEl.appendChild(el("option", { value: "", text: "Choose a measure" }));
+  ISSUES.forEach(function (i) { issueEl.appendChild(el("option", { value: i.id, text: i.label })); });
+  issueEl.value = ISSUES[0].id;
+  function renderIssue() {
+    var i = ISSUES.filter(function (x) { return x.id === issueEl.value; })[0];
+    var out = document.getElementById("issueOut");
+    out.textContent = "";
+    if (!i) return;
+    var all = NEEDS.concat(EXTRA);
+    out.appendChild(el("p", { text: i.sum }));
+    if (i.extra) out.appendChild(el("p", { "class": "sub", text: i.extra(Math.max(0, parseFloat(incomeEl.value) || 0)) }));
+    i.parts.forEach(function (pt) {
+      var n = all.filter(function (x) { return x.k === pt.k; })[0];
+      var lines = [el("div", { "class": "gap-head issue-head" }, [el("strong", { text: pt.what }), el("span", { "class": "pill", text: n.name })]),
+        el("p", { "class": "sub", text: "Of the taxes I pay, about " + usd(moneyFor(n)) + " a year goes toward " + n.name + "." })];
+      out.appendChild(el("div", { "class": "gap n-" + n.k }, lines));
+    });
+    out.appendChild(el("div", { "class": "closerow" }, [el("button", { type: "button", "class": "closebtn", "data-close": "1", text: "Close" })]));
+  }
+  issueEl.addEventListener("change", renderIssue);
+
+  var TRIPS = ["Under 15 minutes", "15 to 30 minutes", "30 to 60 minutes", "1 to 2 hours", "Over 2 hours"];
+  function lifeQ(label, key, opts) {
+    var row = el("div", { "class": "chips" });
+    opts.forEach(function (o) { row.appendChild(el("button", { type: "button", "class": "chip", "aria-pressed": st.life[key] === o[0] ? "true" : "false", "data-life": key + "|" + o[0], text: o[1] })); });
+    return el("div", { "class": "lifeq" }, [el("p", { "class": "askline", text: label }), row]);
+  }
+  var YN = [["yes", "Yes"], ["no", "No"]];
+  function renderLife() {
+    var L = st.life, root = document.getElementById("lifeQs");
+    root.textContent = "";
+    root.appendChild(lifeQ("Work", "work", [["yes", "I work"], ["no", "I don't work"]]));
+    if (L.work === "yes") {
+      root.appendChild(lifeQ("My work is", "local", [["yes", "In my county"], ["no", "In another county or city"]]));
+      if (L.local === "yes") root.appendChild(el("p", { "class": "sub", text: "I work where I live." }));
+      if (L.local === "no") {
+        var inp = el("input", { type: "text", maxlength: "60", "class": "otherin", "data-lifein": "place", "aria-label": "Where I work", placeholder: "County or city" });
+        inp.value = L.place || "";
+        var sel = el("select", { "data-lifesel": "trip", "aria-label": "My trip each way" }, [el("option", { value: "", text: "Choose a time" })]);
+        TRIPS.forEach(function (t) { sel.appendChild(el("option", { value: t, text: t })); });
+        sel.value = L.trip || "";
+        root.appendChild(el("div", { "class": "lifeq" }, [el("p", { "class": "askline", text: "Where I work" }), inp]));
+        root.appendChild(el("div", { "class": "lifeq" }, [el("p", { "class": "askline", text: "My trip each way" }), sel]));
+      }
+    }
+    if (L.work === "no") {
+      root.appendChild(lifeQ("My not working is", "chosen", [["yes", "My choice"], ["no", "Not my choice"]]));
+      if (L.chosen === "yes") root.appendChild(lifeQ("Closest to me", "why", [["retired", "I'm retired"], ["well", "I'm well off"], ["other", "Other"]]));
+      if (L.chosen === "no") root.appendChild(lifeQ("Closest to me", "why", [["looking", "I'm looking for work"], ["cannot", "I can't work right now"]]));
+    }
+    root.appendChild(lifeQ("My home", "home", [["own", "I own my home"], ["rent", "I rent my home"]]));
+    root.appendChild(lifeQ("My form of transportation", "ride", [["drive", "I drive"], ["transit", "I take public transit"], ["both", "Both"]]));
+    if (L.ride === "drive" || L.ride === "both") root.appendChild(lifeQ("My car", "car", [["gas", "Gas"], ["electric", "Electric"]]));
+    renderLifeSummary();
+  }
+  function renderLifeSummary() {
+    var L = st.life, bits = [];
+    if (L.work === "yes" && L.local === "yes") bits.push("I work where I live.");
+    if (L.work === "yes" && L.local === "no") bits.push("I work in " + (L.place || "another county") + (L.trip ? ", " + L.trip.toLowerCase() + " each way." : "."));
+    if (L.work === "no" && L.why) bits.push({ retired: "I'm retired.", well: "I'm well off.", other: "I don't work, and that is my choice.", looking: "I'm looking for work.", cannot: "I can't work right now." }[L.why]);
+    if (L.home) bits.push(L.home === "own" ? "I own my home." : "I rent my home.");
+    if (L.ride === "transit") bits.push("I take public transit.");
+    if (L.ride === "both") bits.push("I drive" + (L.car ? (L.car === "electric" ? " an electric car" : " a gas car") : "") + " and take public transit.");
+    if (L.ride === "drive") bits.push("I drive" + (L.car ? (L.car === "electric" ? " an electric car." : " a gas car.") : "."));
+    document.getElementById("lifeSummary").textContent = bits.length ? "My community: " + (myPlace ? placeText(myPlace) : "Edmonds, Snohomish County") + ". " + bits.join(" ") : "";
+  }
+  var layerTotals = { fed: 0, state: 0, local: 0 };
+
+  function renderFlows() {
+    var inc = Math.max(0, parseFloat(incomeEl.value) || 0);
+    var home = Math.max(0, parseFloat(homeEl.value) || 0);
+    var spend = Math.max(0, parseFloat(spendEl.value) || 0);
+    layerTotals = { fed: inc * fedRate(inc), state: spend * 0.065, local: spend * 0.042 + home * 8.19 / 1000 };
+    var total = layerTotals.fed + layerTotals.state + layerTotals.local;
+    document.getElementById("totalAmt").textContent = usd(total) + (inc ? " (" + (total / inc * 100).toFixed(1) + "% of income)" : "");
+
+    var layers = document.getElementById("layers");
+    layers.textContent = "";
+    [["fed","Federal"],["state","State"],["local","Local"]].forEach(function (p) {
+      var share = total ? layerTotals[p[0]] / total * 100 : 0;
+      layers.appendChild(el("div", { "class": "layer " + p[0] }, [
+        el("span", { "class": "lab", text: p[1] }),
+        el("span", { "class": "amt", text: usd(layerTotals[p[0]]) }),
+        el("span", { "class": "share", text: share.toFixed(0) + "% of my taxes" })
+      ]));
+    });
+
+    var rows = NEEDS.concat(EXTRA).map(function (n) {
+      var f = layerTotals.fed * SPLIT.fed[n.k] / 100;
+      var s = layerTotals.state * SPLIT.state[n.k] / 100;
+      var l = layerTotals.local * SPLIT.local[n.k] / 100;
+      return { n: n, f: f, s: s, l: l, t: f + s + l };
+    });
+    var max = Math.max.apply(null, rows.map(function (r) { return r.t; })) || 1;
+    var root = document.getElementById("flows");
+    root.textContent = "";
+    rows.forEach(function (r) {
+      var top = el("div", { "class": "row-top" }, [
+        el("span", { "class": "nm" }, [document.createTextNode(r.n.name), r.n.sub ? el("small", { text: r.n.sub }) : null]),
+        el("span", { "class": "val", text: usd(r.t) })
+      ]);
+      var bar = el("div", { "class": "bar", role: "img", "aria-label": r.n.name + ": federal " + usd(r.f) + ", state " + usd(r.s) + ", local " + usd(r.l) });
+      [["f", r.f, "Federal"],["s", r.s, "State"],["l", r.l, "Local"]].forEach(function (p) {
+        var i = el("i", { "class": p[0], title: p[2] + " " + usd(p[1]) });
+        i.style.width = (p[1] / max * 100) + "%";
+        bar.appendChild(i);
+      });
+      var kids = [top, bar];
+      if (r.n.inc) kids.push(el("p", { "class": "incbody", text: r.n.inc }));
+      if (r.n.ex) kids.push(el("p", { "class": "incbody" }, [el("strong", { text: "Taxes can pay for:" }), document.createTextNode(" " + r.n.ex)]));
+      root.appendChild(el("div", {}, kids));
+    });
+    renderGaps();
+    renderIssue();
+  }
+  function sentenceRow(text, who, key, part) {
+    var wrap = el("div", { "class": "srow" }, [el("p", { "class": "partline", text: text })]);
+    var dots = el("div", { "class": "dots", role: "group", "aria-label": text });
+    for (var v = 1; v <= 4; v++) {
+      dots.appendChild(el("button", { type: "button", "class": "dot" + (v <= 2 ? " low" : ""), "aria-pressed": st[who][key][part] === v ? "true" : "false", "data-who": who, "data-need": key, "data-part": part, "data-v": String(v), text: String(v) }));
+    }
+    wrap.appendChild(dots);
+    return wrap;
+  }
+  function renderNeeds() {
+    var root = document.getElementById("needs");
+    root.textContent = "";
+    NEEDS.forEach(function (n) {
+      var kids = [el("div", { "class": "nm" }, [document.createTextNode(n.name)])];
+      PARTS.forEach(function (p) {
+        kids.push(el("div", { "class": "partbox" }, [sentenceRow(n[p[0]], "me", n.k, p[0]), sentenceRow(COM[n.k][p[0]], "com", n.k, p[0])]));
+      });
+      root.appendChild(el("div", { "class": "need" }, kids));
+    });
+  }
+
+  function moneyFor(n) {
+    var f = layerTotals.fed * SPLIT.fed[n.k] / 100, s = layerTotals.state * SPLIT.state[n.k] / 100, l = layerTotals.local * SPLIT.local[n.k] / 100;
+    return f + s + l;
+  }
+  function giftChips(n, key) {
+    var chips = el("div", { "class": "chips" });
+    n.gifts.concat(st.custom[key] || []).forEach(function (g) {
+      var id = key + ":" + g;
+      chips.appendChild(el("button", { type: "button", "class": "chip", "aria-pressed": st.lend[id] ? "true" : "false", "data-gift": id, text: g }));
+    });
+    chips.appendChild(el("button", { type: "button", "class": "chip", "data-other": key, text: "+ Other" }));
+    var out = [chips];
+    if (openOther[key]) {
+      var inp = el("input", { type: "text", maxlength: "60", "class": "otherin", "data-otherin": key, "aria-label": "My own way to be involved in " + n.name, placeholder: "My own" });
+      out.push(el("div", { "class": "otherrow" }, [inp, el("button", { type: "button", "class": "chip", "data-addother": key, text: "Add" }), el("button", { type: "button", "class": "chip", "data-cancelother": key, text: "Cancel" })]));
+    }
+    return out;
+  }
+  function renderGaps() {
+    var root = document.getElementById("gaps");
+    root.textContent = "";
+    var any = false;
+    NEEDS.forEach(function (n) {
+      var meLow = PARTS.filter(function (p) { return st.me[n.k][p[0]] <= 2; }).map(function (p) { return p[1]; });
+      var comLow = PARTS.filter(function (p) { return st.com[n.k][p[0]] <= 2; }).map(function (p) { return p[1]; });
+      var lowMe = meLow.length > 0, lowCom = comLow.length > 0;
+      if (!lowMe && !lowCom) return;
+      any = true;
+      var who = [];
+      if (lowMe) who.push("me");
+      if (lowCom) who.push("our community");
+      var kids = [
+        el("div", { "class": "gap-head" }, [el("strong", { text: n.name }), el("span", { "class": "lowfor", text: "Low for " + who.join(" and ") })]),
+        el("p", { "class": "sub", text: "Of the taxes I pay, about " + usd(moneyFor(n)) + " a year goes toward this need." })
+      ];
+      var detail = [];
+      if (lowMe) detail.push("Low for me: " + meLow.join(", "));
+      if (lowCom) detail.push("Low for our community: " + comLow.join(", "));
+      kids.push(el("p", { "class": "sub", text: detail.join(" · ") }));
+      if (lowMe) {
+        kids.push(el("p", { "class": "askline", text: "Where do I want to be involved to " + n.askMe + "?" }));
+        giftChips(n, n.k).forEach(function (c) { kids.push(c); });
+      }
+      if (lowCom) {
+        var h = st.help[n.k];
+        kids.push(el("p", { "class": "askline", text: "Is my need for change great enough to be involved in helping our community?" }));
+        kids.push(el("div", { "class": "chips" }, [
+          el("button", { type: "button", "class": "chip", "aria-pressed": h === "yes" ? "true" : "false", "data-help": n.k + "|yes", text: "Yes" }),
+          el("button", { type: "button", "class": "chip", "aria-pressed": h === "no" ? "true" : "false", "data-help": n.k + "|no", text: "Not now" })
+        ]));
+        if (h === "yes") {
+          kids.push(el("p", { "class": "askline", text: "Where do I want to be involved to help our community " + n.askCom + "?" }));
+          giftChips(n, "c-" + n.k).forEach(function (c) { kids.push(c); });
+        }
+      }
+      root.appendChild(el("div", { "class": "gap n-" + n.k }, kids));
+    });
+    if (!any) root.appendChild(el("p", { "class": "empty", text: "Every need is rated 3 or higher. Lower a rating above to see how this section responds." }));
+  }
+
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest("button");
+    if (!b) return;
+    if (b.hasAttribute("data-close")) { issueEl.value = ""; renderIssue(); return; }
+    if (b.hasAttribute("data-v")) {
+      st[b.getAttribute("data-who")][b.getAttribute("data-need")][b.getAttribute("data-part")] = parseInt(b.getAttribute("data-v"), 10);
+      save(); renderNeeds(); renderGaps(); return;
+    }
+    if (b.hasAttribute("data-other")) {
+      openOther[b.getAttribute("data-other")] = true;
+      renderGaps();
+      var f = document.querySelector('[data-otherin="' + b.getAttribute("data-other") + '"]');
+      if (f) f.focus();
+      return;
+    }
+    if (b.hasAttribute("data-cancelother")) { openOther[b.getAttribute("data-cancelother")] = false; renderGaps(); return; }
+    if (b.hasAttribute("data-addother")) { addOther(b.getAttribute("data-addother")); return; }
+    if (b.hasAttribute("data-life")) {
+      var lp = b.getAttribute("data-life").split("|");
+      st.life[lp[0]] = lp[1];
+      if (lp[0] === "work") { delete st.life.local; delete st.life.chosen; delete st.life.why; }
+      if (lp[0] === "local") { delete st.life.place; delete st.life.trip; }
+      if (lp[0] === "chosen") delete st.life.why;
+      if (lp[0] === "ride") delete st.life.car;
+      save(); renderLife(); return;
+    }
+    if (b.hasAttribute("data-help")) {
+      var hp = b.getAttribute("data-help").split("|");
+      st.help[hp[0]] = hp[1];
+      save(); renderGaps(); return;
+    }
+    if (b.hasAttribute("data-gift")) {
+      var id = b.getAttribute("data-gift");
+      st.lend[id] = !st.lend[id];
+      save(); renderGaps();
+    }
+  });
+  function addOther(k) {
+    var f = document.querySelector('[data-otherin="' + k + '"]');
+    var v = f ? f.value.replace(/\s+/g, " ").trim() : "";
+    if (!v) return;
+    var list = st.custom[k] || (st.custom[k] = []);
+    if (list.indexOf(v) < 0) list.push(v);
+    st.lend[k + ":" + v] = true;
+    openOther[k] = false;
+    save(); renderGaps();
+  }
+  document.addEventListener("keydown", function (e) {
+    var k = e.target.getAttribute && e.target.getAttribute("data-otherin");
+    if (k && e.key === "Enter") { e.preventDefault(); addOther(k); }
+  });
+  incomeEl.addEventListener("input", renderFlows);
+  homeEl.addEventListener("input", renderFlows);
+  spendEl.addEventListener("input", renderFlows);
+
+  document.addEventListener("input", function (e) { var t = e.target; if (t.getAttribute && t.getAttribute("data-lifein")) { st.life.place = t.value; save(); renderLifeSummary(); } });
+  document.addEventListener("change", function (e) { var t = e.target; if (t.getAttribute && t.getAttribute("data-lifesel")) { st.life.trip = t.value; save(); renderLifeSummary(); } });
+  var myPlace = null;
+  function placeText(p) {
+    var county = p.county ? (/county$/i.test(p.county) ? p.county : p.county + " County") : "";
+    return [p.city, county, p.state].filter(Boolean).join(", ");
+  }
+  function isEdmonds(p) { return !!p && /edmonds/i.test(p.city || "") && /snohomish/i.test(p.county || ""); }
+  function stateFrom(loc) {
+    var skip = /^(united states|usa|us|north america|\d{5}(-\d{4})?)$/i;
+    var parts = String(loc || "").split(",").map(function (x) { return x.trim(); }).filter(function (x) { return x && !skip.test(x); });
+    if (parts.some(function (x) { return /^(wa|washington)$/i.test(x); })) return "Washington";
+    return parts[parts.length - 1] || "";
+  }
+  function showMyPlace(kids) {
+    var box = document.getElementById("myPlace");
+    box.textContent = "";
+    kids.forEach(function (k) { box.appendChild(typeof k === "string" ? document.createTextNode(k) : k); });
+    box.hidden = false;
+  }
+  function readMyPlace(again) {
+    var id = "", tok = "";
+    try { id = localStorage.getItem("cw-id") || localStorage.getItem("appear-id") || ""; tok = localStorage.getItem("cw-token") || ""; } catch (e) {}
+    if (!id || !tok) { showMyPlace([el("a", { href: window.CW_SIGNIN, text: "Sign in" }), " to use the location on my account."]); return; }
+    fetch("https://cw-api-gate.jessieupp.workers.dev/?action=getIntake&appearId=" + encodeURIComponent(id) + "&meToken=" + encodeURIComponent(tok))
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (!d || d.status === "error") throw new Error("no answer");
+        var p = { city: String(d.city || "").trim(), county: String(d.county || "").trim(), state: stateFrom(d.location) };
+        if (!p.city && !p.county && !p.state) { showMyPlace(["My account has no location yet."]); return; }
+        myPlace = p;
+        showMyPlace(["My location: ", el("strong", { text: placeText(p) })]);
+        placeChanged();
+      })
+      .catch(function () {
+        if (!again) { setTimeout(function () { readMyPlace(true); }, 2000); return; }
+        showMyPlace(["My location didn't load. ", el("a", { href: window.CW_SIGNIN, text: "Sign in again" }), " to try once more."]);
+      });
+  }
+  function placeChanged() {
+    if (!isEdmonds(myPlace)) document.getElementById("followWhere").textContent = "These are Edmonds, Snohomish County numbers. Numbers for " + placeText(myPlace) + " are not in yet.";
+    renderLifeSummary();
+  }
+  renderLife();
+  readMyPlace();
+  renderNeeds();
+  renderFlows();
+})();
+</script>
+</body>
+</html>
