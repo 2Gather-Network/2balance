@@ -60,7 +60,7 @@
 .msg{font-size:15px;line-height:1.5;color:var(--soft);margin:0;}
 .opts.pair{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:stretch;}.pair .opt{text-align:center;display:flex;align-items:center;justify-content:center;}.pair .opt:nth-child(1){order:1;}.pair .opt:nth-child(2){order:3;}.pair .opt:nth-child(3){order:2;}@media(max-width:560px){.opts.pair{grid-template-columns:1fr;}.pair .opt:nth-child(n){order:0;}}
 .lpt{font-size:15px;font-weight:700;color:var(--ink);margin:16px 0 8px;}.lpills{margin-top:12px;}
-.fscale{display:grid;gap:14px;}.frow{display:grid;grid-template-columns:200px 1fr;gap:10px;align-items:center;}.flbl{font-size:16px;font-weight:600;color:#000;}.fseg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}.fbtn{padding:7px 6px;font-size:13px;line-height:1.25;text-align:center;display:flex;flex-direction:column;align-items:center;gap:2px;}.fbtn b{font-size:16px;}@media(max-width:620px){.frow{grid-template-columns:1fr;gap:6px;}}
+.fscale{display:grid;gap:14px;}.frow{display:grid;grid-template-columns:minmax(0,1fr) 220px;gap:10px;align-items:center;}.flbl{font-size:16px;font-weight:600;color:#000;}.fseg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}.fbtn{padding:8px 6px;font-size:16px;font-weight:700;text-align:center;}.ckey{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:14px;color:#000;margin:0 0 16px;}.ckey b{color:var(--brand);}@media(max-width:420px){.frow{grid-template-columns:1fr;gap:6px;}}
 </style>
 </head>
 <body>
@@ -290,7 +290,7 @@ function checkupPage(){
  var C=loadC();var y=window.scrollY;
  var lists={over:CU_OVER.concat(C.own.over.filter(function(x){return CU_OVER.indexOf(x)<0;})),pat:CU_PAT.slice(),under:CU_UNDER.concat(C.own.under.filter(function(x){return CU_UNDER.indexOf(x)<0;}))};
  var h='<h1>Check-up</h1>';
- h+='<div class="qb"><div class="fscale">'+CU_SCALE.map(function(n){var v=C.rate[n]||0;return '<div class="frow"><div class="flbl">'+esc(n)+'</div><div class="fseg">'+CU_LV.map(function(lb,i){return '<button type="button" class="opt fbtn'+(v===i+1?" on":"")+'" data-r="'+esc(n)+'" data-v="'+(i+1)+'"><b>'+(i+1)+'</b><span>'+esc(lb)+'</span></button>';}).join("")+'</div></div>';}).join("")+'</div></div>';
+ h+='<div class="qb"><div class="ckey">'+CU_LV.map(function(lb,i){return '<span><b>'+(i+1)+'</b> '+esc(lb)+'</span>';}).join("")+'</div><div class="fscale">'+CU_SCALE.map(function(n){var v=C.rate[n]||0;return '<div class="frow"><div class="flbl">'+esc(n)+'</div><div class="fseg">'+CU_LV.map(function(lb,i){return '<button type="button" class="opt fbtn'+(v===i+1?" on":"")+'" data-r="'+esc(n)+'" data-v="'+(i+1)+'" aria-label="'+(i+1)+' '+esc(lb)+'">'+(i+1)+'</button>';}).join("")+'</div></div>';}).join("")+'</div></div>';
  h+='<div class="qb"><h2>Where is your energy going that isn\'t serving you right now?</h2>'+cbList(lists.over,C.over,"over",true)+'</div>';
  h+='<div class="qb"><h2>Sometimes what drains us runs deeper than a packed calendar. Which of these patterns show up for you when you\'re overwhelmed?</h2>'+cbList(lists.pat,C.pat,"pat",false)+'</div>';
  h+='<div class="qb"><h2>Are you feeling underwhelmed in any way? If so, where would you like more challenge or inspiration right now?</h2><div class="opts pills" data-k="under">'+lists.under.concat(["+ Other"]).map(function(x,i){return '<button type="button" class="opt'+(x==="+ Other"?" other":"")+(C.under.indexOf(x)>-1?" on":"")+'" data-i="'+i+'">'+esc(x)+'</button>';}).join("")+'</div><div class="ownhost" data-k="under"></div></div>';
