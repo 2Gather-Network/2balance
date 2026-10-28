@@ -47,7 +47,6 @@
   .note b{color:var(--ink);}
   .foot{display:flex;justify-content:space-between;align-items:center;margin-top:14px;}
   #back{font-weight:700;color:var(--brand);background:#fff;border:1.5px solid var(--panel-line);border-radius:20px;padding:10px 20px;text-decoration:none;}
-  #restart{color:#fff;}
   @media(max-width:700px){.card{padding:22px 18px;}h1{font-size:23px;}}
 .qb{margin-top:30px;}.qb:first-child{margin-top:0;}.qb h2{font-size:20px;line-height:1.3;margin:0 0 4px;color:var(--ink);}
 .fscale{display:grid;gap:14px;}.frow{display:grid;grid-template-columns:minmax(0,1fr) 220px;gap:10px;align-items:center;}.flbl{font-size:16px;font-weight:600;color:#000;}.fseg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}.fbtn{padding:8px 6px;font-size:16px;font-weight:700;text-align:center;}.ckey{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:14px;color:#000;margin:0 0 16px;}.ckey b{color:var(--brand);}@media(max-width:420px){.frow{grid-template-columns:1fr;gap:6px;}}
@@ -55,13 +54,14 @@
 .chk{display:flex;gap:10px;align-items:flex-start;margin:12px 0 0;font-size:15px;line-height:1.4;cursor:pointer;color:#000;}.chk input{margin-top:3px;width:18px;height:18px;flex:none;accent-color:var(--brand);}
 .wrow{margin-top:22px;}.wrow:first-of-type{margin-top:18px;}.wlbl{font-size:17px;font-weight:700;color:#000;margin:0 0 2px;}.wrow .opts{margin-top:8px;}
 .own textarea{flex:1;min-width:0;font:inherit;font-size:16px;line-height:1.4;padding:10px 12px;border:2px solid var(--brand);border-radius:10px;resize:vertical;min-height:96px;}
+.row{justify-content:flex-end;}.inv{display:flex;flex-direction:column;}.inv .btn{align-self:flex-end;}
 .stmt{font-size:19px;line-height:1.6;color:#000;margin:0 0 8px;}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="card" id="app" aria-live="polite"></div>
-  <div class="foot"><button class="link" id="back" type="button">Back</button><button class="link" id="restart" type="button">Start over</button></div>
+  <div class="foot"><button class="link" id="back" type="button">Back</button></div>
 </div>
 <script>
 (function(){
@@ -98,7 +98,7 @@ function load(){var t=null;try{t=JSON.parse(localStorage.getItem(KEY)||"null");}
 function save(t){try{localStorage.setItem(KEY,JSON.stringify(t));}catch(e){}}
 function go(fn,arg){hist.push([cur,curArg]);cur=fn;curArg=arg;render();}
 function back(){var h=hist.pop();if(h){cur=h[0];curArg=h[1];render();}}
-function render(){cur(curArg);document.getElementById("back").hidden=!hist.length;document.getElementById("restart").hidden=!hist.length;window.scrollTo(0,0);}
+function render(){cur(curArg);document.getElementById("back").hidden=!hist.length;window.scrollTo(0,0);}
 function row(k){for(var i=0;i<ROWS.length;i++)if(ROWS[i].k===k)return ROWS[i];}
 function pillRow(list,sel,attr,other){return '<div class="opts pills">'+list.map(function(x,i){return '<button type="button" class="opt'+(sel.indexOf(x)>-1?" on":"")+'" '+attr+' data-i="'+i+'">'+esc(x)+'</button>';}).join("")+(other?'<button type="button" class="opt other" '+attr+' data-other="1">+ Other</button>':'')+'</div>';}
 
@@ -169,8 +169,7 @@ function feelPage(){
 }
 function donePage(){app.innerHTML='<h1>Thank you</h1><p class="sub">This is a mockup, so nothing is saved to your profile yet.</p>';}
 document.getElementById("back").addEventListener("click",back);
-document.getElementById("restart").addEventListener("click",function(){hist=[];cur=whenPage;render();});
-if(new URLSearchParams(location.search).get("mockup")!=="1"){app.innerHTML='<h1>2Balance</h1><p class="sub">Coming soon.</p>';document.getElementById("back").hidden=true;document.getElementById("restart").hidden=true;}else{cur=whenPage;render();}
+if(new URLSearchParams(location.search).get("mockup")!=="1"){app.innerHTML='<h1>2Balance</h1><p class="sub">Coming soon.</p>';document.getElementById("back").hidden=true;}else{cur=whenPage;render();}
 })();
 </script>
 </body>
