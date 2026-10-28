@@ -61,6 +61,7 @@
 .opts.pair{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:stretch;}.pair .opt{text-align:center;display:flex;align-items:center;justify-content:center;}.pair .opt:nth-child(1){order:1;}.pair .opt:nth-child(2){order:3;}.pair .opt:nth-child(3){order:2;}@media(max-width:560px){.opts.pair{grid-template-columns:1fr;}.pair .opt:nth-child(n){order:0;}}
 .lpt{font-size:15px;font-weight:700;color:var(--ink);margin:16px 0 8px;}.lpills{margin-top:12px;}
 .thead{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}.thead h1{margin:0;}.stars{display:flex;align-items:center;gap:6px;}.flame{font-size:22px;margin-right:4px;}.star{font:inherit;font-size:30px;line-height:1;color:var(--brand);background:none;border:0;padding:2px 4px;cursor:pointer;}.star:focus-visible{outline:3px solid var(--brand);outline-offset:2px;}
+.fscale{display:grid;gap:10px;}.frow{display:grid;grid-template-columns:170px 1fr;gap:10px;align-items:center;}.flbl{font-size:16px;font-weight:600;color:#000;}.fseg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}.fbtn{padding:7px 6px;font-size:14px;text-align:center;}@media(max-width:560px){.frow{grid-template-columns:1fr;gap:6px;}}
 </style>
 </head>
 <body>
@@ -283,8 +284,10 @@ function ownNow(t){app.innerHTML='<h1>'+esc(t)+'</h1>';ownBox("In your own words
 function readyNow(x){app.innerHTML='<h1>'+esc(x)+'</h1><div class="row" style="justify-content:flex-end"><button class="btn" type="button" id="dn">Done</button></div>';document.getElementById("dn").addEventListener("click",function(){go(finish);});}
 function eatWell(){app.innerHTML='<h1>Eating Well</h1><p class="sub">The Eating Well app opens here once it is connected.</p><div class="row" style="justify-content:flex-end"><button class="btn" type="button" id="dn">Done</button></div>';document.getElementById("dn").addEventListener("click",function(){go(finish);});}
 var TKEY="balance.today.v1";
+var FEELS=[["\u{1F310}","Connected"],["\u{1F3A8}","Expressed"],["\u{1F958}","Nourished"],["\u{1F300}","Energized to move"],["\u{1F3D3}","Playful"],["\u{1F499}","Rested"]];
+var FSC=["Not at all","A little","Mostly","Fully"];
 function tday(){var d=new Date();return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();}
-function loadT(){var t=null;try{t=JSON.parse(localStorage.getItem(TKEY)||"null");}catch(e){}if(!t||t.date!==tday())t={date:tday(),important:"",move:[],rest:[],connect:"",enth:0,own:{move:[],rest:[]}};return t;}
+function loadT(){var t=null;try{t=JSON.parse(localStorage.getItem(TKEY)||"null");}catch(e){}if(!t||t.date!==tday())t={date:tday(),important:"",move:[],rest:[],connect:"",enth:0,feel:{},own:{move:[],rest:[]}};if(!t.feel)t.feel={};return t;}
 function saveT(t){try{localStorage.setItem(TKEY,JSON.stringify(t));}catch(e){}}
 function todayPage(){
  var T=loadT();
@@ -295,6 +298,7 @@ function todayPage(){
  function pills(list,sel,k){var h='<div class="opts pills" data-k="'+k+'">';list.concat(["+ Other"]).forEach(function(x,i){h+='<button type="button" class="opt'+(x==="+ Other"?" other":"")+(sel.indexOf(x)>-1?" on":"")+'" data-i="'+i+'">'+emo(x)+esc(x)+'</button>';});return h+'</div><div class="ownhost" data-k="'+k+'"></div>';}
  var stars='';for(var i=1;i<=4;i++)stars+='<button type="button" class="star'+(i<=T.enth?" on":"")+'" data-s="'+i+'" aria-label="'+i+' of 4">'+(i<=T.enth?"★":"☆")+'</button>';
  app.innerHTML='<div class="thead"><h1>Design my day</h1><button type="button" class="btn ghost jc" id="treset">Reset my day</button></div>'
+  +'<div class="qb"><h2>Today I feel...</h2><div class="fscale">'+FEELS.map(function(fx){var v=T.feel[fx[1]]||0;return '<div class="frow"><div class="flbl">'+fx[0]+' '+esc(fx[1])+'</div><div class="fseg">'+FSC.map(function(lb,i){return '<button type="button" class="opt fbtn'+(v===i+1?" on":"")+'" data-f="'+esc(fx[1])+'" data-v="'+(i+1)+'">'+esc(lb)+'</button>';}).join("")+'</div></div>';}).join("")+'</div></div>'
   +'<div class="qb"><h2>No matter what, the most important thing for me today:</h2><div class="own"><input type="text" id="timp" maxlength="140" aria-label="The most important thing for me today" value="'+esc(T.important).replace(/"/g,"&quot;")+'"></div></div>'
   +'<div class="qb"><h2>How I want to move today:</h2>'+pills(mv,T.move,"move")+'</div>'
   +'<div class="qb"><h2>How I want to give myself rest today:</h2>'+pills(rs,T.rest,"rest")+'</div>'
@@ -307,6 +311,7 @@ function todayPage(){
   box.querySelectorAll(".opt").forEach(function(b){b.addEventListener("click",function(){var v=list[+b.getAttribute("data-i")];
    if(v==="+ Other"){if(host.firstChild)return;host.innerHTML='<div class="own"><input type="text" maxlength="60" placeholder="Add your own" aria-label="Add your own"><button class="btn ghost" type="button">Add</button></div>';var inp=host.querySelector("input");var add=function(){var t=inp.value.trim();if(!t)return;if(T.own[k].indexOf(t)<0)T.own[k].push(t);if(T[k].indexOf(t)<0)T[k].push(t);saveT(T);todayPage();};host.querySelector("button").addEventListener("click",add);inp.addEventListener("keydown",function(e){if(e.key==="Enter")add();});inp.focus();return;}
    var i=T[k].indexOf(v);if(i>-1){T[k].splice(i,1);b.classList.remove("on");}else{T[k].push(v);b.classList.add("on");}saveT(T);});});});
+ app.querySelectorAll(".fbtn").forEach(function(b){b.addEventListener("click",function(){var k=b.getAttribute("data-f"),n=+b.getAttribute("data-v");T.feel[k]=(T.feel[k]===n?0:n);saveT(T);todayPage();});});
  app.querySelectorAll(".star").forEach(function(b){b.addEventListener("click",function(){var n=+b.getAttribute("data-s");T.enth=(T.enth===n?0:n);saveT(T);todayPage();});});
  document.getElementById("treset").addEventListener("click",function(){try{localStorage.removeItem(TKEY);}catch(e){}todayPage();});
  document.getElementById("tdone").addEventListener("click",function(){go(todayDone);});
