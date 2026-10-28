@@ -290,28 +290,38 @@ function tday(){var d=new Date();return d.getFullYear()+"-"+(d.getMonth()+1)+"-"
 function loadT(){var t=null;try{t=JSON.parse(localStorage.getItem(TKEY)||"null");}catch(e){}if(!t||t.date!==tday())t={date:tday(),important:"",move:[],rest:[],connect:"",enth:0,feel:{},own:{move:[],rest:[]}};if(!t.feel)t.feel={};return t;}
 function saveT(t){try{localStorage.setItem(TKEY,JSON.stringify(t));}catch(e){}}
 function todayPage(){
- var T=loadT();
- var mv=(S.joy&&S.joy.move&&S.joy.move.length)?S.joy.move.slice():["Workout","Walk","Stretch","Garden","Cycle","Swim","Run","Dance","Sport"];
- var rs=(S.joy&&S.joy.rest&&S.joy.rest.length)?S.joy.rest.slice():NOW.Rest.base.slice();
- T.own.move.forEach(function(x){if(mv.indexOf(x)<0)mv.push(x);});T.own.rest.forEach(function(x){if(rs.indexOf(x)<0)rs.push(x);});
+ var T=loadT();if(!T.care)T.care=[];if(!T.play)T.play=[];if(!T.create)T.create=[];if(!T.own.play)T.own.play=[];if(!T.own.create)T.own.create=[];
+ var lists={
+  move:(S.joy&&S.joy.move&&S.joy.move.length)?S.joy.move.slice():["Workout","Walk","Stretch","Garden","Cycle","Swim","Run","Dance","Sport"],
+  rest:(S.joy&&S.joy.rest&&S.joy.rest.length)?S.joy.rest.slice():NOW.Rest.base.slice(),
+  play:(function(){var m=nowMine("Play");return m.length?m:NOW.Play.base.slice();})(),
+  create:(function(){var m=nowMine("Create");return m.length?m:NOW.Create.base.slice();})()
+ };
+ Object.keys(lists).forEach(function(k){(T.own[k]||[]).forEach(function(x){if(lists[k].indexOf(x)<0)lists[k].push(x);});});
  var y=window.scrollY;
  function pills(list,sel,k){var h='<div class="opts pills" data-k="'+k+'">';list.concat(["+ Other"]).forEach(function(x,i){h+='<button type="button" class="opt'+(x==="+ Other"?" other":"")+(sel.indexOf(x)>-1?" on":"")+'" data-i="'+i+'">'+emo(x)+esc(x)+'</button>';});return h+'</div><div class="ownhost" data-k="'+k+'"></div>';}
+ var on=function(n){return T.care.indexOf(n)>-1;};
  var stars='';for(var i=1;i<=4;i++)stars+='<button type="button" class="star'+(i<=T.enth?" on":"")+'" data-s="'+i+'" aria-label="'+i+' of 4">'+(i<=T.enth?"★":"☆")+'</button>';
- app.innerHTML='<div class="thead"><h1>Design my day</h1><button type="button" class="btn ghost jc" id="treset">Reset my day</button></div>'
-  +'<div class="qb"><h2>Today I feel...</h2><div class="fscale">'+FEELS.map(function(fx){var v=T.feel[fx[1]]||0;return '<div class="frow"><div class="flbl">'+fx[0]+' '+esc(fx[1])+'</div><div class="fseg">'+FSC.map(function(lb,i){return '<button type="button" class="opt fbtn'+(v===i+1?" on":"")+'" data-f="'+esc(fx[1])+'" data-v="'+(i+1)+'">'+esc(lb)+'</button>';}).join("")+'</div></div>';}).join("")+'</div></div>'
-  +'<div class="qb"><h2>No matter what, the most important thing for me today:</h2><div class="own"><input type="text" id="timp" maxlength="140" aria-label="The most important thing for me today" value="'+esc(T.important).replace(/"/g,"&quot;")+'"></div></div>'
-  +'<div class="qb"><h2>How I want to move today:</h2>'+pills(mv,T.move,"move")+'</div>'
-  +'<div class="qb"><h2>How I want to give myself rest today:</h2>'+pills(rs,T.rest,"rest")+'</div>'
-  +'<div class="qb"><h2>Who I want to connect with today:</h2><div class="own"><input type="text" id="tcon" maxlength="140" aria-label="Who I want to connect with today" value="'+esc(T.connect).replace(/"/g,"&quot;")+'"></div></div>'
-  +'<div class="qb"><h2>My enthusiasm for today:</h2><div class="stars"><span class="flame" aria-hidden="true">\u{1F525}</span>'+stars+'</div></div>'
-  +'<div class="row" style="justify-content:flex-end;margin-top:22px"><button class="btn jc" type="button" id="tdone">Done</button></div>';
+ var h='<div class="thead"><h1>Design my day</h1><button type="button" class="btn ghost jc" id="treset">Reset my day</button></div>';
+ h+='<div class="qb"><h2>Which of these could use some care today?</h2><div class="opts pills" id="tcare">'+FEELS.map(function(fx){return '<button type="button" class="opt'+(on(fx[1])?" on":"")+'" data-c="'+esc(fx[1])+'">'+fx[0]+' '+esc(fx[1])+'</button>';}).join("")+'</div></div>';
+ h+='<div class="qb"><h2>No matter what, the most important thing for me today:</h2><div class="own"><input type="text" id="timp" maxlength="140" aria-label="The most important thing for me today" value="'+esc(T.important).replace(/"/g,"&quot;")+'"></div></div>';
+ if(on("Connected"))h+='<div class="qb"><h2>Who I want to connect with today:</h2><div class="own"><input type="text" id="tcon" maxlength="140" aria-label="Who I want to connect with today" value="'+esc(T.connect).replace(/"/g,"&quot;")+'"></div></div>';
+ if(on("Expressed"))h+='<div class="qb"><h2>How I want to create today:</h2>'+pills(lists.create,T.create,"create")+'</div>';
+ if(on("Nourished"))h+='<div class="qb"><h2>Would you like to get some ideas of healthy things you can eat or drink?</h2><div class="opts pills"><button type="button" class="opt'+(T.eat==="Yes"?" on":"")+'" data-e="Yes">Yes</button><button type="button" class="opt'+(T.eat==="Not right now"?" on":"")+'" data-e="Not right now">Not right now</button></div>'+(T.eat==="Yes"?'<p class="msg" style="margin-top:12px">The Eating Well app opens here once it is connected.</p>':'')+'</div>';
+ if(on("Energized to move"))h+='<div class="qb"><h2>How I want to move today:</h2>'+pills(lists.move,T.move,"move")+'</div>';
+ if(on("Playful"))h+='<div class="qb"><h2>How I want to play today:</h2>'+pills(lists.play,T.play,"play")+'</div>';
+ if(on("Rested"))h+='<div class="qb"><h2>How I want to give myself rest today:</h2>'+pills(lists.rest,T.rest,"rest")+'</div>';
+ h+='<div class="qb"><h2>My enthusiasm for today:</h2><div class="stars"><span class="flame" aria-hidden="true">\u{1F525}</span>'+stars+'</div></div>';
+ h+='<div class="row" style="justify-content:flex-end;margin-top:22px"><button class="btn jc" type="button" id="tdone">Done</button></div>';
+ app.innerHTML=h;
+ app.querySelectorAll("#tcare .opt").forEach(function(b){b.addEventListener("click",function(){var v=b.getAttribute("data-c"),i=T.care.indexOf(v);if(i>-1)T.care.splice(i,1);else T.care.push(v);saveT(T);todayPage();});});
  document.getElementById("timp").addEventListener("input",function(e){T.important=e.target.value;saveT(T);});
- document.getElementById("tcon").addEventListener("input",function(e){T.connect=e.target.value;saveT(T);});
- [["move",mv],["rest",rs]].forEach(function(p){var k=p[0],list=p[1].concat(["+ Other"]);var box=app.querySelector('.opts[data-k="'+k+'"]');var host=app.querySelector('.ownhost[data-k="'+k+'"]');
+ var tc=document.getElementById("tcon");if(tc)tc.addEventListener("input",function(e){T.connect=e.target.value;saveT(T);});
+ app.querySelectorAll("[data-e]").forEach(function(b){b.addEventListener("click",function(){T.eat=b.getAttribute("data-e");saveT(T);todayPage();});});
+ ["move","rest","play","create"].forEach(function(k){var box=app.querySelector('.opts[data-k="'+k+'"]');if(!box)return;var list=lists[k].concat(["+ Other"]);var host=app.querySelector('.ownhost[data-k="'+k+'"]');
   box.querySelectorAll(".opt").forEach(function(b){b.addEventListener("click",function(){var v=list[+b.getAttribute("data-i")];
    if(v==="+ Other"){if(host.firstChild)return;host.innerHTML='<div class="own"><input type="text" maxlength="60" placeholder="Add your own" aria-label="Add your own"><button class="btn ghost" type="button">Add</button></div>';var inp=host.querySelector("input");var add=function(){var t=inp.value.trim();if(!t)return;if(T.own[k].indexOf(t)<0)T.own[k].push(t);if(T[k].indexOf(t)<0)T[k].push(t);saveT(T);todayPage();};host.querySelector("button").addEventListener("click",add);inp.addEventListener("keydown",function(e){if(e.key==="Enter")add();});inp.focus();return;}
    var i=T[k].indexOf(v);if(i>-1){T[k].splice(i,1);b.classList.remove("on");}else{T[k].push(v);b.classList.add("on");}saveT(T);});});});
- app.querySelectorAll(".fbtn").forEach(function(b){b.addEventListener("click",function(){var k=b.getAttribute("data-f"),n=+b.getAttribute("data-v");T.feel[k]=(T.feel[k]===n?0:n);saveT(T);todayPage();});});
  app.querySelectorAll(".star").forEach(function(b){b.addEventListener("click",function(){var n=+b.getAttribute("data-s");T.enth=(T.enth===n?0:n);saveT(T);todayPage();});});
  document.getElementById("treset").addEventListener("click",function(){try{localStorage.removeItem(TKEY);}catch(e){}todayPage();});
  document.getElementById("tdone").addEventListener("click",function(){go(todayDone);});
