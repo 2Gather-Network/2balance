@@ -1,0 +1,319 @@
+<!doctype html>
+<!--
+  Copyright 2026 DayBalancer LLC. All rights reserved.
+
+  The code and the content here power Creating.Works, DayBalancer, Appear Network,
+  and 2Gather. They are published so they can be read, audited, and dated.
+
+  Running either as a separate offering requires a license, whether you brand it as
+  ours or as your own, and whether or not money changes hands.
+
+  hello@creating.works
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Check-in · 2Balance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700;6..12,800&family=DM+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--brand:#1F699E;--ink:#1A2E42;--soft:#4B5A6D;--line:#DDE3EA;--panel:#F7FBFF;--panel-line:#C9DFF3;}
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--brand);color:var(--ink);font-family:'Nunito Sans','DM Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;}
+  .wrap{max-width:760px;margin:0 auto;padding:24px 18px 60px;}
+  .card{background:#fff;border-radius:16px;padding:30px;min-height:360px;}
+  h1{font-size:26px;font-weight:800;line-height:1.25;margin:0 0 8px;text-wrap:balance;}
+  .sub{font-size:16px;line-height:1.55;color:var(--soft);margin:0 0 18px;}
+  .kicker{font-size:13px;font-weight:800;letter-spacing:.06em;color:var(--brand);margin:0 0 10px;text-transform:uppercase;}
+  .opts{display:flex;flex-direction:row;flex-wrap:wrap;gap:8px;margin:18px 0 0;}
+  .opts.pills{flex-direction:row;flex-wrap:wrap;}
+  .opt{font:inherit;font-size:16px;font-weight:500;color:#000;background:#fff;border:1.5px solid var(--panel-line);border-radius:20px;padding:12px 18px;text-align:left;cursor:pointer;}
+  .opt{padding:7px 14px;font-size:15px;line-height:1.3;}
+  .opt:hover{border-color:var(--brand);}
+  .opt.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:700;}
+  .opt.other{border:1.5px solid var(--brand);font-weight:700;}
+  .opt:focus-visible,.btn:focus-visible,input:focus-visible{outline:3px solid var(--brand);outline-offset:2px;}
+  .head{font-size:14px;font-weight:800;letter-spacing:.04em;color:var(--soft);margin:20px 0 0;text-transform:uppercase;}
+  .row{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap;align-items:center;}
+  .btn{font:inherit;font-weight:800;font-size:16px;color:#fff;background:var(--brand);border:0;border-radius:12px;padding:12px 22px;cursor:pointer;border:1.5px solid var(--brand);border-radius:20px;}
+  .btn.ghost{background:transparent;color:var(--brand);border:1px solid var(--brand);}
+  .link{font:inherit;font-size:14px;color:var(--soft);background:none;border:0;padding:6px 0;cursor:pointer;text-decoration:underline;}
+  .own{display:flex;gap:8px;margin-top:14px;}
+  .own input{flex:1;min-width:0;font:inherit;font-size:16px;padding:10px 12px;border:2px solid var(--brand);border-radius:10px;}
+  .note{background:var(--panel);border:1px solid var(--panel-line);border-radius:12px;padding:14px 16px;margin-top:18px;font-size:15px;line-height:1.6;color:var(--soft);}
+  .note b{color:var(--ink);}
+  .foot{display:flex;justify-content:space-between;align-items:center;margin-top:14px;}
+  #back{font-weight:700;color:var(--brand);background:#fff;border:1.5px solid var(--panel-line);border-radius:20px;padding:10px 20px;text-decoration:none;}
+  #restart{color:#fff;}
+  @media(max-width:700px){.card{padding:22px 18px;}h1{font-size:23px;}}
+.chk{display:flex;gap:10px;align-items:flex-start;margin:12px 0 0;font-size:15px;line-height:1.4;cursor:pointer;}.chk input{margin-top:3px;width:18px;height:18px;flex:none;accent-color:var(--brand);}
+.jc{font-size:14px;padding:10px 20px;}.prog{display:flex;gap:6px;margin:0 0 18px;}.prog i{flex:1;height:6px;border-radius:3px;background:var(--panel-line);}.prog i.on{background:var(--brand);}
+.crow{display:flex;align-items:flex-start;gap:10px;margin-top:12px;}.crow .chk{margin:0;flex:1;}.ib{flex:none;width:22px;height:22px;border-radius:50%;border:1.5px solid var(--brand);background:#fff;color:var(--brand);font:italic 700 13px/1 Georgia,serif;cursor:pointer;padding:0;}.ib:focus-visible{outline:3px solid var(--brand);outline-offset:2px;}.exn{margin:4px 0 0 28px;font-size:14px;line-height:1.45;color:var(--soft);}
+.qb{margin-top:30px;}.qb:first-child{margin-top:0;}.qb h2{font-size:20px;line-height:1.3;margin:0 0 4px;color:var(--ink);}
+.sec{font-size:24px;line-height:1.2;color:var(--brand);margin:40px 0 4px;}.sec:first-child{margin-top:0;}
+.own textarea{flex:1;min-width:0;font:inherit;font-size:16px;line-height:1.4;padding:10px 12px;border:2px solid var(--brand);border-radius:10px;resize:vertical;min-height:96px;}
+.dk .opt:not(.on){color:#000;}
+.fn{font-size:14px;color:var(--soft);margin:12px 0 0;}
+.msg{font-size:15px;line-height:1.5;color:var(--soft);margin:0;}
+.opts.pair{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:stretch;}.pair .opt{text-align:center;display:flex;align-items:center;justify-content:center;}.pair .opt:nth-child(1){order:1;}.pair .opt:nth-child(2){order:3;}.pair .opt:nth-child(3){order:2;}@media(max-width:560px){.opts.pair{grid-template-columns:1fr;}.pair .opt:nth-child(n){order:0;}}
+.lpt{font-size:15px;font-weight:700;color:var(--ink);margin:16px 0 8px;}.lpills{margin-top:12px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card" id="app" aria-live="polite"></div>
+  <div class="foot"><button class="link" id="back" type="button">Back</button><button class="link" id="restart" type="button">Start over</button></div>
+</div>
+<script>
+(function(){
+var app=document.getElementById("app");
+var hist=[];var memo={};
+var S={feel:"",wish:"",picks:[],detail:{},now:"",extra:[],ideas:{},joy:{}};
+var KEY="balance.move.v1";
+function load(){try{var v=JSON.parse(localStorage.getItem(KEY)||"null");if(v){S.picks=v.picks||[];S.detail=v.detail||{};S.extra=v.extra||[];S.ideas=v.ideas||{};S.joy=v.joy||{};if(S.joy.move)S.joy.move=S.joy.move.filter(function(x){return x!=="Focused strengthening";});delete S.joy.light;if(S.joy.chars)S.joy.chars=S.joy.chars.filter(function(x){return ["Show up when it matters","Be joy","Try new things","Create things together","Connect people","Bring calm","Make people laugh","Challenge people to grow","Being playful","Being encouraging"].indexOf(x)<0;});if(S.joy.rest)S.joy.rest=S.joy.rest.filter(function(x){return x.indexOf("/")<0&&x.indexOf(" or ")<0&&x!=="Breathing/ body scan";});if(S.joy.spaces)S.joy.spaces=S.joy.spaces.filter(function(x){return x.indexOf("(")<0&&["Food & Drink","Movement","Play","Rest & Recovery","Community & Culture","Arts & Expression"].indexOf(x)<0;});}}catch(e){}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify({picks:S.picks,detail:S.detail,extra:S.extra,ideas:S.ideas,joy:S.joy}));}catch(e){}}
+var ACT=["Walking","Running","Cycling","Swimming","Dancing","Yoga","Climbing","Weightlifting","Gardening","Playing sports"];
+var TAGS={"Walking":["heart pumping"],"Running":["heart pumping"],"Cycling":["heart pumping","strength"],"Swimming":["heart pumping","strength"],"Dancing":["heart pumping","strength","stretch","balance","play"],"Yoga":["stretch","strength","balance"],"Climbing":["strength","balance"],"Weightlifting":["strength"],"Gardening":["strength","stretch"],"Playing sports":["heart pumping","strength","play"]};
+var ALLTAGS=["heart pumping","strength","stretch","balance","play"];
+var KINDS={
+"Walking":["Nature walks","Urban walking","Birdwatching","Hiking"],
+"Running":["Marathon","Cross country","Ultra running","Trail running"],
+"Cycling":["Road cycling","Mountain biking","Commuting by bike"],
+"Swimming":["Lap swimming","Open water swimming","Diving","Water polo"],
+"Dancing":["Ballet","Hip Hop","Salsa","Ballroom","Contemporary","Swing","Folk","Breaking","Tap","Line","Belly"],
+"Yoga":["Hatha","Vinyasa","Restorative","Hot yoga"],
+"Climbing":["Rock climbing","Bouldering","Indoor climbing"],
+"Weightlifting":["Powerlifting","Olympic lifting","CrossFit","Bodybuilding","Strongman","Wrestling","Gymnastics"],
+"Gardening":["Vegetable gardening","Flower gardening","Native plants"]
+};
+var SPORTS=[["Racquet sports",["Tennis","Pickleball","Ping pong","Squash","Badminton","Racquetball","Padel"]],["Field sports",["Soccer","Baseball","Football","Track and field","Lacrosse","Rugby","Cricket","Ultimate Frisbee","Flag football","Softball","Field hockey"]],["Court sports",["Basketball","Volleyball","Handball","Netball","Beach volleyball","Futsal"]],["Combat sports",["Martial arts","Boxing","Fencing","Judo","Karate","Taekwondo","Brazilian Jiu Jitsu","Muay Thai","MMA","Kickboxing"]],["Water sports",["Rowing","Paddling","Kayaking","Surfing","Stand up paddleboarding","Wakeboarding","Water skiing","Water polo"]],["Snow sports",["Skiing","Snowboarding","Ice skating","Hockey","Curling","Cross country skiing","Snowshoeing"]],["Precision sports",["Archery","Golf","Bowling","Darts","Disc golf","Cornhole","Bocce ball"]]];
+var QUICK={"Walking":1,"Running":1,"Cycling":1,"Yoga":1,"Gardening":1,"Weightlifting":1,"Dancing":1};
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");}
+function go(fn,arg){hist.push([cur,curArg]);cur=fn;curArg=arg;render();}
+var cur,curArg;
+function render(){cur(curArg);document.getElementById("back").hidden=!hist.length;document.getElementById("restart").hidden=!hist.length||cur===joyPage||cur===joyDone;window.scrollTo(0,0);}
+var EMO={"Rest":"💙","Eat and drink":"🥘","Move":"🌀","Play":"🏓","Connect":"🌐","Create":"🎨","Connected":"🌐","Expressed":"🎨","Nourished":"🥘","Energized":"🌀","Playful":"🏓","Rested":"💙","Walking":"👣","Running":"⏱️","Cycling":"🚲","Swimming":"🌊","Dancing":"🎶","Yoga":"🪷","Climbing":"⛰️","Weightlifting":"🔩","Gardening":"🌱","Playing sports":"⚽"};
+function emo(x){return EMO[x]?EMO[x]+" ":"";}
+function opts(list,cls,onpick,sel){var h='<div class="opts '+(cls||"")+'">';list.forEach(function(x,i){h+='<button type="button" class="opt'+(x==="+ Other"?" other":"")+((sel&&sel.indexOf(x)>-1)?" on":"")+'" data-i="'+i+'">'+emo(x)+esc(x)+'</button>';});h+='</div>';return h;}
+function wire(list,fn){app.querySelectorAll(".opt").forEach(function(b){b.addEventListener("click",function(){fn(list[+b.getAttribute("data-i")],b);});});}
+function ownBox(label,fn){var d=document.createElement("div");d.innerHTML='<div class="own"><input type="text" id="ownin" maxlength="60" placeholder="'+esc(label)+'" aria-label="'+esc(label)+'"><button class="btn ghost" type="button" id="ownadd">Add</button></div>';app.appendChild(d);var i=d.querySelector("#ownin");function add(){var v=i.value.trim();if(v){fn(v);i.value="";}}d.querySelector("#ownadd").addEventListener("click",add);i.addEventListener("keydown",function(e){if(e.key==="Enter")add();});}
+function single(title,sub,list,fn,kick){var key=title+"|"+sub;app.innerHTML=(kick?'<p class="kicker">'+esc(kick)+'</p>':'')+'<h1>'+esc(title)+'</h1>'+(sub?'<p class="sub">'+esc(sub)+'</p>':'')+opts(list,"",null,memo[key]?[memo[key]]:null);wire(list,function(v){memo[key]=v;fn(v);});}
+
+function start(){feel();}
+function toIkigai(){app.innerHTML='<h1>Your ikigai</h1><p class="sub">This opens your ikigai page.</p><div class="row"><a class="btn" href="https://2gather.network/ikigai/" target="_blank" rel="noopener">Open my ikigai</a></div>';}
+function areas(){single("In which area do you want to create balance right now?","",["My emotions","My body","My sleep","My energy","My work","My relationship","My community","My home","My money","+ Other"],function(v){if(v==="My emotions")go(feel);else if(v==="+ Other")go(other0);else go(soon,v);});}
+function soon(v){app.innerHTML='<h1>'+esc(v)+'</h1><p class="sub">This part is not built yet. Try My emotions, then Move.</p><div class="row"><button class="btn" type="button" id="b">Choose again</button></div>';document.getElementById("b").addEventListener("click",back);}
+function other0(){app.innerHTML='<h1>Tell us in your own words</h1><p class="sub">We will file it with the closest place to find balance.</p>';ownBox("What does balance mean to you?",function(v){S.extra.push(v);save();go(otherWhere,v);});}
+function otherWhere(v){single("Which of these does it belong with?","“"+v+"”",["My emotions","My body","My sleep","My energy","My work","My relationship","My community","My home","My money"],function(w){go(soon,"Thank you. “"+v+"” is saved under "+w);});}
+function feel(){single("What are you feeling right now?","",["Tense","Tired","Hungry","Isolated","Satiated and nourished"],function(v){S.feel=v;if(v==="Tense")go(tension);else if(v==="Satiated and nourished")go(helpOthers);else go(wish);});}
+function helpOthers(){single("\u{1F49B} Here's to prioritizing your self-care! What feeling could you help others experience today?","",["Connected","Expressed","Nourished","Energized","Playful","Rested","+ Other"],function(v){S.help=v;if(v==="+ Other")go(needOther,"help");else go(ready);});}
+function ready(){app.innerHTML='<h1>'+esc(S.help||"")+'</h1><div class="row" style="justify-content:flex-end"><button class="btn" type="button" id="dn">Done</button></div>';document.getElementById("dn").addEventListener("click",function(){go(finish);});}
+function finish(){app.innerHTML='<h1>Done</h1><p class="sub">Thanks for checking in. This is a mockup, so nothing goes to your profile yet.</p>';}
+function tension(){single("Where are you holding your tension?","",["Forehead / eyes","Jaw","Neck / shoulders","Stomach","Back","+ Other"],function(){go(wish);});}
+function wish(){single("What do you wish you were feeling?","",["Connected","Expressed","Nourished","Energized","Playful","Rested","+ Other"],function(v){S.wish=v;if(v==="+ Other")go(needOther,"feeling");else if(IDEAS[v])go(ideasScreen,v);else go(five);});}
+var IDEAS={"Playful":["Laughing and having fun","Feeling light and free","Losing myself in a game or a song","Feeling like a kid again","Having fun with no goal"]};
+function ideasScreen(w){
+ var mine=S.ideas[w]||[];var base=mine.length?mine:IDEAS[w];var list=["Get moving"].concat(base,["+ Other"]);var moving=false;
+ app.innerHTML='<h1>What does '+esc(w.toLowerCase())+' look like to you?</h1><p class="sub">'+(mine.length?'Your ideas are marked. Add more any time.':'Pick as many as you like.')+'</p>'+opts(list,"pills",null,mine);
+ wire(list,function(v,b){if(v==="+ Other"){ownBox("What does "+w.toLowerCase()+" look like?",function(t){var a=S.ideas[w]=S.ideas[w]||[];if(a.indexOf(t)<0)a.push(t);save();go(ideasScreen,w);});return;}
+  if(v==="Get moving"){moving=!moving;b.classList.toggle("on",moving);return;}
+  var a=S.ideas[w]=S.ideas[w]||[];var i=a.indexOf(v);if(i>-1){a.splice(i,1);b.classList.remove("on");}else{a.push(v);b.classList.add("on");}});
+ var r=document.createElement("div");r.className="row";r.innerHTML='<button class="btn" type="button" id="next">Continue</button>';app.appendChild(r);
+ r.querySelector("#next").addEventListener("click",function(){if(!moving&&!(S.ideas[w]||[]).length)return;save();if(moving)go(moveA);else go(five);});
+}
+
+var JE={"Organizing and planning - creating order and structure": "🗂", "Repairing and fixing - diagnosing and solving problems": "🔧", "Sharing what I know - demonstrating / showing / modeling": "📚", "Consulting and advising - offering direction when asked": "🧭", "Facilitating and coaching - helping others find their own answers": "🌀", "Making and designing - bringing new things into being": "🎨", "Caring and healing - nurturing what sustains": "🌿", "Arts/culture (music/ theater/ film/ cinema/ open mic/ performance)": "🎭", "Physical health/wellness (fitness/ yoga/ sports/ dance/ movement)": "🏓", "Learning/discovery (book club/ study circle/ skill swap/ learning series)": "🌱", "Nature/outdoors (outdoor club/ gardening/ hiking/ seasonal celebration)": "🌲", "Professional development (peer circle/ practice group/ founder circle)": "💼", "Creative making (writing group/ maker space/ art studio/ craft guild/ hobby circle)": "🎨", "Inner life (meditation/ prayer/ reflection/ spiritual community)": "💙", "Resource sharing (tool library/ repair café/ co-working/ equipment lending)": "🔧", "Mental health/wellness (support/ recovery group/ mutual aid/ neighborhood circle)": "💛", "Social gathering (meetup/ game night/ cultural celebration/ neighborhood party)": "🎉", "Family/caregiving/home (support/home organization)": "🏡", "Food/drink (cooking class/ wine tasting/ potluck/ supper club)": "🥘", "Wealth/exchange (financial literacy/ investment/ abundance circle/ time banking)": "💰", "Walk": "👣", "Garden": "🌱", "Cycle": "🚲", "Swim": "🌊", "Run": "⏱️", "Sport": "⚽", "Soak or float": "🛁", "Nap time": "💤", "Breathing/ body scan": "🌬️", "Visualization": "🌅", "Journaling": "📓", "Sound or music": "🎵", "Sun or light": "☀️", "Relaxing walk": "👣", "Time outdoors": "🌲"};
+for(var k in JE)EMO[k]=JE[k];
+var CE={"Travel (Trips, road trips, cruises, local exploring, travel planning)": "✈️", "Outdoors (Being in nature and caring for it: hiking, camping, kayaking, fishing, gardening, birdwatching, foraging, conservation, habitat restoration, tree planting, ecology, biodiversity, composting, climate action)": "🌲", "Home Life (Childcare, elder care, parenting, family routines, organizing, decorating, cleaning, indoor plants)": "🏡", "Animals (Dogs, cats, horses, pet training, animal care, pet food, animal rescue, beekeeping)": "🐶", "Technology (Coding, AI, analytics, engineering, experience design, gadgets, robotics, web design)": "📱", "Personal Care (Showering, bathing, toothbrushing, personal hygiene, hygiene kits, laundry, menstrual supplies, diaper supplies, skincare, nail care, grooming, spa)": "🪮", "Belief & Meaning (Prayer, worship, scripture, faith communities, spiritual reading, pilgrimages)": "🌿", "Professional (Entrepreneurship, administration, HR, operations, procurement, project management, strategy, marketing, sales, product direction, nonprofits, real estate)": "💼", "Communications (Writing, public speaking, podcasting, journalism, social media, translation)": "💬", "Building & Repurposing (Construction, home repairs, plumbing, electrical, carpentry, trade skills, woodworking, 3D printing, recycling, upcycling, repair cafés)": "🔨", "Transportation (Cars, car restoration, motorcycles, cycling, boating, aviation, trains, transit)": "🚊", "Finance (Investing, budgeting, bookkeeping, taxes, crypto, financial literacy)": "📊", "Science (Space, astronomy, biology, chemistry, research, data science, citizen science)": "🔬", "Medical (Diagnosing, treating, nursing, patient care, pharmacy, dentistry, first aid, preventative medicine)": "🩺"};for(var kk in CE)EMO[kk]=CE[kk];
+EMO["Workout"]="🔩";EMO["Stretch"]="🪷";EMO["Dance"]="🥁";EMO["Dancing"]="🥁";
+for(var ek in {"Soak": "🛁", "Nap time": "💤", "Breathing": "🌬️", "Visualization": "🌅", "Journaling": "📓", "Music": "🎵", "Sun": "☀️", "Relaxing walk": "👣", "Time outdoors": "🌲"})EMO[ek]={"Soak": "🛁", "Nap time": "💤", "Breathing": "🌬️", "Visualization": "🌅", "Journaling": "📓", "Music": "🎵", "Sun": "☀️", "Relaxing walk": "👣", "Time outdoors": "🌲"}[ek];
+EMO["Float"]="🌊";EMO["Body scan"]="🔦";EMO["Ball roll"]="🎾";EMO["Meditation"]="☮️";EMO["Light therapy"]="🔆";EMO["Slow movement"]="🍃";
+EMO["Massage"]="🛋️";EMO["Foam roll"]="🥖";EMO["Sound"]="🎼";
+for(var ek2 in {"Connect with self/others/place/nature": "🌱", "Create to express (explore/design/build/share)": "🎨", "Eat and drink to nourish (design/prepare/gather)": "🥘", "Move freely to energize (flexibility/agility/strength/endurance)": "🌀", "Play games/music": "🏓", "Time inwards to rest (breathe/notice/nap/sleep)": "💙", "Feedback": "💡", "Knowledge": "📚", "Access": "🔑", "Accountability": "🎯", "Collaboration": "⏰", "Funding": "💰", "A workspace": "🪑", "A resource": "🔧"})EMO[ek2]={"Connect with self/others/place/nature": "🌱", "Create to express (explore/design/build/share)": "🎨", "Eat and drink to nourish (design/prepare/gather)": "🥘", "Move freely to energize (flexibility/agility/strength/endurance)": "🌀", "Play games/music": "🏓", "Time inwards to rest (breathe/notice/nap/sleep)": "💙", "Feedback": "💡", "Knowledge": "📚", "Access": "🔑", "Accountability": "🎯", "Collaboration": "⏰", "Funding": "💰", "A workspace": "🪑", "A resource": "🔧"}[ek2];
+var GP_NATIVE = { 'English':'English', 'Mandarin':'普通话', 'Cantonese':'廣東話', 'Hindi':'हिन्दी', 'Spanish':'Español', 'Arabic':'العربية', 'Bengali':'বাংলা', 'Portuguese':'Português', 'French':'Français', 'Urdu':'اردو', 'Russian':'Русский', 'Indonesian':'Bahasa Indonesia', 'German':'Deutsch', 'Japanese':'日本語', 'Swahili':'Kiswahili', 'Marathi':'मराठी', 'Telugu':'తెలుగు', 'Turkish':'Türkçe', 'Tamil':'தமிழ்', 'Vietnamese':'Tiếng Việt', 'Korean':'한국어', 'Italian':'Italiano', 'Thai':'ไทย', 'Persian (Farsi)':'فارسی', 'Polish':'Polski', 'Pashto':'پښتو', 'Punjabi':'ਪੰਜਾਬੀ', 'Ukrainian':'Українська', 'Malayalam':'മലയാളം', 'Kannada':'ಕನ್ನಡ', 'Romanian':'Română', 'Dutch':'Nederlands', 'Greek':'Ελληνικά', 'Czech':'Čeština', 'Hungarian':'Magyar', 'Gujarati':'ગુજરાતી', 'Somali':'Soomaali', 'Swedish':'Svenska', 'Norwegian':'Norsk', 'Hebrew':'עברית', 'Danish':'Dansk', 'Finnish':'Suomi', 'Albanian':'Shqip', 'Croatian':'Hrvatski', 'Lithuanian':'Lietuvių', 'Nepali':'नेपाली', 'Khmer (Cambodian)':'ខ្មែរ', 'Hmong':'Hmoob', 'Estonian':'Eesti', 'Laotian':'ລາວ', 'Sign Language':'Sign Language' };
+var GP_LANGS=Object.keys(GP_NATIVE);
+var JOY=[
+{k:"natural",t:"What comes most naturally to you?",sub:"",l:["Organizing and planning - creating order and structure", "Repairing and fixing - diagnosing and solving problems", "Sharing what I know - demonstrating / showing / modeling", "Consulting and advising - offering direction when asked", "Facilitating and coaching - helping others find their own answers", "Making and designing - bringing new things into being", "Caring and healing - nurturing what sustains"]},
+{k:"lose",t:"What is one thing that, when you do it, you lose track of time?",sub:"",text:1},
+{k:"spaces",t:"What topics bring you joy?",sub:"",noOther:1,l:["Travel (Trips, road trips, cruises, local exploring, travel planning)", "Outdoors (Being in nature and caring for it: hiking, camping, kayaking, fishing, gardening, birdwatching, foraging, conservation, habitat restoration, tree planting, ecology, biodiversity, composting, climate action)", "Home Life (Childcare, elder care, parenting, family routines, organizing, decorating, cleaning, indoor plants)", "Animals (Dogs, cats, horses, pet training, animal care, pet food, animal rescue, beekeeping)", "Technology (Coding, AI, analytics, engineering, experience design, gadgets, robotics, web design)", "Personal Care (Showering, bathing, toothbrushing, personal hygiene, hygiene kits, laundry, menstrual supplies, diaper supplies, skincare, nail care, grooming, spa)", "Belief & Meaning (Prayer, worship, scripture, faith communities, spiritual reading, pilgrimages)", "Professional (Entrepreneurship, administration, HR, operations, procurement, project management, strategy, marketing, sales, product direction, nonprofits, real estate)", "Communications (Writing, public speaking, podcasting, journalism, social media, translation)", "Building & Repurposing (Construction, home repairs, plumbing, electrical, carpentry, trade skills, woodworking, 3D printing, recycling, upcycling, repair cafés)", "Transportation (Cars, car restoration, motorcycles, cycling, boating, aviation, trains, transit)", "Finance (Investing, budgeting, bookkeeping, taxes, crypto, financial literacy)", "Science (Space, astronomy, biology, chemistry, research, data science, citizen science)", "Medical (Diagnosing, treating, nursing, patient care, pharmacy, dentistry, first aid, preventative medicine)"]},
+{k:"move",t:"How do you like to move?",sub:"",l:["Workout",  "Walk", "Stretch", "Garden", "Cycle", "Swim", "Run", "Dance", "Sport"]},
+{k:"rest",t:"How do you like to rest?",sub:"",l:["Soak", "Float", "Nap time", "Breathing", "Body scan", "Massage", "Foam roll", "Ball roll", "Visualization", "Journaling", "Sound", "Music", "Meditation", "Sun", "Light therapy", "Slow movement", "Relaxing walk", "Time outdoors"]},
+{k:"energize",t:"Which of these energize you most?",sub:"",l:["Connect","Create","Eat and drink","Move","Play","Rest"]},
+{k:"helpfeel",t:"What do you most like helping other people feel and experience?",sub:"",l:["Connected", "Expressed", "Nourished", "Energized", "Playful", "Rested"]},
+{k:"services",feeds:1,t:"Acts of service is a way to appreciate people in your life. In which ways do you enjoy serving others the most?",sub:"",l:["Home/life (cleaning/ organizing/ pet care/ family care)", "Transportation/logistics (delivery/ moving/ courier)", "Food/hospitality (chef/ catering/ restaurant services)", "Beauty/expression (hair/ styling/ personal brand)", "Creative/design (graphics/ photography/ videography/ writing/ branding)", "Fine/performing arts (visual art/ music/ dance/ theater/ performance)", "Skilled trades (construction/ plumbing/ landscaping/ mechanical)", "Health/wellness (supporting physical/ mental/ emotional wellbeing)", "Professional (tech/ software/ operations/ real estate/ legal/ finance)"],noOther:1},
+{k:"works",t:"Do you work or want to work right now?",sub:"",l:["Yes","No"],noOther:1,one:1},
+{k:"aligned",when:{k:"works",v:"Yes"},area:1,t:"Think about a time when work and life felt aligned - when you were energized rather than drained. What was happening?",sub:"",text:1},
+{k:"best",when:{k:"works",v:"Yes"},t:"I do my best when I'm [fill in the blank].",sub:"",text:1},
+{k:"influenced",t:"Who has influenced your thinking that you'd enjoy discussing?",sub:"",text:1},
+{k:"sharing",dark:1,t:"What do find yourself sharing a lot these days that you enjoy?",sub:"",l:["Feedback", "Knowledge", "Access", "Accountability", "Collaboration", "Funding", "A workspace", "A resource"]},
+{k:"roles",dark:1,t:"Are you interested in serving in any of these non-paid roles, where others tap into your experience?",sub:"",l:["Feedback provider", "Mentor", "Apprentice", "Accountability advocate", "Volunteer", "Board member", "Partner", "Cofounder", "Collaborator", "Advisor", "Fundraiser", "Speaker", "Coach", "Tutor", "Resource provider"]},
+{k:"people",t:"Name 1-5 people you spend the most time with.",sub:"",text:1},
+{k:"showsup",t:"Who in your life shows up for you - and you for them - even if you don't see them often?",sub:"",text:1},
+{k:"inspires",t:"Who in your life inspires you or brings out the best in you?",sub:"",text:1},
+{k:"chars",feeds:1,t:"How do you enjoy showing up for the people around you?",sub:"",l:["Help when asked", "Show up consistently", "Share what I know", "Tell the truth", "Treat people fairly", "Care for others", "Ask good questions", "Listen deeply", "See what's possible", "Offer perspective", "Lead by example", "Be playful", "Be encouraging", "Be warm", "Be curious about people", "Be collaborative", "Be welcoming", "Be steady"]},
+{k:"charnat",from:"chars",noOther:1,t:"Out of your selections above, what comes most naturally - without much effort?",sub:"",l:[]},
+{k:"express",t:"These days, do you feel like you express these often?",sub:"",l:["Enough","Not enough"],noOther:1,one:1},
+{k:"blockers",when:{k:"express",v:"Not enough"},t:"These days, what gets in the way of expressing them?",sub:"",l:["Not enough time", "Too tired", "Feeling stressed", "Too busy with work", "Too busy caring for others", "Not feeling well", "Feeling alone", "Feeling unsure", "Not sure how", "Others don’t respond", "Too far away"]}
+];
+JOY=JOY.concat([{"lead": 1, "t": "When you're at your best, what are your natural tendencies?"},
+{"k": "think", "t": "Approach to thinking:", "l": ["I tend to appreciate structure/ practicality/ convention", "I tend to balance structure with creative flexibility", "I tend to seek novelty/ creativity/ abstract thinking"], "noOther": 1, "one": 1},
+{"k": "tasks", "t": "Approach to tasks:", "l": ["I tend to approach life with flexibility and spontaneity", "I tend to balance structure with adaptability", "I tend to be organized/ methodical/ detail-oriented"], "noOther": 1, "one": 1},
+{"k": "energy", "t": "Approach to energy:", "l": ["I tend to draw energy from quiet reflection and deeper connections", "I tend to enjoy both social interaction and solitary activities", "I tend to draw energy from social engagement and external activities"], "noOther": 1, "one": 1},
+{"k": "prorel", "t": "Approach professional relationships:", "l": ["I tend to be independent-minded and prioritize objective reasoning", "I tend to balance cooperation with healthy boundaries", "I tend to be empathetic/ trusting/ focused on harmony"], "noOther": 1, "one": 1},
+{"k": "emotions", "t": "Emotions:", "l": ["I tend to remain composed and stable under pressure", "I tend to experience a balanced range of emotional responses", "I tend to be emotionally responsive and sensitive to my environment"], "noOther": 1, "one": 1},
+{"lead": 1, "t": "Which best describes you?"},
+{"k": "wstyle","pair": 1, "t": "Work style:", "l": ["Working independently", "Collaborating with a team", "It depends"], "noOther": 1, "one": 1},
+{"k": "wdecide","pair": 1, "t": "Decision-making:", "l": ["Collaborative decision-making", "Established protocols", "It depends"], "noOther": 1, "one": 1},
+{"k": "wadapt","pair": 1, "t": "Adaptability:", "l": ["Quick adaptation", "Methodical planning", "It depends"], "noOther": 1, "one": 1},
+{"k": "wcomm","pair": 1, "t": "Communication:", "l": ["Direct, brief communication", "Detailed, contextual communication", "It depends"], "noOther": 1, "one": 1},
+{"k": "wtask","pair": 1, "t": "Task vs relationship:", "l": ["Task completion and deliverables", "Stakeholder relationships and engagement", "It depends"], "noOther": 1, "one": 1},
+{"k": "learn", "t": "How do you learn and communicate best?", "l": ["I am multi-passionate.", "I process ideas best through verbal discussion.", "I'm a holistic big-picture thinker.", "I excel at managing multiple projects simultaneously.", "I focus intensely on tasks and maintain persistence until completion.", "I am a serial list maker. I even have a list of all my lists.", "I have a short attention span outside of my key interests but have extreme focus in areas I'm passionate about - often leading to expertise.", "I tend to neglect self-care when deeply immersed in projects or topics.", "I need clear expectations and struggle with ambiguity.", "I prefer independent work and value autonomy.", "I can talk at length about topics I'm passionate about.", "I process information logically - and others may sometimes read this as unempathetic.", "I excel when given creative freedom but struggle with repetitive tasks."], "noOther": 1},
+{"k": "tools", "t": "What tools, resources, or support systems help set you up for success?", "l": ["A.I. tools", "Regular check-ins", "Peer mentorship", "Shadowing someone", "Buddy system", "Surveys and questionnaires", "Interactive workshops", "Presentations (videos/speeches/lectures)", "Self-paced learning", "Coaching", "Structured plans", "Accountability advocate", "Knowledge repositories", "Q&A"]},
+{"k": "traits", "t": "Top traits you identify with most.", "l": ["Analytically inclined (enjoys data analysis/ weighs risks/ makes evidence-based decisions)", "Strategically inclined (focuses on big-picture planning and goal-oriented decisions)", "Problem-solving inclined (thrives on challenges/ identifies issues quickly/ adapts solutions)", "Conflict-resolution inclined (values relationships/ understands human behavior/ communicates effectively)", "Situationally inclined (maintains composure under pressure/ manages stress rationally)", "Independently inclined (works well with tools and systems/ solves problems directly)", "Written communication expressive (creates precise/ well-structured content)", "Creatively expressive (excels in design/ visual composition/ and artistic judgment)", "Musically expressive (creates or analyzes music/ focuses on rhythm and sound)", "Physically expressive (engages through movement/ sports/ dance/ or hands-on activities)", "Organizationally inclined (maintains systems and order/ follows effective procedures)", "Teamwork inclined (collaborates effectively/ builds trust/ coordinates group efforts)", "Self-aware inclined (focuses on personal growth/ reflects on strengths and areas to build)", "Nature inclined (connects with environment/ observes and appreciates ecosystems)"], "noOther": 1},
+{"k": "mbti", "t": "If you know your Myers Briggs Type Indicator (MBTI) personality type, please share it below.", "text": 1},
+{"k": "disc", "t": "If you know your DISC type, please share it below.", "text": 1},
+{"k": "enneagram", "t": "If you know your Enneagram type, please share it below.", "text": 1},
+{"k": "hdesign", "t": "If you know your Human Design type, please share it below.", "text": 1},
+{"k": "strengths", "feeds": 1, "t": "Which strengths would others most likely use to describe you in a working relationship?", "l": ["Meet deadlines consistently", "Maintain a positive approach", "Handle confidential information properly", "Communicate clearly", "Share information appropriately", "Deliver on commitments", "Maintain productivity under pressure", "Work effectively with diverse people", "Build strong professional relationships", "Adapt to change", "Address issues proactively", "Achieve goals collaboratively", "Pursue continuous improvement", "Resolve conflicts professionally", "Take ownership of outcomes", "Support collaborators", "Consider diverse perspectives", "Make well-informed decisions", "Include collaborator input in decisions", "Read and adapt to group dynamics", "Navigate complex problems effectively"], "noOther": 1},
+{"k": "build", "from": "strengths", "one": 1, "noOther": 1, "t": "From the list above, which one do you most want to build on right now?", "l": []},
+{"k": "does","feeds": 1, "t": "What do you do well and enjoy working on?", "l": ["Aerospace", "Agriculture and Food", "Arts and Entertainment", "Building and Construction", "Ecology and Nature", "Education and Learning", "Energy and Utilities", "Transportation", "Entertainment and Media", "Financial", "Government and Policy", "Hospitality", "Manufacturing", "Media", "Medical", "Real Estate", "Retail", "Security and Defense", "Technology", "Telecommunications", "Business and commerce", "Wellness and Fitness"], "noOther": 1},
+{"k": "lvxd", "when": {"k": "does", "v": "Experience Design"}, "t": "What level of experience do you have in Experience Design?", "l": ["Entry Level", "Mid Level", "Expert Level"], "noOther": 1, "one": 1},
+{"k": "lvmh", "when": {"k": "does", "v": "Health: Mental/ Emotional"}, "t": "What level of experience do you have in Health: Mental/ Emotional?", "l": ["Entry Level", "Mid Level", "Expert Level"], "noOther": 1, "one": 1},
+{"k": "contrib", "t": "How do you most like to contribute to a team right now?", "l": ["Solve complex challenges", "Innovate new solutions", "Develop team potential", "Share my expertise", "Lead initiatives", "Build team culture", "Scale successful programs", "Build collaboration", "Create sustainable systems", "Optimize processes", "Evaluate effectiveness"], "noOther": 1},
+{"k": "healthadv", "when": {"k": "services", "v": "Health/wellness"}, "t": "You selected health/wellness as a service offering. Do you want to be included as a health advocate in our ecosystem?", "l": ["Yes", "Not right now"], "noOther": 1, "one": 1},
+{"k": "healthoff", "when": {"k": "healthadv", "v": "Yes"}, "t": "What do you want to share as your specific health offering(s)?", "text": 1},
+{"k": "domains", "t": "Where do you most enjoy applying your skills?", "l": ["Aerospace", "Agriculture and Food", "Arts and Entertainment", "Building and Construction", "Ecology and Nature", "Education and Learning", "Energy and Utilities", "Financial", "Government and Policy", "Hospitality", "Manufacturing", "Media", "Medical", "Real Estate", "Retail", "Security and Defense", "Technology", "Telecommunications", "Transportation", "Wellness and Fitness"], "noOther": 1},
+{"k": "led", "t": "Have you led or managed people - formally (with direct reports) or informally (projects, teams, initiatives)?", "l": ["No", "Informally - some", "Informally - a great deal", "Formally - some (with direct reports)", "Formally - a great deal"], "noOther": 1, "one": 1},
+{"k": "ledleaders", "t": "Have you led other leaders?", "l": ["No", "C-Level", "Executive Director", "Vice President", "Director", "People managers", "Independent contributors", "Contractors"], "noOther": 1},
+{"k": "openleaders", "t": "Are you open to leading other leaders?", "l": ["No", "Informally - some", "Informally - a great deal", "Formally - some (with direct reports)", "Formally - a great deal"], "noOther": 1, "one": 1},
+{"k": "leadcomm", "t": "Do you lead a community or group?", "l": ["Yes", "Not right now"], "noOther": 1, "one": 1},
+{"k": "langs", "t": "What language(s) do you speak fluently, including sign language?", "lang": 1, "l": [], "noOther": 1},
+{"k": "kw1", "t": "Share the tools you work with the most and enjoy.", "text": 1, "area": 1},
+{"k": "kw2", "t": "Paste anything from your website, resume, or deck that describes your expertise.", "text": 1, "area": 1},
+{"k": "kw3", "t": "What keywords do you want people to be matched to you on?", "text": 1},
+{k:"commtype",when:{k:"leadcomm",v:"Yes"},t:"What type of community do you lead right now?",noOther:1,l:JOY.filter(function(x){return x.k==="spaces";})[0].l}
+]);
+(function(){
+ var keys=["wstyle", "wdecide", "wadapt", "wcomm", "wtask", "strengths", "build", "does", "lvxd", "lvmh", "contrib", "healthadv", "healthoff", "domains", "led", "ledleaders", "openleaders"];var gate=null,nonwork=[],work=[];
+ JOY.forEach(function(st){
+  if(st.k==="works"){gate=st;return;}
+  if(st.lead&&st.t==="Which best describes you?"){st.wk=1;work.push(st);return;}
+  if(st.k&&keys.indexOf(st.k)>-1){st.wk=1;work.push(st);return;}
+  nonwork.push(st);
+ });
+ var ai=nonwork.findIndex(function(x){return x.k==="aligned";});nonwork.splice(ai,0,gate,{msg:"You said you don't work or don't want to work right now so we'll skip these next set of questions. If you'd like to answer them, then please change your answer to yes.",when:{k:"works",v:"No"}});
+ JOY=nonwork.concat([{sw:1,msg:"You said you don't work or don't want to work right now so we'll skip these next set of questions. If you'd like to answer them, then please change your answer to yes."}],work);
+})();
+function joyPage(){
+ function parts(x){var m=x.match(/^(.*?) \((.*)\)$/);return m?{k:m[1],ex:m[2]}:{k:x,ex:""};}
+ function wc(x){return x.trim().split(/\s+/).length;}
+ function draw(){
+  var y=window.scrollY;var h="";
+  JOY.forEach(function(st,n){
+   if(st.when&&(S.joy[st.when.k]||[]).indexOf(st.when.v)<0)return;
+   if(st.sw){var wk=S.joy.works||[];h+='<div class="qb" data-n="'+n+'"><h2>Do you work or want to work right now?</h2><div class="opts pills"><button type="button" class="opt swbtn'+(wk.indexOf("Yes")>-1?' on':'')+'" data-v="Yes">Yes</button><button type="button" class="opt swbtn'+(wk.indexOf("No")>-1?' on':'')+'" data-v="No">No</button></div>'+(wk.indexOf("No")>-1?'<p class="msg" style="margin-top:12px">'+esc(st.msg)+'</p>':'')+'</div>';return;}
+   if(st.msg){h+='<div class="qb" data-n="'+n+'"><p class="msg">'+esc(st.msg)+'</p></div>';return;}
+   if(st.wk&&(S.joy.works||[]).indexOf("Yes")<0)return;
+   if(st.lang){var lp=S.joy[st.k]=(S.joy[st.k]||[]);var lall=GP_LANGS.concat(lp.filter(function(x){return GP_LANGS.indexOf(x)<0;}));h+='<div class="qb" data-n="'+n+'"><h2>'+esc(st.t)+'</h2><div class="own"><input type="search" class="lsearch" placeholder="Search or add a language" aria-label="Search or add a language"><button class="btn ghost ladd" type="button">Add</button></div><div class="opts pills lpills">';lall.forEach(function(x){var nm=GP_NATIVE[x]||x;h+='<button type="button" class="opt'+(lp.indexOf(x)>-1?' on':'')+'" data-l="'+esc(x).replace(/"/g,"&quot;")+'" data-find="'+esc((x+" "+nm).toLowerCase()).replace(/"/g,"&quot;")+'">'+esc(nm)+'</button>';});h+='</div><div class="langprim"></div></div>';return;}
+   if(st.lead){h+='<div class="qb" data-n="'+n+'"><h2>'+esc(st.t)+'</h2></div>';return;}
+   if(st.from){var src=S.joy[st.from]||[];if(!src.length)return;st.l=src.slice();S.joy[st.k]=(S.joy[st.k]||[]).filter(function(x){return src.indexOf(x)>-1;});}
+   h+=(st.sec?'<h1 class="sec">'+esc(st.sec)+'</h1>':"")+'<div class="qb" data-n="'+n+'"><h2>'+esc(st.t)+'</h2>';
+   if(st.text){h+=st.area?'<div class="own"><textarea class="jt" rows="4" aria-label="Your answer">'+esc(S.joy[st.k]||"")+'</textarea></div></div>':'<div class="own"><input type="text" class="jt" maxlength="120" value="'+esc(S.joy[st.k]||"").replace(/"/g,"&quot;")+'" aria-label="Your answer"></div></div>';return;}
+   var mine=S.joy[st.k]=(S.joy[st.k]||[]);var keys=st.l.map(function(x){return parts(x).k;});
+   var all=st.l.concat(mine.filter(function(x){return st.l.indexOf(x)<0&&keys.indexOf(x)<0;}));
+   var cbm=!st.pair&&st.l.some(function(x){return wc(x)>3;});
+   var longs=cbm?all:[];var shorts=(cbm?[]:all.slice()).concat(cbm||st.noOther?[]:["+ Other"]);
+   longs.forEach(function(x,i){var p=parts(x);h+='<div class="crw"><div class="crow"><label class="chk"><input type="checkbox" data-c="'+i+'"'+(mine.indexOf(p.k)>-1?' checked':'')+'><span>'+emo(x)+esc(p.k)+(st.star&&st.star.indexOf(p.k)>-1?' *':'')+'</span></label>'+(p.ex?'<button type="button" class="ib" aria-label="Examples for '+esc(p.k)+'">i</button>':'')+'</div>'+(p.ex?'<div class="exn" hidden>'+esc(p.ex)+'</div>':'')+'</div>';});
+   if(shorts.length)h+=opts(shorts,st.pair?"pills pair":(st.dark?"pills dk":"pills"),null,mine);if(cbm&&!st.noOther)h+='<label class="chk"><input type="checkbox" class="oth"><span>+ Other</span></label>';if(st.note)h+='<p class="fn">'+esc(st.note)+'</p>';
+   h+='<div class="ownhost"></div></div>';
+  });
+  h+='<div class="row" style="justify-content:flex-end;margin-top:22px"><button class="btn jc" type="button" id="jdone">Done</button></div>';
+  app.innerHTML=h;
+  function addOwn(st,host){if(host.firstChild)return;host.innerHTML='<div class="own"><input type="text" maxlength="60" placeholder="Add your own" aria-label="Add your own"><button class="btn ghost" type="button">Add</button></div>';var i=host.querySelector("input");function add(){var v=i.value.trim();if(!v)return;var a=S.joy[st.k];if(a.indexOf(v)<0)a.push(v);save();draw();}host.querySelector("button").addEventListener("click",add);i.addEventListener("keydown",function(e){if(e.key==="Enter")add();});i.focus();}
+  app.querySelectorAll(".qb").forEach(function(q){
+   var st=JOY[+q.getAttribute("data-n")];
+   if(st.sw){q.querySelectorAll(".swbtn").forEach(function(b){b.addEventListener("click",function(){S.joy.works=[b.getAttribute("data-v")];save();draw();});});return;}
+   if(st.lang){
+    var lq=q;var lm=S.joy[st.k];
+    function drawPrim(){var box=lq.querySelector(".langprim");box.innerHTML="";if(lm.length<2){if(S.joy.langprimary&&lm.indexOf(S.joy.langprimary)<0)S.joy.langprimary="";return;}if(S.joy.langprimary&&lm.indexOf(S.joy.langprimary)<0)S.joy.langprimary="";var hh='<p class="lpt">Select a primary language, if you prefer:</p><div class="opts pills">';lm.forEach(function(x){hh+='<button type="button" class="opt'+(S.joy.langprimary===x?' on':'')+'" data-p="'+esc(x).replace(/"/g,"&quot;")+'">'+(S.joy.langprimary===x?"★ ":"")+esc(GP_NATIVE[x]||x)+'</button>';});hh+='</div>';box.innerHTML=hh;box.querySelectorAll(".opt").forEach(function(b){b.addEventListener("click",function(){var v=b.getAttribute("data-p");S.joy.langprimary=S.joy.langprimary===v?"":v;save();drawPrim();});});}
+    lq.querySelectorAll(".lpills .opt").forEach(function(b){b.addEventListener("click",function(){var v=b.getAttribute("data-l");var i=lm.indexOf(v);if(i>-1){lm.splice(i,1);b.classList.remove("on");}else{lm.push(v);b.classList.add("on");}save();drawPrim();});});
+    var si=lq.querySelector(".lsearch");si.addEventListener("input",function(){var t=si.value.trim().toLowerCase();lq.querySelectorAll(".lpills .opt").forEach(function(b){b.style.display=!t||b.getAttribute("data-find").indexOf(t)>-1?"":"none";});});
+    function ladd(){var v=si.value.trim();if(!v)return;var lv=v.toLowerCase(),hit=null;GP_LANGS.forEach(function(w){if(w.toLowerCase()===lv||String(GP_NATIVE[w]||"").toLowerCase()===lv)hit=w;});var val=hit||v.charAt(0).toUpperCase()+v.slice(1);if(lm.indexOf(val)<0)lm.push(val);save();draw();}
+    lq.querySelector(".ladd").addEventListener("click",ladd);si.addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault();ladd();}});
+    drawPrim();return;
+   }
+   if(st.lead||st.msg)return;
+   if(st.text){q.querySelector(".jt").addEventListener("input",function(e){S.joy[st.k]=e.target.value.trim();save();});return;}
+   var mine=S.joy[st.k];var keys=st.l.map(function(x){return parts(x).k;});
+   var all=st.l.concat(mine.filter(function(x){return st.l.indexOf(x)<0&&keys.indexOf(x)<0;}));
+   var cbm=!st.pair&&st.l.some(function(x){return wc(x)>3;});
+   var longs=cbm?all:[];var shorts=(cbm?[]:all.slice()).concat(cbm||st.noOther?[]:["+ Other"]);
+   var host=q.querySelector(".ownhost");
+   var oc=q.querySelector(".oth");if(oc)oc.addEventListener("change",function(){if(oc.checked)addOwn(st,host);oc.checked=false;});
+   q.querySelectorAll(".chk input[data-c]").forEach(function(c){c.addEventListener("change",function(){var v=parts(longs[+c.getAttribute("data-c")]).k;var k=mine.indexOf(v);if(c.checked){if(st.one)mine.length=0;mine.push(v);}else if(k>-1)mine.splice(k,1);save();if(st.feeds||st.one)draw();});});
+   q.querySelectorAll(".ib").forEach(function(b){b.addEventListener("click",function(){var e=b.parentNode.nextSibling;if(e)e.hidden=!e.hidden;});});
+   q.querySelectorAll(".opt").forEach(function(b){b.addEventListener("click",function(){var v=shorts[+b.getAttribute("data-i")];if(v==="+ Other"){addOwn(st,host);return;}if(st.one){mine.length=0;mine.push(v);save();draw();return;}var i=mine.indexOf(v);if(i>-1){mine.splice(i,1);b.classList.remove("on");}else{mine.push(v);b.classList.add("on");}save();if(st.feeds)draw();});});
+  });
+  document.getElementById("jdone").addEventListener("click",function(){save();go(joyDone);});
+  window.scrollTo(0,y);
+ }
+ draw();
+}
+function joyDone(){app.innerHTML='<h1>That is what lights you up.</h1><p class="sub">Your answers are saved.</p>';}
+function five(){single("In the next 5 minutes, what could you do to feel your desired feeling?","",["Rest","Eat and drink","Move","Play","Connect","Create","+ Other"],function(v){if(v==="Move")go(moveA);else if(v==="+ Other")go(needOther,"five");else go(soon,v);});}
+function needOther(k){app.innerHTML='<h1>Tell us in your own words</h1><p class="sub">We will file it under one of the six.</p>';ownBox("Your word",function(v){S.extra.push(v);save();go(needWhere,v);});}
+function needWhere(v){single("Which of these does it belong with?","“"+v+"”",["Connect","Create","Eat and drink","Move","Play","Rest"],function(w){if(w==="Move"){S.picks.indexOf(v)<0&&S.picks.push(v);save();go(moveA);}else go(soon,w);});}
+
+function moveA(){
+ var saved=S.picks.length>0;
+ app.innerHTML='<p class="kicker">Move</p><h1>How do you like to move?</h1><p class="sub">'+(saved?'Your picks are marked. Add more any time.':'Pick as many as you like.')+'</p>'+opts(ACT.concat(["+ Other"]),"pills",null,S.picks);
+ var all=ACT.concat(["+ Other"]);
+ wire(all,function(v,b){if(v==="+ Other"){addOwn();return;}var i=S.picks.indexOf(v);if(i>-1){S.picks.splice(i,1);b.classList.remove("on");}else{S.picks.push(v);b.classList.add("on");}});
+ S.picks.filter(function(p){return ACT.indexOf(p)<0;}).forEach(function(p){});
+ var r=document.createElement("div");r.className="row";r.innerHTML='<button class="btn" type="button" id="next">Continue</button>';app.appendChild(r);
+ r.querySelector("#next").addEventListener("click",function(){if(!S.picks.length)return;save();S.queue=S.picks.filter(function(p){return KINDS[p]||p==="Playing sports";}).slice();nextDrill();});
+ function addOwn(){if(document.getElementById("ownin"))return;ownBox("Add your own way to move",function(v){go(otherKind,v);});}
+}
+function otherKind(v){single("Which of these is closest to “"+v+"”?","We file your word there so it can be found.",ACT,function(a){S.picks.push(a);S.detail[a]=(S.detail[a]||[]);S.detail[a].push(v);S.extra.push(v);save();go(moveA);});}
+function nextDrill(){var a=S.queue.shift();if(!a){go(moveB);return;}go(ask,a);}
+function ask(a){app.innerHTML='<p class="kicker">'+esc(a)+'</p><h1>Would you like to share more?</h1><p class="sub">About '+esc(a.toLowerCase())+'.</p>'+opts(["Yes","Not right now"]);wire(["Yes","Not right now"],function(v){if(v==="Yes")go(kinds,a);else nextDrill();});}
+function kinds(a){
+ var sel=S.detail[a]=S.detail[a]||[];
+ var h='<p class="kicker">'+esc(a)+'</p>';
+ if(a==="Playing sports"){h+='<h1>Which sports do you like?</h1><p class="sub">Pick as many as you like.</p>';SPORTS.forEach(function(g,gi){h+='<p class="head">'+esc(g[0])+'</p><div class="opts pills">';g[1].forEach(function(s,si){h+='<button type="button" class="opt'+(sel.indexOf(s)>-1?" on":"")+'" data-g="'+gi+'" data-s="'+si+'">'+esc(s)+'</button>';});h+='</div>';});}
+ else{h+='<h1>Which '+esc(a==="Weightlifting"?"kinds of strength training":a==="Dancing"?"kinds of dance":a==="Gardening"?"kinds of gardening":"kinds of "+a.toLowerCase())+' do you like?</h1><p class="sub">Pick as many as you like.</p>'+opts(KINDS[a],"pills",null,sel);}
+ app.innerHTML=h;
+ function tog(v,b){var i=sel.indexOf(v);if(i>-1){sel.splice(i,1);b.classList.remove("on");}else{sel.push(v);b.classList.add("on");}}
+ if(a==="Playing sports"){app.querySelectorAll(".opt").forEach(function(b){b.addEventListener("click",function(){tog(SPORTS[+b.getAttribute("data-g")][1][+b.getAttribute("data-s")],b);});});}
+ else{wire(KINDS[a],tog);}
+ ownBox("Other",function(v){sel.push(v);S.extra.push(v);save();render();});
+ var r=document.createElement("div");r.className="row";r.innerHTML='<button class="btn" type="button" id="next">Continue</button>';app.appendChild(r);
+ r.querySelector("#next").addEventListener("click",function(){save();nextDrill();});
+}
+function moveB(){var list=[];S.picks.forEach(function(p){list.push(p);(S.detail[p]||[]).forEach(function(d){if(list.indexOf(d)<0)list.push(d);});});S.list=list;single("Which of these would you like to do right now?","",list,function(v){S.now=v;go(step);},"Move");}
+function owner(v){for(var i=0;i<S.picks.length;i++){var p=S.picks[i];if(p===v||(S.detail[p]||[]).indexOf(v)>-1)return p;}return v;}
+function step(){
+ var v=S.now,o=owner(v);
+ if(QUICK[o]){app.innerHTML='<p class="kicker">Five minutes</p><h1>'+esc(v)+' for five minutes. Ready?</h1><p class="sub">Start when you are. Nothing is timed for you.</p><div class="row"><button class="btn" type="button" id="y">I am ready</button><button class="btn ghost" type="button" id="n">Not now</button></div>';document.getElementById("y").addEventListener("click",function(){go(done,"ready");});document.getElementById("n").addEventListener("click",function(){go(done,"later");});}
+ else{app.innerHTML='<p class="kicker">Pick a time</p><h1>When would you like to do '+esc(v.toLowerCase())+'?</h1>'+opts(["Today","Tomorrow","This weekend","Decide later"]);wire(["Today","Tomorrow","This weekend","Decide later"],function(){go(people);});}
+}
+function people(){var v=S.now;app.innerHTML='<h1>Would you like to find people who like '+esc(v.toLowerCase())+'?</h1><p class="sub">This is an invitation. Nothing is shared until you say so.</p>'+opts(["Yes, show me","Not right now"]);wire(["Yes, show me","Not right now"],function(){go(done,"planned");});}
+function done(kind){
+ var have={};S.picks.forEach(function(p){(TAGS[p]||[]).forEach(function(t){have[t]=1;});});
+ var got=ALLTAGS.filter(function(t){return have[t];}),open=ALLTAGS.filter(function(t){return !have[t];});
+ var msg=kind==="ready"?"Enjoy your five minutes.":kind==="planned"?"Your plan is saved.":"Saved for later.";
+ app.innerHTML='<p class="kicker">Move</p><h1>'+msg+'</h1><p class="sub">Your picks are saved. Next time, you will see them first.</p><div class="note"><b>What your movement gives so far:</b> '+esc(got.join(", ")||"nothing yet")+'.'+(open.length?'<br><b>Still open:</b> '+esc(open.join(", "))+'.':'')+'</div><div class="row" style="justify-content:flex-end"><button class="btn" type="button" id="dn">Done</button></div>';
+ document.getElementById("dn").addEventListener("click",function(){go(finish);});
+}
+function back(){var h=hist.pop();if(h){cur=h[0];curArg=h[1];render();}}
+document.getElementById("back").addEventListener("click",back);
+document.getElementById("restart").addEventListener("click",function(){hist=[];memo={};cur=start;curArg=undefined;render();});
+
+if(new URLSearchParams(location.search).get("mockup")!=="1"){app.innerHTML='<h1>Check-in</h1><p class="sub">Coming soon.</p>';document.getElementById("back").hidden=true;document.getElementById("restart").hidden=true;}else{load();cur=start;render();}
+})();
+</script>
+</body>
+</html>
