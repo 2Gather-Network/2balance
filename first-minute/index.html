@@ -55,6 +55,7 @@
 .wrow{margin-top:22px;}.wrow:first-of-type{margin-top:18px;}.wlbl{font-size:17px;font-weight:700;color:#000;margin:0 0 2px;}.wrow .opts{margin-top:8px;}
 .own textarea{flex:1;min-width:0;font:inherit;font-size:16px;line-height:1.4;padding:10px 12px;border:2px solid var(--brand);border-radius:10px;resize:vertical;min-height:96px;}
 .row{justify-content:flex-end;}.crumbs{display:flex;flex-wrap:wrap;gap:4px 6px;align-items:center;font-size:14px;margin:0 0 14px;}.crumbs:empty{display:none;}.crumbs button{font:inherit;font-size:14px;font-weight:600;color:#000;background:none;border:0;padding:2px 0;cursor:pointer;text-decoration:underline;}.crumbs span{color:var(--soft);}.crumbs b{font-weight:700;color:var(--ink);}.inv{display:flex;flex-direction:column;}.inv .btn{align-self:flex-end;}
+.fseg.lvl{max-width:220px;}
 .stmt{font-size:19px;line-height:1.6;color:#000;margin:0 0 8px;}
 </style>
 </head>
@@ -132,11 +133,11 @@ function startWith(){
  var n=document.getElementById("next");if(n)n.addEventListener("click",function(){go(dive,pick);});
 }
 function dive(k){
- var r=row(k),R=load(),D=R.dive[k]=R.dive[k]||{level:"",a:[[],[]],own:[[],[]],need:"",vis:""};
+ var r=row(k),R=load(),D=R.dive[k]=R.dive[k]||{level:0,a:[[],[]],own:[[],[]],need:"",vis:""};if(typeof D.level!=="number")D.level=0;
  function draw(){
   var y=window.scrollY;
   var h='<h1>'+esc(r.n)+'</h1>';
-  h+='<div class="qb"><h2>Right now, '+esc(r.w)+' '+r.v+':</h2>'+pillRow(["Too little","About right","Too much"],D.level?[D.level]:[],'data-q="level"',false)+'</div>';
+  h+='<div class="qb"><h2>Right now, '+esc(r.w)+' '+r.v+':</h2><div class="ckey">'+LV.map(function(lb,i){return '<span><b>'+(i+1)+'</b> '+esc(lb)+'</span>';}).join("")+'</div><div class="fseg lvl">'+LV.map(function(lb,i){return '<button type="button" class="opt fbtn'+(D.level===i+1?" on":"")+'" data-q="level" data-v="'+(i+1)+'" aria-label="'+(i+1)+' '+esc(lb)+'">'+(i+1)+'</button>';}).join("")+'</div></div>';
   r.q.forEach(function(q,qi){
    var list=q.l.concat(D.own[qi]);
    h+='<div class="qb"><h2>'+esc(q.t)+'</h2>';
@@ -144,11 +145,11 @@ function dive(k){
    else h+=pillRow(list,D.a[qi],'data-q="'+qi+'"',true);
    h+='<div class="ownhost" data-q="'+qi+'"></div></div>';
   });
-  h+='<div class="qb"><h2>In the next 5 minutes, what would you like to do?</h2><div class="opts pills">'+r.needs.map(function(x,i){return '<button type="button" class="opt'+(D.need===x?" on":"")+'" data-q="need" data-i="'+i+'">'+NE[x]+' '+esc(x)+'</button>';}).join("")+'</div></div>';
   h+='<div class="qb"><h2>What\'s your greatest, grandest vision for '+esc(r.vis)+'?</h2><div class="own"><textarea id="vis" aria-label="My vision">'+esc(D.vis)+'</textarea></div></div>';
+  h+='<div class="qb"><h2>In the next 5 minutes, what would you like to do?</h2><div class="opts pills">'+r.needs.map(function(x,i){return '<button type="button" class="opt'+(D.need===x?" on":"")+'" data-q="need" data-i="'+i+'">'+NE[x]+' '+esc(x)+'</button>';}).join("")+'</div></div>';
   h+='<div class="row"><button class="btn" type="button" id="next">Continue</button></div>';
   app.innerHTML=h;window.scrollTo(0,y);
-  app.querySelectorAll('.opt[data-q="level"]').forEach(function(b){b.addEventListener("click",function(){var v=b.textContent;D.level=(D.level===v?"":v);save(R);draw();});});
+  app.querySelectorAll('.opt[data-q="level"]').forEach(function(b){b.addEventListener("click",function(){var v=+b.getAttribute("data-v");D.level=(D.level===v?0:v);save(R);draw();});});
   app.querySelectorAll('.opt[data-q="need"]').forEach(function(b){b.addEventListener("click",function(){var v=r.needs[+b.getAttribute("data-i")];D.need=(D.need===v?"":v);save(R);draw();});});
   r.q.forEach(function(q,qi){
    var list=q.l.concat(D.own[qi]);
