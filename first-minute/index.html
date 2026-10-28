@@ -108,7 +108,7 @@ function whenPage(){
  ROWS.forEach(function(r){h+='<div class="wrow"><p class="wlbl">'+esc(r.n)+'</p>'+pillRow(WHEN,R.when[r.k]?[R.when[r.k]]:[],'data-r="'+r.k+'"',false)+'</div>';});
  var while_=ROWS.some(function(r){return ["Last month","Last year","In my life"].indexOf(R.when[r.k])>-1;});
  if(showHelp&&while_)h+='<div class="inv"><p>We see it\'s been a while... we can help.</p><button class="btn jc" type="button" id="learn">Learn more</button></div>';
- else h+='<div class="row"><button class="btn" type="button" id="done">Done</button></div>';
+ else if(ROWS.every(function(r){return R.when[r.k];}))h+='<div class="row"><button class="btn" type="button" id="done">Done</button></div>';
  app.innerHTML=h;
  app.querySelectorAll(".opt[data-r]").forEach(function(b){b.addEventListener("click",function(){var k=b.getAttribute("data-r"),v=WHEN[+b.getAttribute("data-i")];R.when[k]=(R.when[k]===v?"":v);save(R);showHelp=false;whenPage();window.scrollTo(0,y);});});
  var d=document.getElementById("done");if(d)d.addEventListener("click",function(){if(while_){showHelp=true;whenPage();window.scrollTo(0,y);}else go(donePage);});
