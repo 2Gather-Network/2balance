@@ -1,0 +1,100 @@
+<!doctype html>
+<!--
+  Copyright 2026 DayBalancer LLC. All rights reserved.
+
+  The code and the content here power Creating.Works, DayBalancer, Appear Network,
+  and 2Gather. They are published so they can be read, audited, and dated.
+
+  Running either as a separate offering requires a license, whether you brand it as
+  ours or as your own, and whether or not money changes hands.
+
+  hello@creating.works
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>First minute · 2Balance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700;6..12,800&family=DM+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--brand:#1F699E;--ink:#1A2E42;--soft:#4B5A6D;--line:#DDE3EA;--panel:#F7FBFF;--panel-line:#C9DFF3;}
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--brand);color:var(--ink);font-family:'Nunito Sans','DM Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;}
+  .wrap{max-width:760px;margin:0 auto;padding:24px 18px 60px;}
+  .card{background:#fff;border-radius:16px;padding:30px;min-height:360px;}
+  h1{font-size:26px;font-weight:800;line-height:1.25;margin:0 0 8px;text-wrap:balance;}
+  .sub{font-size:16px;line-height:1.55;color:var(--soft);margin:0 0 18px;}
+  .kicker{font-size:13px;font-weight:800;letter-spacing:.06em;color:var(--brand);margin:0 0 10px;text-transform:uppercase;}
+  .opts{display:flex;flex-direction:row;flex-wrap:wrap;gap:8px;margin:18px 0 0;}
+  .opts.pills{flex-direction:row;flex-wrap:wrap;}
+  .opt{font:inherit;font-size:16px;font-weight:500;color:#000;background:#fff;border:1.5px solid var(--panel-line);border-radius:20px;padding:12px 18px;text-align:left;cursor:pointer;}
+  .opt{padding:7px 14px;font-size:15px;line-height:1.3;}
+  .opt:hover{border-color:var(--brand);}
+  .opt.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:700;}
+  .opt.other{border:1.5px solid var(--brand);font-weight:700;}
+  .opt:focus-visible,.btn:focus-visible,input:focus-visible{outline:3px solid var(--brand);outline-offset:2px;}
+  .head{font-size:14px;font-weight:800;letter-spacing:.04em;color:var(--soft);margin:20px 0 0;text-transform:uppercase;}
+  .row{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap;align-items:center;}
+  .btn{font:inherit;font-weight:800;font-size:16px;color:#fff;background:var(--brand);border:0;border-radius:12px;padding:12px 22px;cursor:pointer;border:1.5px solid var(--brand);border-radius:20px;}
+  .btn.ghost{background:transparent;color:var(--brand);border:1px solid var(--brand);}
+  .link{font:inherit;font-size:14px;color:var(--soft);background:none;border:0;padding:6px 0;cursor:pointer;text-decoration:underline;}
+  .own{display:flex;gap:8px;margin-top:14px;}
+  .own input{flex:1;min-width:0;font:inherit;font-size:16px;padding:10px 12px;border:2px solid var(--brand);border-radius:10px;}
+  .note{background:var(--panel);border:1px solid var(--panel-line);border-radius:12px;padding:14px 16px;margin-top:18px;font-size:15px;line-height:1.6;color:var(--soft);}
+  .note b{color:var(--ink);}
+  .foot{display:flex;justify-content:space-between;align-items:center;margin-top:14px;}
+  #back{font-weight:700;color:var(--brand);background:#fff;border:1.5px solid var(--panel-line);border-radius:20px;padding:10px 20px;text-decoration:none;}
+  #restart{color:#fff;}
+  @media(max-width:700px){.card{padding:22px 18px;}h1{font-size:23px;}}
+.qb{margin-top:30px;}.qb:first-child{margin-top:0;}.qb h2{font-size:20px;line-height:1.3;margin:0 0 4px;color:var(--ink);}
+.fscale{display:grid;gap:14px;}.frow{display:grid;grid-template-columns:minmax(0,1fr) 220px;gap:10px;align-items:center;}.flbl{font-size:16px;font-weight:600;color:#000;}.fseg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}.fbtn{padding:8px 6px;font-size:16px;font-weight:700;text-align:center;}.ckey{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:14px;color:#000;margin:0 0 16px;}.ckey b{color:var(--brand);}@media(max-width:420px){.frow{grid-template-columns:1fr;gap:6px;}}
+.jc{font-size:14px;padding:10px 20px;}.inv{background:var(--panel);border:1px solid var(--panel-line);border-radius:12px;padding:16px 18px;margin-top:22px;}.inv p{margin:0 0 12px;font-size:16px;line-height:1.5;color:#000;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card" id="app" aria-live="polite"></div>
+  <div class="foot"><button class="link" id="back" type="button">Back</button></div>
+</div>
+<script>
+(function(){
+var app=document.getElementById("app");
+var hist=[];var cur,curArg;
+var KEY="balance.firstminute.v1";
+var LV=["Not where I want it","Getting there","Good","Great"];
+var LIFE=["🌍 My physical life","💧 My emotional life","🔥 My energetic life","🌬️ My mental life","✨ My creative and inspired life"];
+var GIVE=["Connected","Expressed","Nourished","Energized","Playful","Rested"];
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");}
+function load(){var t=null;try{t=JSON.parse(localStorage.getItem(KEY)||"null");}catch(e){}return t||{rate:{}};}
+function save(t){try{localStorage.setItem(KEY,JSON.stringify(t));}catch(e){}}
+function go(fn,arg){hist.push([cur,curArg]);cur=fn;curArg=arg;render();}
+function back(){var h=hist.pop();if(h){cur=h[0];curArg=h[1];render();}}
+function render(){cur(curArg);document.getElementById("back").hidden=!hist.length;window.scrollTo(0,0);}
+function feelPage(){
+ var R=load(),y=window.scrollY;
+ var low=LIFE.filter(function(n){return R.rate[n]===1||R.rate[n]===2;});
+ var high=LIFE.filter(function(n){return R.rate[n]===3||R.rate[n]===4;});
+ var h='<h1>How do you feel about your life right now?</h1>';
+ h+='<div class="qb"><div class="ckey">'+LV.map(function(lb,i){return '<span><b>'+(i+1)+'</b> '+esc(lb)+'</span>';}).join("")+'</div><div class="fscale">'+LIFE.map(function(n){var v=R.rate[n]||0;return '<div class="frow"><div class="flbl">'+esc(n)+'</div><div class="fseg">'+LV.map(function(lb,i){return '<button type="button" class="opt fbtn'+(v===i+1?" on":"")+'" data-r="'+esc(n)+'" data-v="'+(i+1)+'" aria-label="'+(i+1)+' '+esc(lb)+'">'+(i+1)+'</button>';}).join("")+'</div></div>';}).join("")+'</div></div>';
+ if(low.length)h+='<div class="inv"><p>If any of these isn\'t where you want it, we can help.</p><button class="btn jc" type="button" id="learn">I\'d like to learn more</button></div>';
+ if(high.length)h+='<div class="inv"><p>When part of you feels full, you have something to give.</p><button class="btn ghost jc" type="button" id="give">Show me how I can give</button></div>';
+ app.innerHTML=h;
+ app.querySelectorAll(".fbtn").forEach(function(b){b.addEventListener("click",function(){var k=b.getAttribute("data-r"),n=+b.getAttribute("data-v");R.rate[k]=(R.rate[k]===n?0:n);save(R);feelPage();window.scrollTo(0,y);});});
+ var l=document.getElementById("learn");if(l)l.addEventListener("click",function(){go(startWith,low);});
+ var g=document.getElementById("give");if(g)g.addEventListener("click",function(){go(givePage);});
+}
+function pills(list){return '<div class="opts pills">'+list.map(function(x,i){return '<button type="button" class="opt" data-i="'+i+'">'+esc(x)+'</button>';}).join("")+'</div>';}
+function wire(list,fn){app.querySelectorAll(".opt").forEach(function(b){b.addEventListener("click",function(){fn(list[+b.getAttribute("data-i")]);});});}
+function startWith(low){if(low.length===1){learn(low[0]);return;}app.innerHTML='<h1>Which one would you like to start with?</h1>'+pills(low);wire(low,function(v){go(learn,v);});}
+function learn(v){app.innerHTML='<h1>'+esc(v)+'</h1><p class="sub">This is where 2Balance shows you ways to tend to it. This is a mockup, so nothing is saved to your profile yet.</p>';}
+function givePage(){app.innerHTML='<h1>What feeling could you help others experience today?</h1>'+pills(GIVE);wire(GIVE,function(v){go(gave,v);});}
+function gave(v){app.innerHTML='<h1>'+esc(v)+'</h1><p class="sub">This is where 2Balance shows you ways to help others feel '+esc(v.toLowerCase())+'. This is a mockup, so nothing is saved to your profile yet.</p>';}
+document.getElementById("back").addEventListener("click",back);
+if(new URLSearchParams(location.search).get("mockup")!=="1"){app.innerHTML='<h1>2Balance</h1><p class="sub">Coming soon.</p>';document.getElementById("back").hidden=true;}else{cur=feelPage;render();}
+})();
+</script>
+</body>
+</html>
