@@ -65,7 +65,7 @@ var app=document.getElementById("app");
 var hist=[];var cur,curArg;
 var KEY="balance.firstminute.v1";
 var LV=["Not where I want it","Getting there","Good","Great"];
-var LIFE=["🌍 My physical life","💧 My emotional life","🔥 My energetic life","🌬️ My mental life","✨ My creative and inspired life"];
+var LIFE=["🌍 My physical life","💧 My emotional life","🔥 My energetic life","💡 My mental life","✨ My creative and inspired life"];
 var GIVE=["Connected","Expressed","Nourished","Energized","Playful","Rested"];
 function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");}
 function load(){var t=null;try{t=JSON.parse(localStorage.getItem(KEY)||"null");}catch(e){}return t||{rate:{}};}
