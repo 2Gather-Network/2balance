@@ -263,7 +263,25 @@ function joyPage(){
  draw();
 }
 function joyDone(){app.innerHTML='<h1>That is what lights you up.</h1><p class="sub">Your answers are saved.</p>';}
-function five(){single("In the next 5 minutes, what could you do to feel your desired feeling?","",["Rest","Eat and drink","Move","Play","Connect","Create","+ Other"],function(v){if(v==="Move")go(moveA);else if(v==="+ Other")go(needOther,"five");else go(soon,v);});}
+var NOW={
+"Rest":{t:"How would you like to rest right now?",k:"rest",base:["Soak","Float","Nap time","Breathing","Body scan","Massage","Foam roll","Ball roll","Visualization","Journaling","Sound","Music","Meditation","Sun","Light therapy","Slow movement","Relaxing walk","Time outdoors"]},
+"Play":{t:"How would you like to play right now?",idea:"Playful",base:["Sing, dance or make up a game","Play outside","Tell a joke","Play with an animal","Losing myself in a game or a song"]},
+"Connect":{t:"How would you like to connect right now?",idea:"Connected",base:["Call a friend","Say hello to a neighbor","Listen","Spend time in nature","Care for or spend time with an animal","Check in with yourself","Spend time in stillness, prayer or something larger than yourself"]},
+"Create":{t:"How would you like to create right now?",idea:"Expressed",base:["Write, draw, sing or build with what you have","Tell a story","Cook or dream up a new recipe"]}
+};
+function nowMine(v){var c=NOW[v],m=[];if(c.k)m=m.concat((S.joy&&S.joy[c.k])||[]);if(c.idea)m=m.concat((S.ideas&&S.ideas[c.idea])||[]);
+ if(v==="Connect"&&S.joy){["showsup","people","inspires"].forEach(function(k){var t=String(S.joy[k]||"").trim();if(t)m.push("Reach out to "+t.split(/,|\n/)[0].trim());});}
+ if(v==="Create"&&S.joy&&S.joy.natural){S.joy.natural.forEach(function(x){m.push(String(x).split(" - ")[0]);});}
+ return m.filter(function(x,i,a){return x&&a.indexOf(x)===i;});}
+function pick5(v){
+ if(v==="Eat and drink"){app.innerHTML='<h1>Would you like to get some ideas of healthy things you can eat or drink?</h1><div class="opts pills"><button type="button" class="opt" id="ey">Yes</button><button type="button" class="opt" id="en">Not right now</button></div>';document.getElementById("ey").addEventListener("click",function(){go(eatWell);});document.getElementById("en").addEventListener("click",function(){go(finish);});return;}
+ var c=NOW[v];var m=nowMine(v);var list=(m.length?m:c.base).concat(["+ Other"]);
+ single(c.t,"",list,function(x){if(x==="+ Other")go(ownNow,c.t);else go(readyNow,x);});
+}
+function ownNow(t){app.innerHTML='<h1>'+esc(t)+'</h1>';ownBox("In your own words",function(v){go(readyNow,v);});}
+function readyNow(x){app.innerHTML='<h1>'+esc(x)+'</h1><div class="row" style="justify-content:flex-end"><button class="btn" type="button" id="dn">Done</button></div>';document.getElementById("dn").addEventListener("click",function(){go(finish);});}
+function eatWell(){app.innerHTML='<h1>Eating Well</h1><p class="sub">The Eating Well app opens here once it is connected.</p><div class="row" style="justify-content:flex-end"><button class="btn" type="button" id="dn">Done</button></div>';document.getElementById("dn").addEventListener("click",function(){go(finish);});}
+function five(){single("In the next 5 minutes, what could you do to feel your desired feeling?","",["Rest","Eat and drink","Move","Play","Connect","Create","+ Other"],function(v){if(v==="Move")go(moveA);else if(v==="+ Other")go(needOther,"five");else go(pick5,v);});}
 function needOther(k){app.innerHTML='<h1>Tell us in your own words</h1><p class="sub">We will file it under one of the six.</p>';ownBox("Your word",function(v){S.extra.push(v);save();go(needWhere,v);});}
 function needWhere(v){single("Which of these does it belong with?","“"+v+"”",["Connect","Create","Eat and drink","Move","Play","Rest"],function(w){if(w==="Move"){S.picks.indexOf(v)<0&&S.picks.push(v);save();go(moveA);}else go(soon,w);});}
 
