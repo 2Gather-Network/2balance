@@ -52,48 +52,122 @@
 .qb{margin-top:30px;}.qb:first-child{margin-top:0;}.qb h2{font-size:20px;line-height:1.3;margin:0 0 4px;color:var(--ink);}
 .fscale{display:grid;gap:14px;}.frow{display:grid;grid-template-columns:minmax(0,1fr) 220px;gap:10px;align-items:center;}.flbl{font-size:16px;font-weight:600;color:#000;}.fseg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}.fbtn{padding:8px 6px;font-size:16px;font-weight:700;text-align:center;}.ckey{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:14px;color:#000;margin:0 0 16px;}.ckey b{color:var(--brand);}@media(max-width:420px){.frow{grid-template-columns:1fr;gap:6px;}}
 .jc{font-size:14px;padding:10px 20px;}.inv{background:var(--panel);border:1px solid var(--panel-line);border-radius:12px;padding:16px 18px;margin-top:22px;}.inv p{margin:0 0 12px;font-size:16px;line-height:1.5;color:#000;}
+.chk{display:flex;gap:10px;align-items:flex-start;margin:12px 0 0;font-size:15px;line-height:1.4;cursor:pointer;color:#000;}.chk input{margin-top:3px;width:18px;height:18px;flex:none;accent-color:var(--brand);}
+.wrow{margin-top:22px;}.wrow:first-of-type{margin-top:18px;}.wlbl{font-size:17px;font-weight:700;color:#000;margin:0 0 2px;}.wrow .opts{margin-top:8px;}
+.own textarea{flex:1;min-width:0;font:inherit;font-size:16px;line-height:1.4;padding:10px 12px;border:2px solid var(--brand);border-radius:10px;resize:vertical;min-height:96px;}
+.stmt{font-size:19px;line-height:1.6;color:#000;margin:0 0 8px;}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="card" id="app" aria-live="polite"></div>
-  <div class="foot"><button class="link" id="back" type="button">Back</button></div>
+  <div class="foot"><button class="link" id="back" type="button">Back</button><button class="link" id="restart" type="button">Start over</button></div>
 </div>
 <script>
 (function(){
 var app=document.getElementById("app");
 var hist=[];var cur,curArg;
-var KEY="balance.firstminute.v1";
+var KEY="balance.firstminute.v2";
+var WHEN=["Today","Last week","Last month","Last year","In my life"];
 var LV=["Not where I want it","Getting there","Good","Great"];
-var LIFE=["🌍 My physical life","🌊 My emotional life","🔥 My energetic life","🍃 My mental life","✨ My creative and inspired life"];
-var GIVE=["Connected","Expressed","Nourished","Energized","Playful","Rested"];
+var ROWS=[
+{k:"body",n:"🌍 My body and surroundings",w:"my body and surroundings",v:"feel",
+ q:[{t:"What would you like more of?",l:["Safety","Grounding","Structure","Strength","Health","Comfort","Nurturing","Order"]},
+    {t:"Where?",l:["My body","My home","My workspace","My neighborhood","Nature near me","My things"]}],
+ needs:["Move","Rest","Eat and drink"],vis:"your home"},
+{k:"feel",n:"🌊 My feelings",w:"my feelings",v:"feel",
+ q:[{t:"What have you been feeling lately?",l:["Happy","Sad","Angry","Afraid","Calm","Tender","Numb","Grateful"]},
+    {t:"What would you like more of?",l:["Empathy","Ease","Being heard","Caring","Tenderness","Well-being"]}],
+ needs:["Connect","Rest","Create"],vis:"how you feel"},
+{k:"energy",n:"🔥 My energy",w:"my energy",v:"feels",
+ q:[{t:"What lights you up?",l:["Making things","Moving","Learning","Helping","Playing"]},
+    {t:"Where is your energy going that isn't serving you right now?",cb:1,l:["Trying to please everyone","Overcommitting/ poor boundaries","Working on others' priorities, not my own","Unclear expectations","Too many decisions at once","Reactive mode - always putting out fires","Procrastination","Perfectionism/ over-polishing","Social media/ digital distractions","Email overload/ unnecessary meetings","Multitasking/ constant interruptions","Applying to misaligned work opportunities"]}],
+ needs:["Move","Play","Create"],vis:"what you pour your energy into"},
+{k:"mind",n:"🍃 My mind",w:"my mind",v:"feels",
+ q:[{t:"What would you like more of?",l:["Clarity","Focus","Curiosity","Calm thoughts","New ideas","Learning"]},
+    {t:"Which of these are true for you?",cb:1,l:["I see the world clearly","I respond more than I react","I ask questions when I'm curious","I can weigh my options","I say what I mean"]}],
+ needs:["Rest","Create","Connect"],vis:"what you know how to do"},
+{k:"imag",n:"✨ My imagination",w:"my imagination",v:"feels",
+ q:[{t:"What would you like more of?",l:["Inspiration","Ahas","Possibility","Creativity","Wonder","Abundance"]},
+    {t:"When does it come most easily?",l:["Outdoors","In stillness","With others","Making things","Before sleep"]}],
+ needs:["Create","Play","Rest"],vis:"your life"}];
+var NE={"Rest":"💙","Eat and drink":"🥘","Move":"🌀","Play":"🏓","Connect":"🌐","Create":"🎨"};
+var STMT="At 2Balance, you are invited to explore how you relate to the who, what, where, when, how, and why of your life as a daily practice. As you do, we support you to reawaken to balance, joy, connection, and fulfillment in how you experience and engage with all that is other.";
 function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");}
-function load(){var t=null;try{t=JSON.parse(localStorage.getItem(KEY)||"null");}catch(e){}return t||{rate:{}};}
+function load(){var t=null;try{t=JSON.parse(localStorage.getItem(KEY)||"null");}catch(e){}t=t||{};t.when=t.when||{};t.rate=t.rate||{};t.dive=t.dive||{};return t;}
 function save(t){try{localStorage.setItem(KEY,JSON.stringify(t));}catch(e){}}
 function go(fn,arg){hist.push([cur,curArg]);cur=fn;curArg=arg;render();}
 function back(){var h=hist.pop();if(h){cur=h[0];curArg=h[1];render();}}
-function render(){cur(curArg);document.getElementById("back").hidden=!hist.length;window.scrollTo(0,0);}
+function render(){cur(curArg);document.getElementById("back").hidden=!hist.length;document.getElementById("restart").hidden=!hist.length;window.scrollTo(0,0);}
+function row(k){for(var i=0;i<ROWS.length;i++)if(ROWS[i].k===k)return ROWS[i];}
+function pillRow(list,sel,attr,other){return '<div class="opts pills">'+list.map(function(x,i){return '<button type="button" class="opt'+(sel.indexOf(x)>-1?" on":"")+'" '+attr+' data-i="'+i+'">'+esc(x)+'</button>';}).join("")+(other?'<button type="button" class="opt other" '+attr+' data-other="1">+ Other</button>':'')+'</div>';}
+
+function whenPage(){
+ var R=load(),y=window.scrollY;
+ var h='<h1>When did you last think about you in relation to…</h1>';
+ ROWS.forEach(function(r){h+='<div class="wrow"><p class="wlbl">'+esc(r.n)+'</p>'+pillRow(WHEN,R.when[r.k]?[R.when[r.k]]:[],'data-r="'+r.k+'"',false)+'</div>';});
+ h+='<div class="inv"><p>If not lately, or never, we can help.</p><button class="btn jc" type="button" id="learn">I\'d like to learn more</button></div>';
+ app.innerHTML=h;
+ app.querySelectorAll(".opt[data-r]").forEach(function(b){b.addEventListener("click",function(){var k=b.getAttribute("data-r"),v=WHEN[+b.getAttribute("data-i")];R.when[k]=(R.when[k]===v?"":v);save(R);whenPage();window.scrollTo(0,y);});});
+ document.getElementById("learn").addEventListener("click",function(){go(statement);});
+}
+function statement(){
+ app.innerHTML='<p class="stmt">'+esc(STMT)+'</p><div class="row"><button class="btn" type="button" id="next">Continue</button></div>';
+ document.getElementById("next").addEventListener("click",function(){go(startWith);});
+}
+function startWith(){
+ var R=load();
+ var list=ROWS.filter(function(r){return R.when[r.k]==="Last year"||R.when[r.k]==="In my life";});
+ if(!list.length)list=ROWS;
+ app.innerHTML='<h1>Which one would you like to start with?</h1><div class="opts pills">'+list.map(function(r){return '<button type="button" class="opt" data-k="'+r.k+'">'+esc(r.n)+'</button>';}).join("")+'</div>';
+ app.querySelectorAll(".opt").forEach(function(b){b.addEventListener("click",function(){go(dive,b.getAttribute("data-k"));});});
+}
+function dive(k){
+ var r=row(k),R=load(),D=R.dive[k]=R.dive[k]||{level:"",a:[[],[]],own:[[],[]],need:"",vis:""};
+ function draw(){
+  var y=window.scrollY;
+  var h='<h1>'+esc(r.n)+'</h1>';
+  h+='<div class="qb"><h2>Right now, '+esc(r.w)+' '+r.v+':</h2>'+pillRow(["Too little","About right","Too much"],D.level?[D.level]:[],'data-q="level"',false)+'</div>';
+  r.q.forEach(function(q,qi){
+   var list=q.l.concat(D.own[qi]);
+   h+='<div class="qb"><h2>'+esc(q.t)+'</h2>';
+   if(q.cb){list.forEach(function(x,i){h+='<label class="chk"><input type="checkbox" data-q="'+qi+'" data-i="'+i+'"'+(D.a[qi].indexOf(x)>-1?" checked":"")+'><span>'+esc(x)+'</span></label>';});h+='<label class="chk"><input type="checkbox" class="oth" data-q="'+qi+'"><span>+ Other</span></label>';}
+   else h+=pillRow(list,D.a[qi],'data-q="'+qi+'"',true);
+   h+='<div class="ownhost" data-q="'+qi+'"></div></div>';
+  });
+  h+='<div class="qb"><h2>In the next 5 minutes, what would you like to do?</h2><div class="opts pills">'+r.needs.map(function(x,i){return '<button type="button" class="opt'+(D.need===x?" on":"")+'" data-q="need" data-i="'+i+'">'+NE[x]+' '+esc(x)+'</button>';}).join("")+'</div></div>';
+  h+='<div class="qb"><h2>What\'s your greatest, grandest vision for '+esc(r.vis)+'?</h2><div class="own"><textarea id="vis" aria-label="My vision">'+esc(D.vis)+'</textarea></div></div>';
+  h+='<div class="row"><button class="btn" type="button" id="next">Continue</button></div>';
+  app.innerHTML=h;window.scrollTo(0,y);
+  app.querySelectorAll('.opt[data-q="level"]').forEach(function(b){b.addEventListener("click",function(){var v=b.textContent;D.level=(D.level===v?"":v);save(R);draw();});});
+  app.querySelectorAll('.opt[data-q="need"]').forEach(function(b){b.addEventListener("click",function(){var v=r.needs[+b.getAttribute("data-i")];D.need=(D.need===v?"":v);save(R);draw();});});
+  r.q.forEach(function(q,qi){
+   var list=q.l.concat(D.own[qi]);
+   function toggle(v,on){var i=D.a[qi].indexOf(v);if(on&&i<0)D.a[qi].push(v);if(!on&&i>-1)D.a[qi].splice(i,1);save(R);}
+   app.querySelectorAll('.opt[data-q="'+qi+'"][data-i]').forEach(function(b){b.addEventListener("click",function(){var v=list[+b.getAttribute("data-i")];toggle(v,D.a[qi].indexOf(v)<0);draw();});});
+   app.querySelectorAll('.chk input[data-q="'+qi+'"][data-i]').forEach(function(c){c.addEventListener("change",function(){toggle(list[+c.getAttribute("data-i")],c.checked);});});
+   var o=app.querySelector('[data-q="'+qi+'"][data-other], .chk .oth[data-q="'+qi+'"]');
+   if(o)o.addEventListener(o.tagName==="INPUT"?"change":"click",function(){if(o.tagName==="INPUT")o.checked=false;ownBox(qi,function(v){if(D.own[qi].indexOf(v)<0&&q.l.indexOf(v)<0)D.own[qi].push(v);toggle(v,true);draw();});});
+  });
+  document.getElementById("vis").addEventListener("input",function(e){D.vis=e.target.value;save(R);});
+  document.getElementById("next").addEventListener("click",function(){go(feelPage);});
+ }
+ draw();
+}
+function ownBox(qi,fn){var host=app.querySelector('.ownhost[data-q="'+qi+'"]');if(!host||host.firstChild)return;host.innerHTML='<div class="own"><input type="text" maxlength="60" placeholder="Ex: something of my own" aria-label="Add my own"><button class="btn ghost" type="button">Add</button></div>';var i=host.querySelector("input");function add(){var v=i.value.trim();if(v)fn(v);}host.querySelector("button").addEventListener("click",add);i.addEventListener("keydown",function(e){if(e.key==="Enter")add();});i.focus();}
 function feelPage(){
  var R=load(),y=window.scrollY;
- var low=LIFE.filter(function(n){return R.rate[n]===1||R.rate[n]===2;});
- var high=LIFE.filter(function(n){return R.rate[n]===3||R.rate[n]===4;});
- var h='<h1>How do you feel about your life right now?</h1>';
- h+='<div class="qb"><div class="ckey">'+LV.map(function(lb,i){return '<span><b>'+(i+1)+'</b> '+esc(lb)+'</span>';}).join("")+'</div><div class="fscale">'+LIFE.map(function(n){var v=R.rate[n]||0;return '<div class="frow"><div class="flbl">'+esc(n)+'</div><div class="fseg">'+LV.map(function(lb,i){return '<button type="button" class="opt fbtn'+(v===i+1?" on":"")+'" data-r="'+esc(n)+'" data-v="'+(i+1)+'" aria-label="'+(i+1)+' '+esc(lb)+'">'+(i+1)+'</button>';}).join("")+'</div></div>';}).join("")+'</div></div>';
- if(low.length)h+='<div class="inv"><p>If any of these isn\'t where you want it, we can help.</p><button class="btn jc" type="button" id="learn">I\'d like to learn more</button></div>';
- if(high.length)h+='<div class="inv"><p>When part of you feels full, you have something to give.</p><button class="btn ghost jc" type="button" id="give">Show me how I can give</button></div>';
- app.innerHTML=h;
- app.querySelectorAll(".fbtn").forEach(function(b){b.addEventListener("click",function(){var k=b.getAttribute("data-r"),n=+b.getAttribute("data-v");R.rate[k]=(R.rate[k]===n?0:n);save(R);feelPage();window.scrollTo(0,y);});});
- var l=document.getElementById("learn");if(l)l.addEventListener("click",function(){go(startWith,low);});
- var g=document.getElementById("give");if(g)g.addEventListener("click",function(){go(givePage);});
+ var h='<h1>How do you feel about…</h1>';
+ h+='<div class="qb"><div class="ckey">'+LV.map(function(lb,i){return '<span><b>'+(i+1)+'</b> '+esc(lb)+'</span>';}).join("")+'</div><div class="fscale">'+ROWS.map(function(r){var v=R.rate[r.k]||0;return '<div class="frow"><div class="flbl">'+esc(r.n)+'</div><div class="fseg">'+LV.map(function(lb,i){return '<button type="button" class="opt fbtn'+(v===i+1?" on":"")+'" data-r="'+r.k+'" data-v="'+(i+1)+'" aria-label="'+(i+1)+' '+esc(lb)+'">'+(i+1)+'</button>';}).join("")+'</div></div>';}).join("")+'</div></div>';
+ h+='<div class="row"><button class="btn" type="button" id="done">Done</button></div>';
+ app.innerHTML=h;window.scrollTo(0,y);
+ app.querySelectorAll(".fbtn").forEach(function(b){b.addEventListener("click",function(){var k=b.getAttribute("data-r"),n=+b.getAttribute("data-v");R.rate[k]=(R.rate[k]===n?0:n);save(R);feelPage();});});
+ document.getElementById("done").addEventListener("click",function(){go(donePage);});
 }
-function pills(list){return '<div class="opts pills">'+list.map(function(x,i){return '<button type="button" class="opt" data-i="'+i+'">'+esc(x)+'</button>';}).join("")+'</div>';}
-function wire(list,fn){app.querySelectorAll(".opt").forEach(function(b){b.addEventListener("click",function(){fn(list[+b.getAttribute("data-i")]);});});}
-function startWith(low){if(low.length===1){learn(low[0]);return;}app.innerHTML='<h1>Which one would you like to start with?</h1>'+pills(low);wire(low,function(v){go(learn,v);});}
-function learn(v){app.innerHTML='<h1>'+esc(v)+'</h1><p class="sub">This is where 2Balance shows you ways to tend to it. This is a mockup, so nothing is saved to your profile yet.</p>';}
-function givePage(){app.innerHTML='<h1>What feeling could you help others experience today?</h1>'+pills(GIVE);wire(GIVE,function(v){go(gave,v);});}
-function gave(v){app.innerHTML='<h1>'+esc(v)+'</h1><p class="sub">This is where 2Balance shows you ways to help others feel '+esc(v.toLowerCase())+'. This is a mockup, so nothing is saved to your profile yet.</p>';}
+function donePage(){app.innerHTML='<h1>Thank you</h1><p class="sub">This is a mockup, so nothing is saved to your profile yet.</p>';}
 document.getElementById("back").addEventListener("click",back);
-if(new URLSearchParams(location.search).get("mockup")!=="1"){app.innerHTML='<h1>2Balance</h1><p class="sub">Coming soon.</p>';document.getElementById("back").hidden=true;}else{cur=feelPage;render();}
+document.getElementById("restart").addEventListener("click",function(){hist=[];cur=whenPage;render();});
+if(new URLSearchParams(location.search).get("mockup")!=="1"){app.innerHTML='<h1>2Balance</h1><p class="sub">Coming soon.</p>';document.getElementById("back").hidden=true;document.getElementById("restart").hidden=true;}else{cur=whenPage;render();}
 })();
 </script>
 </body>
