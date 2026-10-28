@@ -106,10 +106,11 @@ function whenPage(){
  var R=load(),y=window.scrollY;
  var h='<h1>When did you last think about you in relation to…</h1>';
  ROWS.forEach(function(r){h+='<div class="wrow"><p class="wlbl">'+esc(r.n)+'</p>'+pillRow(WHEN,R.when[r.k]?[R.when[r.k]]:[],'data-r="'+r.k+'"',false)+'</div>';});
- h+='<div class="inv"><p>If not lately, or never, we can help.</p><button class="btn jc" type="button" id="learn">I\'d like to learn more</button></div>';
+ var while_=ROWS.some(function(r){return ["Last month","Last year","In my life"].indexOf(R.when[r.k])>-1;});
+ if(while_)h+='<div class="inv"><p>We see it\'s been a while... we can help.</p><button class="btn jc" type="button" id="learn">Learn more</button></div>';
  app.innerHTML=h;
  app.querySelectorAll(".opt[data-r]").forEach(function(b){b.addEventListener("click",function(){var k=b.getAttribute("data-r"),v=WHEN[+b.getAttribute("data-i")];R.when[k]=(R.when[k]===v?"":v);save(R);whenPage();window.scrollTo(0,y);});});
- document.getElementById("learn").addEventListener("click",function(){go(statement);});
+ var l=document.getElementById("learn");if(l)l.addEventListener("click",function(){go(statement);});
 }
 function statement(){
  app.innerHTML='<p class="stmt">'+esc(STMT)+'</p><div class="row"><button class="btn" type="button" id="next">Continue</button></div>';
