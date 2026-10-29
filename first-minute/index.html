@@ -57,13 +57,15 @@
 .row{justify-content:flex-end;}.crumbs{display:flex;flex-wrap:wrap;gap:4px 6px;align-items:center;font-size:14px;margin:0 0 14px;}.crumbs:empty{display:none;}.crumbs button{font:inherit;font-size:14px;font-weight:600;color:#000;background:none;border:0;padding:2px 0;cursor:pointer;text-decoration:underline;}.crumbs span{color:var(--soft);}.crumbs b{font-weight:700;color:var(--ink);}.inv{display:flex;flex-direction:column;}.inv .btn{align-self:flex-end;}
 .fseg.lvl{max-width:220px;}
 .stmt{font-size:19px;line-height:1.6;color:#000;margin:0 0 8px;}
+.foot .sv{margin:0 0 0 auto;font-size:13px;color:#5B6B7A;}.foot{display:flex;align-items:center;}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="card"><nav class="crumbs" id="crumbs" aria-label="Where I am"></nav><div id="app" aria-live="polite"></div></div>
-  <div class="foot"><button class="link" id="back" type="button">Back</button></div>
+  <div class="foot"><button class="link" id="back" type="button">Back</button><p class="sv" id="sv" aria-live="polite"></p></div>
 </div>
+<script src="https://2balance.network/nav/identity.js?v=38"></script>
 <script>
 (function(){
 var app=document.getElementById("app");
@@ -72,31 +74,62 @@ var MINE={when:{},rate:{},dive:{}};
 var WHEN=["Today","Last week","Last month","Last year","In my life"];
 var LV=["Not where I want it","Getting there","Good","Great"];
 var ROWS=[
-{k:"body",n:"🌍 My body and surroundings",w:"my body and surroundings",v:"feel",
+{k:"body",f:{when:"lastThoughtAboutBody",now:"bodyFeelsNow",q:["bodyMoreOf","bodyWhere"],vis:"bodyVision",need:"bodyNext5Minutes"},n:"🌍 My body and surroundings",w:"my body and surroundings",v:"feel",
  q:[{t:"What would you like more of?",l:["Safety","Grounding","Structure","Strength","Health","Comfort","Nurturing","Order"]},
     {t:"Where?",l:["My body","My home","My workspace","My neighborhood","Nature near me","My things"]}],
  needs:["Move","Rest","Eat and drink"],vis:"your home"},
-{k:"feel",n:"🌊 My feelings",w:"my feelings",v:"feel",
+{k:"feel",f:{when:"lastThoughtAboutFeelings",now:"feelingsFeelNow",q:["feelingsLately","feelingsMoreOf"],vis:"feelingsVision",need:"feelingsNext5Minutes"},n:"🌊 My feelings",w:"my feelings",v:"feel",
  q:[{t:"What have you been feeling lately?",l:["Happy","Sad","Angry","Afraid","Calm","Tender","Numb","Grateful"]},
     {t:"What would you like more of?",l:["Empathy","Ease","Being heard","Caring","Tenderness","Well-being"]}],
  needs:["Connect","Rest","Create"],vis:"how you feel"},
-{k:"energy",n:"🔥 My energy",w:"my energy",v:"feels",
+{k:"energy",f:{when:"lastThoughtAboutEnergy",now:"energyFeelsNow",q:["energyLightsMeUp","energyNotServing"],vis:"energyVision",need:"energyNext5Minutes"},n:"🔥 My energy",w:"my energy",v:"feels",
  q:[{t:"What lights you up?",l:["Making things","Moving","Learning","Helping","Playing"]},
     {t:"Where is your energy going that isn't serving you right now?",cb:1,l:["Trying to please everyone","Overcommitting/ poor boundaries","Working on others' priorities, not my own","Unclear expectations","Too many decisions at once","Reactive mode - always putting out fires","Procrastination","Perfectionism/ over-polishing","Social media/ digital distractions","Email overload/ unnecessary meetings","Multitasking/ constant interruptions","Applying to misaligned work opportunities"]}],
  needs:["Move","Play","Create"],vis:"what you pour your energy into"},
-{k:"mind",n:"🍃 My mind",w:"my mind",v:"feels",
+{k:"mind",f:{when:"lastThoughtAboutMind",now:"mindFeelsNow",q:["mindMoreOf","mindTrueForMe"],vis:"mindVision",need:"mindNext5Minutes"},n:"🍃 My mind",w:"my mind",v:"feels",
  q:[{t:"What would you like more of?",l:["Clarity","Focus","Curiosity","Calm thoughts","New ideas","Learning"]},
     {t:"Which of these are true for you?",cb:1,l:["I see the world clearly","I respond more than I react","I ask questions when I'm curious","I can weigh my options","I say what I mean"]}],
  needs:["Rest","Create","Connect"],vis:"what you know how to do"},
-{k:"imag",n:"✨ My imagination",w:"my imagination",v:"feels",
+{k:"imag",f:{when:"lastThoughtAboutImagination",now:"imaginationFeelsNow",q:["imaginationMoreOf","imaginationWhen"],vis:"imaginationVision",need:"imaginationNext5Minutes"},n:"✨ My imagination",w:"my imagination",v:"feels",
  q:[{t:"What would you like more of?",l:["Inspiration","Ahas","Possibility","Creativity","Wonder","Abundance"]},
     {t:"When does it come most easily?",l:["Outdoors","In stillness","With others","Making things","Before sleep"]}],
  needs:["Create","Play","Rest"],vis:"your life"}];
 var NE={"Rest":"💙","Eat and drink":"🥘","Move":"🌀","Play":"🏓","Connect":"🌐","Create":"🎨"};
 var STMT="At 2Balance, you are invited to explore how you relate to the who, what, where, when, how, and why of your life as a daily practice. As you do, we support you to reawaken to balance, joy, connection, and fulfillment in how you experience and engage with anything in life.";
 function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");}
+var GS="https://cw-api-gate.jessieupp.workers.dev",sent={},timer=null,looking=false;
 function load(){return MINE;}
-function save(t){MINE=t;}
+function save(t){MINE=t;clearTimeout(timer);timer=setTimeout(flush,1500);}
+function me(){try{var m=window.CW&&CW.me&&CW.me();if(!m||!m.id||m.viewing||!CW.passParam())return "";return m.id;}catch(e){return "";}}
+function words(r){return r.n.replace(/^\S+\s+/,"");}
+function dv(k){var D=MINE.dive[k]=MINE.dive[k]||{a:[[],[]],own:[[],[]],need:"",vis:""};return D;}
+function vals(){var o={},st="";ROWS.forEach(function(r){var D=dv(r.k),n=MINE.rate[r.k]||0;o[r.f.when]=MINE.when[r.k]||"";o[r.f.now]=n?LV[n-1]:"";o[r.f.q[0]]=D.a[0].join("|");o[r.f.q[1]]=D.a[1].join("|");o[r.f.vis]=D.vis;o[r.f.need]=D.need;if(MINE.start===r.k)st=words(r);});o.startWithFirst=st;return o;}
+function note(t){document.getElementById("sv").textContent=t;}
+function flush(){clearTimeout(timer);timer=null;var id=me();if(!id||looking)return;var all=vals(),out={},any=false;Object.keys(all).forEach(function(f){if(all[f]!==(sent[f]||"")){out[f]=all[f];any=true;}});if(!any)return;
+ note("Saving…");
+ fetch(GS+"?action=saveBalanceAnswers&appearId="+encodeURIComponent(id)+"&answers="+encodeURIComponent(JSON.stringify(out)),{keepalive:true}).then(function(r){return r.json();}).then(function(r){
+  if(r&&r.status==="ok"&&!(r.missing&&r.missing.length)){Object.keys(out).forEach(function(f){sent[f]=out[f];});note("Saved");}
+  else if(r&&r.status==="norow")note("Your answers could not be saved because your profile is not set up yet.");
+  else if(r&&r.missing&&r.missing.length)note("Not saved yet: "+r.missing.length+" of these answers have no place on the sheet.");
+  else note("Could not save. Try again.");
+ }).catch(function(){note("Could not save. Try again.");});}
+function fill(d){var cur0=vals();
+ function take(f){var v=String(d[f]==null?"":d[f]).trim();sent[f]=v;return cur0[f]===""?v:"";}
+ ROWS.forEach(function(r){var D=dv(r.k),v;
+  if((v=take(r.f.when))&&WHEN.indexOf(v)>-1)MINE.when[r.k]=v;
+  if((v=take(r.f.now))&&LV.indexOf(v)>-1)MINE.rate[r.k]=LV.indexOf(v)+1;
+  [0,1].forEach(function(qi){var v=take(r.f.q[qi]);if(!v)return;D.a[qi]=v.split("|").map(function(x){return x.trim();}).filter(Boolean);D.a[qi].forEach(function(x){if(r.q[qi].l.indexOf(x)<0&&D.own[qi].indexOf(x)<0)D.own[qi].push(x);});});
+  if((v=take(r.f.vis)))D.vis=v;
+  if((v=take(r.f.need))&&r.needs.indexOf(v)>-1)D.need=v;
+  if(take("startWithFirst")===words(r))MINE.start=r.k;
+ });
+ sent.startWithFirst=String(d.startWithFirst==null?"":d.startWithFirst).trim();
+}
+function lookUp(){var id=me();if(!id)return;looking=true;note("Looking for your earlier answers…");
+ var ask=function(){return fetch(GS+"?action=getIntake&appearId="+encodeURIComponent(id)).then(function(r){return r.json();}).then(function(d){if(!d||d.status==="error")throw new Error("no");return d;});};
+ ask().catch(function(){return new Promise(function(ok){setTimeout(ok,2000);}).then(ask);}).then(function(d){fill((d&&d.data)||{});looking=false;note("");if(cur){cur(curArg);drawCrumbs();}flush();}).catch(function(){looking=false;note("Your earlier answers could not be loaded.");});}
+document.addEventListener("visibilitychange",function(){if(document.hidden)flush();});
+window.addEventListener("pagehide",flush);
 function go(fn,arg){hist.push([cur,curArg]);cur=fn;curArg=arg;render();}
 function back(){var h=hist.pop();if(h){cur=h[0];curArg=h[1];render();}}
 function render(){cur(curArg);document.getElementById("back").hidden=!hist.length;drawCrumbs();window.scrollTo(0,0);}
@@ -133,11 +166,11 @@ function startWith(){
  var n=document.getElementById("next");if(n)n.addEventListener("click",function(){go(dive,pick);});
 }
 function dive(k){
- var r=row(k),R=load(),D=R.dive[k]=R.dive[k]||{level:0,a:[[],[]],own:[[],[]],need:"",vis:""};if(typeof D.level!=="number")D.level=0;
+ var r=row(k),R=load(),D=dv(k);
  function draw(){
   var y=window.scrollY;
   var h='<h1>'+esc(r.n)+'</h1>';
-  h+='<div class="qb"><h2>Right now, '+esc(r.w)+' '+r.v+':</h2><div class="ckey">'+LV.map(function(lb,i){return '<span><b>'+(i+1)+'</b> '+esc(lb)+'</span>';}).join("")+'</div><div class="fseg lvl">'+LV.map(function(lb,i){return '<button type="button" class="opt fbtn'+(D.level===i+1?" on":"")+'" data-q="level" data-v="'+(i+1)+'" aria-label="'+(i+1)+' '+esc(lb)+'">'+(i+1)+'</button>';}).join("")+'</div></div>';
+  h+='<div class="qb"><h2>Right now, '+esc(r.w)+' '+r.v+':</h2><div class="ckey">'+LV.map(function(lb,i){return '<span><b>'+(i+1)+'</b> '+esc(lb)+'</span>';}).join("")+'</div><div class="fseg lvl">'+LV.map(function(lb,i){return '<button type="button" class="opt fbtn'+((R.rate[k]||0)===i+1?" on":"")+'" data-q="level" data-v="'+(i+1)+'" aria-label="'+(i+1)+' '+esc(lb)+'">'+(i+1)+'</button>';}).join("")+'</div></div>';
   r.q.forEach(function(q,qi){
    var list=q.l.concat(D.own[qi]);
    h+='<div class="qb"><h2>'+esc(q.t)+'</h2>';
@@ -149,7 +182,7 @@ function dive(k){
   h+='<div class="qb"><h2>In the next 5 minutes, what would you like to do?</h2><div class="opts pills">'+r.needs.map(function(x,i){return '<button type="button" class="opt'+(D.need===x?" on":"")+'" data-q="need" data-i="'+i+'">'+NE[x]+' '+esc(x)+'</button>';}).join("")+'</div></div>';
   h+='<div class="row"><button class="btn" type="button" id="next">Continue</button></div>';
   app.innerHTML=h;window.scrollTo(0,y);
-  app.querySelectorAll('.opt[data-q="level"]').forEach(function(b){b.addEventListener("click",function(){var v=+b.getAttribute("data-v");D.level=(D.level===v?0:v);save(R);draw();});});
+  app.querySelectorAll('.opt[data-q="level"]').forEach(function(b){b.addEventListener("click",function(){var v=+b.getAttribute("data-v");R.rate[k]=(R.rate[k]===v?0:v);save(R);draw();});});
   app.querySelectorAll('.opt[data-q="need"]').forEach(function(b){b.addEventListener("click",function(){var v=r.needs[+b.getAttribute("data-i")];D.need=(D.need===v?"":v);save(R);draw();});});
   r.q.forEach(function(q,qi){
    var list=q.l.concat(D.own[qi]);
@@ -174,9 +207,9 @@ function feelPage(){
  app.querySelectorAll(".fbtn").forEach(function(b){b.addEventListener("click",function(){var k=b.getAttribute("data-r"),n=+b.getAttribute("data-v");R.rate[k]=(R.rate[k]===n?0:n);save(R);feelPage();});});
  document.getElementById("done").addEventListener("click",function(){go(donePage);});
 }
-function donePage(){app.innerHTML='<h1>Thank you</h1><p class="sub">This is a mockup, so nothing is saved to your profile yet.</p>';}
+function donePage(){flush();app.innerHTML='<h1>Thank you</h1>'+(me()?'':'<p class="sub">Your answers are not saved because you are not signed in.</p>');}
 document.getElementById("back").addEventListener("click",back);
-if(new URLSearchParams(location.search).get("mockup")!=="1"){app.innerHTML='<h1>2Balance</h1><p class="sub">Coming soon.</p>';document.getElementById("back").hidden=true;}else{cur=whenPage;render();}
+if(new URLSearchParams(location.search).get("mockup")!=="1"){app.innerHTML='<h1>2Balance</h1><p class="sub">Coming soon.</p>';document.getElementById("back").hidden=true;}else{cur=whenPage;render();lookUp();}
 })();
 </script>
 </body>
