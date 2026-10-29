@@ -68,7 +68,7 @@
 (function(){
 var app=document.getElementById("app");
 var hist=[];var cur,curArg;var showHelp=false;
-var KEY="balance.firstminute.v2";
+var MINE={when:{},rate:{},dive:{}};
 var WHEN=["Today","Last week","Last month","Last year","In my life"];
 var LV=["Not where I want it","Getting there","Good","Great"];
 var ROWS=[
@@ -95,8 +95,8 @@ var ROWS=[
 var NE={"Rest":"💙","Eat and drink":"🥘","Move":"🌀","Play":"🏓","Connect":"🌐","Create":"🎨"};
 var STMT="At 2Balance, you are invited to explore how you relate to the who, what, where, when, how, and why of your life as a daily practice. As you do, we support you to reawaken to balance, joy, connection, and fulfillment in how you experience and engage with anything in life.";
 function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");}
-function load(){var t=null;try{t=JSON.parse(localStorage.getItem(KEY)||"null");}catch(e){}t=t||{};t.when=t.when||{};t.rate=t.rate||{};t.dive=t.dive||{};return t;}
-function save(t){try{localStorage.setItem(KEY,JSON.stringify(t));}catch(e){}}
+function load(){return MINE;}
+function save(t){MINE=t;}
 function go(fn,arg){hist.push([cur,curArg]);cur=fn;curArg=arg;render();}
 function back(){var h=hist.pop();if(h){cur=h[0];curArg=h[1];render();}}
 function render(){cur(curArg);document.getElementById("back").hidden=!hist.length;drawCrumbs();window.scrollTo(0,0);}
