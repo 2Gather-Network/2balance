@@ -54,7 +54,7 @@
 .chk{display:flex;gap:10px;align-items:flex-start;margin:12px 0 0;font-size:15px;line-height:1.4;cursor:pointer;color:#000;}.chk input{margin-top:3px;width:18px;height:18px;flex:none;accent-color:var(--brand);}
 .wrow{margin-top:22px;}.wrow:first-of-type{margin-top:18px;}.wlbl{font-size:17px;font-weight:700;color:#000;margin:0 0 2px;}.wrow .opts{margin-top:8px;}
 .own textarea{flex:1;min-width:0;font:inherit;font-size:16px;line-height:1.4;padding:10px 12px;border:2px solid var(--brand);border-radius:10px;resize:vertical;min-height:96px;}
-.row{justify-content:flex-end;}.crumbs{display:flex;flex-wrap:wrap;gap:4px 6px;align-items:center;font-size:14px;margin:0 0 14px;}.crumbs:empty{display:none;}.crumbs button{font:inherit;font-size:14px;font-weight:600;color:#000;background:none;border:0;padding:2px 0;cursor:pointer;text-decoration:underline;}.crumbs span{color:var(--soft);}.crumbs b{font-weight:700;color:var(--ink);}.inv{display:flex;flex-direction:column;}.inv .btn{align-self:flex-end;}
+.row{justify-content:space-between;}.row .btn:last-child{margin-left:auto;}.crumbs{display:flex;flex-wrap:wrap;gap:4px 6px;align-items:center;font-size:14px;margin:0 0 14px;}.crumbs:empty{display:none;}.crumbs button{font:inherit;font-size:14px;font-weight:600;color:#000;background:none;border:0;padding:2px 0;cursor:pointer;text-decoration:underline;}.crumbs span{color:var(--soft);}.crumbs b{font-weight:700;color:var(--ink);}.inv{display:flex;flex-direction:column;}.inv .btn{align-self:flex-end;}
 .fseg.lvl{max-width:220px;}
 .stmt{font-size:19px;line-height:1.6;color:#000;margin:0 0 8px;}
 </style>
@@ -62,8 +62,7 @@
 <body>
 <div class="wrap">
   <div class="card"><nav class="crumbs" id="crumbs" aria-label="Where I am"></nav><div id="app" aria-live="polite"></div></div>
-  <div class="foot"><button class="link" id="back" type="button">Back</button></div>
-</div>
+  </div>
 <script>
 (function(){
 var app=document.getElementById("app");
@@ -98,8 +97,10 @@ function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").repl
 function load(){return MINE;}
 function save(t){MINE=t;}
 function go(fn,arg){hist.push([cur,curArg]);cur=fn;curArg=arg;render();}
+new MutationObserver(addBack).observe(app,{childList:true});
 function back(){var h=hist.pop();if(h){cur=h[0];curArg=h[1];render();}}
-function render(){cur(curArg);document.getElementById("back").hidden=!hist.length;drawCrumbs();window.scrollTo(0,0);}
+function render(){cur(curArg);addBack();drawCrumbs();window.scrollTo(0,0);}
+function addBack(){if(!hist.length||document.getElementById("back"))return;var r=app.querySelector(".row");if(!r){r=document.createElement("div");r.className="row";app.appendChild(r);}var b=document.createElement("button");b.type="button";b.id="back";b.className="btn ghost";b.textContent="Back";b.addEventListener("click",back);r.insertBefore(b,r.firstChild);}
 function crumbName(fn,arg){if(fn===whenPage)return "When did you last…";if(fn===statement)return "2Balance";if(fn===startWith)return "Start with";if(fn===dive)return row(arg).n;if(fn===feelPage)return "How do you feel about…";return "Thank you";}
 function drawCrumbs(){var nav=document.getElementById("crumbs"),trail=hist.concat([[cur,curArg]]);if(trail.length<2){nav.innerHTML="";return;}
  nav.innerHTML=trail.map(function(t,i){var n=esc(crumbName(t[0],t[1]));return i===trail.length-1?'<b aria-current="page">'+n+'</b>':'<button type="button" data-c="'+i+'">'+n+'</button><span aria-hidden="true">›</span>';}).join("");
@@ -128,7 +129,7 @@ function startWith(){
  var list=ROWS.filter(function(r){return R.when[r.k]==="Last year"||R.when[r.k]==="In my life";});
  if(!list.length)list=ROWS;
  var pick=R.start&&list.some(function(r){return r.k===R.start;})?R.start:"";
- app.innerHTML='<h1>Which one would you like to start with?</h1><div class="opts pills">'+list.map(function(r){return '<button type="button" class="opt'+(pick===r.k?" on":"")+'" data-k="'+r.k+'">'+esc(r.n)+'</button>';}).join("")+'</div>'+(pick?'<div class="row"><button class="btn" type="button" id="next">Next</button></div>':'');
+ app.innerHTML='<h1>Which one would you like to start with?</h1><div class="opts pills">'+list.map(function(r){return '<button type="button" class="opt'+(pick===r.k?" on":"")+'" data-k="'+r.k+'">'+esc(r.n)+'</button>';}).join("")+'</div>'+(pick?'<div class="row"><button class="btn" type="button" id="next">Continue</button></div>':'');
  app.querySelectorAll(".opt").forEach(function(b){b.addEventListener("click",function(){var k=b.getAttribute("data-k");R.start=(R.start===k?"":k);save(R);startWith();});});
  var n=document.getElementById("next");if(n)n.addEventListener("click",function(){go(dive,pick);});
 }
@@ -175,8 +176,7 @@ function feelPage(){
  document.getElementById("done").addEventListener("click",function(){go(donePage);});
 }
 function donePage(){app.innerHTML='<h1>Thank you</h1><p class="sub">This is a mockup, so nothing is saved to your profile yet.</p>';}
-document.getElementById("back").addEventListener("click",back);
-if(new URLSearchParams(location.search).get("mockup")!=="1"){app.innerHTML='<h1>2Balance</h1><p class="sub">Coming soon.</p>';document.getElementById("back").hidden=true;}else{cur=whenPage;render();}
+if(new URLSearchParams(location.search).get("mockup")!=="1"){app.innerHTML='<h1>2Balance</h1><p class="sub">Coming soon.</p>';}else{cur=whenPage;render();}
 })();
 </script>
 </body>
