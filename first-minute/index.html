@@ -149,7 +149,7 @@ function whenPage(){
  ROWS.forEach(function(r){h+='<div class="wrow"><p class="wlbl">'+esc(r.n)+'</p>'+pillRow(WHEN,R.when[r.k]?[R.when[r.k]]:[],'data-r="'+r.k+'"',false)+'</div>';});
  var while_=ROWS.some(function(r){return ["Last month","Last year","In my life"].indexOf(R.when[r.k])>-1;});
  if(showHelp&&while_)h+='<div class="inv"><p>We see it\'s been a while... we can help.</p><button class="btn jc" type="button" id="learn">Learn more</button></div>';
- else if(ROWS.every(function(r){return R.when[r.k];}))h+='<div class="row"><button class="btn" type="button" id="done">Done</button></div>';
+ else if(ROWS.every(function(r){return R.when[r.k];}))h+='<div class="row"><button class="btn" type="button" id="done">Continue</button></div>';
  app.innerHTML=h;
  app.querySelectorAll(".opt[data-r]").forEach(function(b){b.addEventListener("click",function(){var k=b.getAttribute("data-r"),v=WHEN[+b.getAttribute("data-i")];R.when[k]=(R.when[k]===v?"":v);save(R);showHelp=false;whenPage();window.scrollTo(0,y);});});
  var d=document.getElementById("done");if(d)d.addEventListener("click",function(){if(while_){showHelp=true;whenPage();window.scrollTo(0,y);}else go(donePage);});
@@ -215,7 +215,7 @@ function feelPage(){
  var R=load(),y=window.scrollY;
  var h='<h1 class="q">How do you feel about…</h1>';
  h+='<div class="qb"><div class="ckey">'+LV.map(function(lb,i){return '<span><b>'+(i+1)+'</b> '+esc(lb)+'</span>';}).join("")+'</div><div class="fscale">'+ROWS.map(function(r){var v=R.rate[r.k]||0;return '<div class="frow"><div class="flbl">'+esc(r.n)+'</div><div class="fseg">'+LV.map(function(lb,i){return '<button type="button" class="opt fbtn'+(v===i+1?" on":"")+'" data-r="'+r.k+'" data-v="'+(i+1)+'" aria-label="'+(i+1)+' '+esc(lb)+'">'+(i+1)+'</button>';}).join("")+'</div></div>';}).join("")+'</div></div>';
- h+='<div class="row"><button class="btn" type="button" id="done">Done</button></div>';
+ h+='<div class="row"><button class="btn" type="button" id="done">Continue</button></div>';
  app.innerHTML=h;window.scrollTo(0,y);
  app.querySelectorAll(".fbtn").forEach(function(b){b.addEventListener("click",function(){var k=b.getAttribute("data-r"),n=+b.getAttribute("data-v");R.rate[k]=(R.rate[k]===n?0:n);save(R);feelPage();});});
  document.getElementById("done").addEventListener("click",function(){go(donePage);});
