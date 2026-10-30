@@ -163,9 +163,9 @@ new MutationObserver(addBack).observe(app,{childList:true});
 function render(){cur(curArg);addBack();drawCrumbs();drawRail();window.scrollTo(0,0);}
 function addBack(){if(!hist.length||document.getElementById("back"))return;var r=app.querySelector(".row");if(!r){r=document.createElement("div");r.className="row";app.appendChild(r);}var b=document.createElement("button");b.type="button";b.id="back";b.className="btn ghost";b.textContent="Back";b.addEventListener("click",back);r.insertBefore(b,r.firstChild);}
 function crumbName(fn,arg){if(fn===whenPage)return "Home";if(fn===startWith)return "Begin";if(fn===dive)return words(row(typeof arg==="string"?arg:arg.k));if(fn===feelPage)return "How do you feel about…";if(fn===explorePage)return "Explore";if(fn===askedPage)return "A question";if(fn===feelWhatPage)return "What I would like to feel";if(fn===notePage)return "Looking closer";if(fn===optionsPage)return words(row(arg));if(fn===finalPage)return "Next 5 minutes";if(fn===invite)return "Save my answers";if(fn===notNow)return "Not at this time";if(fn===remind)return "Email reminder";return "Thank you";}
-function drawRail(){var e=document.getElementById("rail"),R=load(),p=R.picks||[],k=cur===dive?(typeof curArg==="string"?curArg:curArg&&curArg.k):cur===optionsPage?curArg:"",i=p.indexOf(k);if(p.length<2||i<0){e.innerHTML="";return;}var did=R.areasDone||[];
+function drawRail(){var e=document.getElementById("rail"),R=load(),p=R.picks||[],k=cur===dive?(typeof curArg==="string"?curArg:curArg&&curArg.k):"",i=p.indexOf(k);if(p.length<2||i<0){e.innerHTML="";return;}var did=R.areasDone||[];
  e.innerHTML='<div class="rdots">'+p.map(function(a,j){var d=did.indexOf(a)>-1,n=words(row(a));return '<button type="button" class="rdot'+(j===i?" now":"")+(d?" did":"")+'" data-a="'+a+'" aria-label="'+esc(n)+(d?", finished":"")+'"'+(j===i?' aria-current="step"':'')+'>'+row(a).n.split(" ")[0]+(d?'<span class="rchk" aria-hidden="true">✓</span>':'')+'</button>';}).join("")+'</div><p class="rname">'+(i+1)+' of '+p.length+'</p>';
- e.querySelectorAll(".rdot").forEach(function(b){b.addEventListener("click",function(){var a=b.getAttribute("data-a");if(a===k)return;function move(){if(cur===optionsPage){dv(k).need=needWords(k);save(R);}go(dive,a);}if(R.rate[k]){move();return;}var q=document.createElement("div");q.className="rask";q.innerHTML='<p class="rname">Are you sure you want to continue without answering the scale?</p><div class="row"><button class="btn ghost" type="button" id="rstay">Stay here</button><button class="btn" type="button" id="rgo">Yes, continue</button></div>';var old=e.querySelector(".rask");if(old)old.remove();e.appendChild(q);document.getElementById("rstay").addEventListener("click",function(){q.remove();});document.getElementById("rgo").addEventListener("click",move);});});}
+ e.querySelectorAll(".rdot").forEach(function(b){b.addEventListener("click",function(){var a=b.getAttribute("data-a");if(a===k)return;function move(){dv(k).need=needWords(k);save(R);go(dive,a);}if(R.rate[k]){move();return;}var q=document.createElement("div");q.className="rask";q.innerHTML='<p class="rname">Are you sure you want to continue without answering the scale?</p><div class="row"><button class="btn ghost" type="button" id="rstay">Stay here</button><button class="btn" type="button" id="rgo">Yes, continue</button></div>';var old=e.querySelector(".rask");if(old)old.remove();e.appendChild(q);document.getElementById("rstay").addEventListener("click",function(){q.remove();});document.getElementById("rgo").addEventListener("click",move);});});}
 function drawCrumbs(){var nav=document.getElementById("crumbs"),trail=hist.concat([[cur,curArg]]);if(trail.length<2){nav.innerHTML="";return;}
 
  function kk(t){return typeof t[1]==="string"?t[1]:(t[1]&&t[1].k);}
@@ -238,23 +238,24 @@ function remind(){
  document.getElementById("sendrem").addEventListener("click",send);em.addEventListener("keydown",function(e){if(e.key==="Enter")send();});
 }
 function dive(arg){
- var k=typeof arg==="string"?arg:arg.k,step=typeof arg==="string"?0:arg.s,r=row(k),R=load(),D=dv(k);
- var steps=["level"];if(!r.noq)r.q.forEach(function(q,qi){steps.push(qi);});if(r.f.vis)steps.push("vis");var cs=steps[step];
+ var k=typeof arg==="string"?arg:arg.k,r=row(k),R=load(),D=dv(k);
+ flow(k).explore=HOME[k].slice();
  function draw(){
   var y=window.scrollY;
   var h='<h1>'+esc(r.n)+'</h1>';
-  if(cs==="level")h+='<div class="qb"><h2>Right now, I would rate '+esc(r.w)+' as:</h2>'+keyHTML()+'<div class="fseg lvl">'+LV.map(function(lb,i){return '<button type="button" class="opt fbtn'+((R.rate[k]||0)===i+1?" on":"")+'" data-q="level" data-v="'+(i+1)+'" aria-label="'+(i+1)+' '+esc(lb)+'">'+(i+1)+'</button>';}).join("")+'</div></div>';
+  h+='<div class="qb"><h2>Right now, I would rate '+esc(r.w)+' as:</h2>'+keyHTML()+'<div class="fseg lvl">'+LV.map(function(lb,i){return '<button type="button" class="opt fbtn'+((R.rate[k]||0)===i+1?" on":"")+'" data-q="level" data-v="'+(i+1)+'" aria-label="'+(i+1)+' '+esc(lb)+'">'+(i+1)+'</button>';}).join("")+'</div></div>';
   r.q.forEach(function(q,qi){
-   if(cs!==qi)return;
+   if(r.noq)return;
    var list=q.l.concat(D.own[qi]);
    h+='<div class="qb"><h2>'+esc(q.t)+'</h2>'+(q.t==="What have you been feeling lately?"?'<p class="sub" style="margin:0 0 6px">Select all that apply.</p>':'');
    if(q.cb){list.forEach(function(x,i){h+='<label class="chk"><input type="checkbox" data-q="'+qi+'" data-i="'+i+'"'+(D.a[qi].indexOf(x)>-1?" checked":"")+'><span>'+esc(x)+'</span></label>';});h+='<label class="chk"><input type="checkbox" class="oth" data-q="'+qi+'"><span>+ Other</span></label>';}
    else h+=pillRow(list,D.a[qi],'data-q="'+qi+'"',true);
    h+='<div class="ownhost" data-q="'+qi+'"></div></div>';
   });
-  if(cs==="vis")h+='<div class="qb"><h2>What\'s your greatest, grandest vision for '+esc(r.vis)+'?</h2><div class="own"><textarea id="vis" aria-label="My vision">'+esc(D.vis)+'</textarea></div></div>';
-  if(cs!=="level"||R.rate[k])h+='<div class="row"><button class="btn" type="button" id="next">Continue</button></div>';
-  app.innerHTML=h;window.scrollTo(0,y);
+  if(r.f.vis)h+='<div class="qb"><h2>What\'s your greatest, grandest vision for '+esc(r.vis)+'?</h2><div class="own"><textarea id="vis" aria-label="My vision">'+esc(D.vis)+'</textarea></div></div>';
+  h+='<div id="optshost"></div>';
+  if(R.rate[k])h+='<div class="row"><button class="btn" type="button" id="next">Continue</button></div>';
+  app.innerHTML=h;optionsPage(k);window.scrollTo(0,y);
   app.querySelectorAll('.opt[data-q="level"]').forEach(function(b){b.addEventListener("click",function(){var v=+b.getAttribute("data-v");R.rate[k]=(R.rate[k]===v?0:v);save(R);draw();});});
   var vb=document.getElementById("vis");if(vb)vb.addEventListener("input",function(e){D.vis=e.target.value;save(R);});
   r.q.forEach(function(q,qi){
@@ -265,7 +266,7 @@ function dive(arg){
    var o=app.querySelector('[data-q="'+qi+'"][data-other], .chk .oth[data-q="'+qi+'"]');
    if(o)o.addEventListener(o.tagName==="INPUT"?"change":"click",function(){if(o.tagName==="INPUT")o.checked=false;ownBox(qi,function(v){if(D.own[qi].indexOf(v)<0&&q.l.indexOf(v)<0)D.own[qi].push(v);toggle(v,true);draw();});});
   });
-  var nb=document.getElementById("next");if(nb)nb.addEventListener("click",function(){if(step<steps.length-1)go(dive,{k:k,s:step+1});else{flow(k).explore=HOME[k].slice();go(optionsPage,k);}});
+  var nb=document.getElementById("next");if(nb)nb.addEventListener("click",function(){var nx=afterArea(k);R.areasDone=R.areasDone||[];if(R.areasDone.indexOf(k)<0)R.areasDone.push(k);D.need=needWords(k);save(R);if(nx)go(dive,nx);else go(finalPage,k);});
  }
  draw();
 }
@@ -504,6 +505,7 @@ function gpSaveNow(k){var F=flow(k);gpMethodsNorm();F.opts.Natural=Object.keys(_
 function gpNaturalBlock(k){gpLoad(k);window.gpMethodsChanged=function(){gpSaveNow(k);};window.gpTouchSave=function(){gpSaveNow(k);};return gpBlock('What comes most naturally to you?','How you like to help, rather than what you know.',gpSubjWrap(gpStagesBody()));}
 
 function optionsPage(k){
+ var host=document.getElementById("optshost");
  var F=flow(k),h="";
  var br=F.branch=F.branch||{},oth=F.other=F.other||{},act=activeBr(F);
  function drawB(B){if(askedBefore(k,B.k))return;var c=br[B.k]=br[B.k]||[];h+='<div class="qb">'+(B.chart?mealChart():'')+'<h2>'+esc(B.q)+'</h2><div class="opts pills">'+B.l.map(function(l,i){return '<button type="button" class="opt br'+(c.indexOf(l)>-1?" on":"")+(l==="+ Other"?" other":"")+'" data-b="'+esc(B.k)+'" data-i="'+i+'">'+esc(l)+'</button>';}).join("")+'</div>'+(c.indexOf("+ Other")>-1?'<div class="own"><input type="text" maxlength="80" data-o="'+esc(B.k)+'" value="'+esc(oth[B.k]||"")+'" aria-label="Other"></div>':'')+'</div>';}
@@ -511,15 +513,13 @@ function optionsPage(k){
   if(askedBefore(k,x))return;
   if(x==="Natural"){h+='<div data-gp="1"></div>';}else if(x==="Expression"){}else if(LISTS[x]){var cur=F.opts[x]=F.opts[x]||[];h+='<div class="qb"><h2>'+esc(q)+'</h2><div class="opts pills">'+LISTS[x].map(function(l,i){return '<button type="button" class="opt'+(cur.indexOf(l)>-1?" on":"")+(l==="+ Other"?" other":"")+'" data-x="'+xi+'" data-i="'+i+'">'+esc(l)+'</button>';}).join("")+'</div></div>';}
   else{h+='<div class="qb"><h2>'+esc(TXT[x])+'</h2><div class="own"><input type="text" maxlength="80" data-t="'+xi+'" value="'+esc((F.opts[x]||[""])[0]||"")+'" aria-label="'+esc(TXT[x])+'"></div></div>';}if((F.opts[x]||[]).indexOf("+ Other")>-1)h+='<div class="own"><input type="text" maxlength="80" data-o="n:'+esc(x)+'" value="'+esc(oth["n:"+x]||"")+'" aria-label="Other"></div>';act.filter(function(B){return B.need===x;}).forEach(drawB);});
- var nx=afterArea(k);
- app.innerHTML=h+'<div class="row"><button class="btn" type="button" id="next">Continue</button></div>';
- var gph=app.querySelector('[data-gp]');if(gph)gph.replaceWith(gpNaturalBlock(k));
+ host.innerHTML=h;
+ var gph=host.querySelector('[data-gp]');if(gph)gph.replaceWith(gpNaturalBlock(k));
  var y=window.scrollY;
- app.querySelectorAll(".opt.br").forEach(function(b){b.addEventListener("click",function(){var B=act.filter(function(x){return x.k===b.getAttribute("data-b");})[0],v=B.l[+b.getAttribute("data-i")],c=br[B.k],i=c.indexOf(v);if(i>-1)c.splice(i,1);else{if(B.one)c.length=0;c.push(v);}optionsPage(k);window.scrollTo(0,y);});});
- app.querySelectorAll("input[data-o]").forEach(function(t){t.addEventListener("input",function(){oth[t.getAttribute("data-o")]=t.value.trim();});});
- app.querySelectorAll(".opt:not(.br)").forEach(function(b){b.addEventListener("click",function(){var x=F.explore[+b.getAttribute("data-x")],v=LISTS[x][+b.getAttribute("data-i")],c=F.opts[x],i=c.indexOf(v);if(i>-1)c.splice(i,1);else c.push(v);optionsPage(k);window.scrollTo(0,y);});});
- app.querySelectorAll("input[data-t]").forEach(function(t){t.addEventListener("input",function(){F.opts[F.explore[+t.getAttribute("data-t")]]=[t.value.trim()].filter(Boolean);});});
- document.getElementById("next").addEventListener("click",function(){var R=load();R.areasDone=R.areasDone||[];if(R.areasDone.indexOf(k)<0)R.areasDone.push(k);dv(k).need=needWords(k);save(R);if(nx)go(dive,nx);else go(finalPage,k);});
+ host.querySelectorAll(".opt.br").forEach(function(b){b.addEventListener("click",function(){var B=act.filter(function(x){return x.k===b.getAttribute("data-b");})[0],v=B.l[+b.getAttribute("data-i")],c=br[B.k],i=c.indexOf(v);if(i>-1)c.splice(i,1);else{if(B.one)c.length=0;c.push(v);}optionsPage(k);window.scrollTo(0,y);});});
+ host.querySelectorAll("input[data-o]").forEach(function(t){t.addEventListener("input",function(){oth[t.getAttribute("data-o")]=t.value.trim();});});
+ host.querySelectorAll(".opt:not(.br)").forEach(function(b){b.addEventListener("click",function(){var x=F.explore[+b.getAttribute("data-x")],v=LISTS[x][+b.getAttribute("data-i")],c=F.opts[x],i=c.indexOf(v);if(i>-1)c.splice(i,1);else c.push(v);optionsPage(k);window.scrollTo(0,y);});});
+ host.querySelectorAll("input[data-t]").forEach(function(t){t.addEventListener("input",function(){F.opts[F.explore[+t.getAttribute("data-t")]]=[t.value.trim()].filter(Boolean);});});
 }
 function finalPage(k){
  var F=flow(k),pool=[],ks=load().picks&&load().picks.indexOf(k)>-1?load().picks:[k];
