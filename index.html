@@ -258,12 +258,12 @@ function explorePickPage(){
  var R=load(),L=areasList();R.exp=R.exp||{};
  function first(){var f=L.filter(function(a){return R.exp[a]==="Yes";})[0];if(f)go(areaQsPage,f);else go(finalPage);}
  if(L.length===1){var k=L[0],r=row(k);
-  app.innerHTML='<h1 class="q">Would you like to explore '+esc(r.w.replace(/^my /,"your "))+' a little more?</h1><div class="acts"><button class="btn" type="button" id="yes">Yes</button></div><div class="alts"><button class="lnk" type="button" id="no">Not right now, thank you</button></div>';
+  app.innerHTML='<h1 class="q">Would you like to explore '+esc(r.w.replace(/^my /,"your "))+' a little more?</h1><div class="acts"><button class="btn" type="button" id="yes">Yes</button></div><div class="invite"><div class="alts"><button class="lnk" type="button" id="no">Not right now, thank you</button></div></div>';
   document.getElementById("yes").addEventListener("click",function(){R.exp[k]="Yes";save(R);first();});
   document.getElementById("no").addEventListener("click",function(){R.exp[k]="No";save(R);go(notNow);});
   return;}
  var any=L.some(function(a){return R.exp[a]==="Yes";});
- app.innerHTML='<h1 class="q">Would you like to explore any of these a little more?</h1><div class="chks">'+L.map(function(a){var r=row(a);return '<label class="chk"><input type="checkbox" data-a="'+a+'"'+(R.exp[a]==="Yes"?" checked":"")+'><span>'+esc(r.n)+' ('+(R.rate[a]||"")+' '+esc(LV[(R.rate[a]||1)-1].replace(/^./,function(c){return c.toLowerCase();}))+')</span></label>';}).join("")+'</div><div class="row"><button class="btn" type="button" id="next">Continue</button></div><div class="alts"><button class="lnk" type="button" id="no">Not right now, thank you</button></div>';
+ app.innerHTML='<h1 class="q">Would you like to explore any of these a little more?</h1><div class="chks">'+L.map(function(a){var r=row(a);return '<label class="chk"><input type="checkbox" data-a="'+a+'"'+(R.exp[a]==="Yes"?" checked":"")+'><span>'+esc(r.n)+' ('+(R.rate[a]||"")+' '+esc(LV[(R.rate[a]||1)-1].replace(/^./,function(c){return c.toLowerCase();}))+')</span></label>';}).join("")+'</div><div class="row"><button class="btn" type="button" id="next">Continue</button></div><div class="invite"><div class="alts"><button class="lnk" type="button" id="no">Not right now, thank you</button></div></div>';
  app.querySelectorAll(".chk input").forEach(function(c){c.addEventListener("change",function(){R.exp[c.getAttribute("data-a")]=c.checked?"Yes":"No";save(R);});});
  document.getElementById("no").addEventListener("click",function(){L.forEach(function(a){R.exp[a]="No";});save(R);go(notNow);});
  document.getElementById("next").addEventListener("click",first);
