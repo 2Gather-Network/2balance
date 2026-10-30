@@ -96,7 +96,7 @@ var ROWS=[
     {t:"Where is your energy going that isn't serving you right now?",cb:1,l:["Lack of direction","Constant overwhelm","Distraction overload","Unclear priorities","Life on autopilot","Waiting for one change to fix everything"]},
     {t:"Are you feeling underwhelmed in any way? If so, where would you like more challenge or inspiration right now?",l:["Connect","Create","Eat and drink","Move","Play","Rest"]}],
  needs:["Move","Play","Create"]},
-{k:"mind",f:{when:"lastThoughtAboutMind",now:"mindFeelsNow",q:["mindMoreOf","mindTrueForMe"],need:"mindNext5Minutes"},n:"🍃 My mind",w:"my mind",v:"feels",
+{k:"mind",direct:1,f:{when:"lastThoughtAboutMind",now:"mindFeelsNow",q:["mindMoreOf","mindTrueForMe"],need:"mindNext5Minutes"},n:"🍃 My mind",w:"my mind",v:"feels",
  q:[{t:"What would you like more of?",l:["Clarity","Focus","Curiosity","Calm thoughts","New ideas","Learning"]},
     {t:"Which of these are true for you?",cb:1,l:["I see the world clearly","I respond more than I react","I ask questions when I'm curious","I can weigh my options","I say what I mean"]}],
  needs:["Rest","Create","Connect"]},
@@ -235,6 +235,7 @@ function remind(){
 }
 function dive(arg){
  var k=typeof arg==="string"?arg:arg.k,step=typeof arg==="string"?0:arg.s,r=row(k),R=load(),D=dv(k);
+ if(r.direct){D.feels=ALLN.map(function(n){return FE[n];});flow(k).explore=[];cur=explorePage;curArg=k;explorePage(k);return;}
  var steps=["level"];r.q.forEach(function(q,qi){steps.push(qi);});if(r.f.vis)steps.push("vis");var cs=steps[step];
  function draw(){
   var y=window.scrollY;
@@ -282,7 +283,7 @@ function explorePage(k){
  var h=one?'<h1 class="q">Would you like to explore '+esc(youize(lab(D.feels[0])).replace(/^how you like to/,"how you like to"))+'?</h1>':'<h1 class="q">Would you like to explore these?</h1><div class="chks">'+D.feels.map(function(x,i){return '<label class="chk"><input type="checkbox" data-i="'+i+'"'+(F.explore.indexOf(x)>-1?" checked":"")+'><span>'+NE[NEEDOF[x]]+' '+esc(lab(x))+'</span></label>';}).join("")+'</div>';
  app.innerHTML=h+'<div class="row"><button class="btn" type="button" id="next">Continue</button></div>';
  app.querySelectorAll('.chk input').forEach(function(c){c.addEventListener("change",function(){var v=D.feels[+c.getAttribute("data-i")],i=F.explore.indexOf(v);if(c.checked&&i<0)F.explore.push(v);if(!c.checked&&i>-1)F.explore.splice(i,1);});});
- document.getElementById("next").addEventListener("click",function(){if(one)F.explore=[D.feels[0]];go(F.explore.length?optionsPage:finalPage,k);});
+ document.getElementById("next").addEventListener("click",function(){if(one)F.explore=[D.feels[0]];if(row(k).direct){D.need=F.explore.map(function(x){return NEEDOF[x];}).join("|");save(load());}go(F.explore.length?optionsPage:finalPage,k);});
 }
 function optionsPage(k){
  var F=flow(k),h="";
