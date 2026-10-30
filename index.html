@@ -102,7 +102,7 @@ var ROWS=[
  needs:["Rest","Create","Connect"]},
 {k:"imag",f:{when:"lastThoughtAboutImagination",now:"imaginationFeelsNow",q:["imaginationMoreOf","imaginationWhen"],need:"imaginationNext5Minutes"},n:"✨ My imagination",w:"my imagination",v:"feels",
  q:[{t:"What would you like more of?",l:["Inspiration","Ahas","Possibility","Creativity","Wonder","Abundance"]},
-    {t:"When does it come most easily?",after:0,l:["Outdoors","In stillness","With others","Making things","Before sleep"]}],
+    {t:"When does it come most easily?",after:0,tf:function(a){var n=a.map(function(x){return x.charAt(0).toLowerCase()+x.slice(1);}),j=n.length>1?n.slice(0,-1).join(", ")+" and "+n[n.length-1]:n[0];return "When "+(n.length>1?"do ":"does ")+j+" come most easily?";},l:["Outdoors","In stillness","With others","Making things","Before sleep"]}],
  needs:["Create","Play","Rest"]}];
 var FE={"Connect":"Connected","Create":"Expressed","Eat and drink":"Nourished","Move":"Energized to move","Play":"Playful","Rest":"Rested"};
 var LAB={mind:{"Connected":"How to connect through my mind","Expressed":"How to express my mind","Nourished":"How to nourish my mind","Energized to move":"How to energize my mind","Playful":"How to have fun with my mind","Rested":"How to rest my mind"}};
@@ -277,7 +277,7 @@ function areaQsPage(k){
    if(r.noq)return;
    if(q.after!==undefined&&!D.a[q.after].length)return;
    var list=q.l.concat(D.own[qi]);
-   h+='<div class="qb"><h2>'+esc(q.t)+'</h2>'+(q.t==="What have you been feeling lately?"?'<p class="sub" style="margin:0 0 6px">Select all that apply.</p>':'');
+   h+='<div class="qb"><h2>'+esc(q.tf?q.tf(D.a[q.after]):q.t)+'</h2>'+(q.t==="What have you been feeling lately?"?'<p class="sub" style="margin:0 0 6px">Select all that apply.</p>':'');
    if(q.cb){list.forEach(function(x,i){h+='<label class="chk"><input type="checkbox" data-q="'+qi+'" data-i="'+i+'"'+(D.a[qi].indexOf(x)>-1?" checked":"")+'><span>'+esc(x)+'</span></label>';});h+='<label class="chk"><input type="checkbox" class="oth" data-q="'+qi+'"><span>+ Other</span></label>';}
    else h+=pillRow(list,D.a[qi],'data-q="'+qi+'"',true);
    h+='<div class="ownhost" data-q="'+qi+'"></div></div>';
