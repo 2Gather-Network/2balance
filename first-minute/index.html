@@ -81,8 +81,8 @@ var WHEN=["Today","Last week","Last month","Last year","In my life"];
 var LV=["Not where I want it","Getting there","Good","Great"];
 var ROWS=[
 {k:"body",f:{when:"lastThoughtAboutBody",now:"bodyFeelsNow",q:["bodyMoreOf","bodyWhere"],need:"bodyNext5Minutes"},n:"🌍 My body and surroundings",w:"my body and surroundings",v:"feel",
- q:[{t:"What would you like more of?",l:["Safety","Grounding","Structure","Strength","Health","Comfort","Nurturing","Order"]},
-    {t:"Where?",after:0,l:["My body","My home","My workspace","My neighborhood","Nature near me","My things"]}],
+ q:[{t:"What would you like to feel more of as a result of your surroundings?",l:["Safety","Grounding","Structure","Strength","Health","Comfort","Nurturing","Order","Attractiveness"]},
+    {t:"Where would you like to experience this (or these)?",after:0,l:["My body","My home","My workspace","My neighborhood","Nature near me","My things"]}],
  needs:["Move","Rest","Eat and drink"]},
 {k:"feel",f:{when:"lastThoughtAboutFeelings",now:"feelingsFeelNow",q:["feelingsLately","feelingsMoreOf"],need:"feelingsNext5Minutes"},n:"🌊 My feelings",w:"my feelings",v:"feel",
  q:[{t:"What have you been feeling lately?",l:["Happy","Sad","Angry","Afraid","Calm","Tender","Numb","Grateful"]},
@@ -215,7 +215,7 @@ function startWith(){
 }
 var HOME={body:["Nourished","Energized to move","Rested"],feel:["Connected"],energy:[],mind:["Natural"],imag:["Expression"]};
 function afterArea(k){var p=load().picks||[],i=p.indexOf(k);return i>-1&&i<p.length-1?p[i+1]:"";}
-function setExplore(k){var o=HOME[k].slice();row(k).q.forEach(function(q,qi){if(q.br)dv(k).a[qi].forEach(function(l){if(q.br[l]&&o.indexOf(q.br[l])<0)o.push(q.br[l]);});});flow(k).explore=o;}
+function setExplore(k){var o=HOME[k].filter(function(x){return !(k==="body"&&x==="Nourished"&&dv(k).a[1].indexOf("My body")<0);});row(k).q.forEach(function(q,qi){if(q.br)dv(k).a[qi].forEach(function(l){if(q.br[l]&&o.indexOf(q.br[l])<0)o.push(q.br[l]);});});flow(k).explore=o;}
 function needWords(k){var F=flow(k),o=[];F.explore.forEach(function(x){var n=x==="Natural"||x==="Expression"?"Create":NEEDOF[x],has=x==="Expression"?((F.branch||{}).expression||[]).length:(F.opts[x]||[]).length||(x==="Natural"&&(F.subjects||[]).length);if(has&&o.indexOf(n)<0)o.push(n);});return o.join("|");}
 var HELD="bal-first-minute-held";
 function hold(){try{localStorage.setItem(HELD,JSON.stringify(MINE));}catch(e){}}
@@ -241,7 +241,7 @@ function dive(arg){
  var k=typeof arg==="string"?arg:arg.k,step=typeof arg==="string"?0:arg.s,r=row(k),R=load(),D=dv(k);
  setExplore(k);
  function draw(){
-  var y=window.scrollY;
+  setExplore(k);var y=window.scrollY;
   var h='<h1>'+esc(r.n)+'</h1>';
   if(step===0)h+='<div class="qb"><h2>Right now, I would rate '+esc(r.w)+' as:</h2>'+keyHTML()+'<div class="fseg lvl">'+LV.map(function(lb,i){return '<button type="button" class="opt fbtn'+((R.rate[k]||0)===i+1?" on":"")+'" data-q="level" data-v="'+(i+1)+'" aria-label="'+(i+1)+' '+esc(lb)+'">'+(i+1)+'</button>';}).join("")+'</div></div>';
   r.q.forEach(function(q,qi){
