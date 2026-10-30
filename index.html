@@ -255,7 +255,7 @@ function dive(arg){
    h+='<div class="ownhost" data-q="'+qi+'"></div></div>';
   });
   if(cs==="vis")h+='<div class="qb"><h2>What\'s your greatest, grandest vision for '+esc(r.vis)+'?</h2><div class="own"><textarea id="vis" aria-label="My vision">'+esc(D.vis)+'</textarea></div></div>';
-  h+='<div class="row"><button class="btn" type="button" id="next">Continue</button></div>';
+  if(cs!=="level"||R.rate[k])h+='<div class="row"><button class="btn" type="button" id="next">Continue</button></div>';
   app.innerHTML=h;window.scrollTo(0,y);
   app.querySelectorAll('.opt[data-q="level"]').forEach(function(b){b.addEventListener("click",function(){var v=+b.getAttribute("data-v");R.rate[k]=(R.rate[k]===v?0:v);save(R);draw();});});
   var vb=document.getElementById("vis");if(vb)vb.addEventListener("input",function(e){D.vis=e.target.value;save(R);});
@@ -267,7 +267,7 @@ function dive(arg){
    var o=app.querySelector('[data-q="'+qi+'"][data-other], .chk .oth[data-q="'+qi+'"]');
    if(o)o.addEventListener(o.tagName==="INPUT"?"change":"click",function(){if(o.tagName==="INPUT")o.checked=false;ownBox(qi,function(v){if(D.own[qi].indexOf(v)<0&&q.l.indexOf(v)<0)D.own[qi].push(v);toggle(v,true);draw();});});
   });
-  document.getElementById("next").addEventListener("click",function(){if(step<steps.length-1)go(dive,{k:k,s:step+1});else{flow(k).explore=HOME[k].slice();go(optionsPage,k);}});
+  var nb=document.getElementById("next");if(nb)nb.addEventListener("click",function(){if(step<steps.length-1)go(dive,{k:k,s:step+1});else{flow(k).explore=HOME[k].slice();go(optionsPage,k);}});
  }
  draw();
 }
