@@ -216,7 +216,7 @@ var WELCOME={"Yes":"Then you know how it can feel to be asked. We're glad you're
 function askedPage(){
  var R=load(),a=R.asked||"",olds=oldAreas(),l=R.look||"",h='<h1 class="q">Has anybody besides you ever asked you these questions?</h1><div class="opts pills">'+ASKED.map(function(x,i){return '<button type="button" class="opt'+(a===x?" on":"")+'" data-a="'+i+'">'+esc(x)+'</button>';}).join("")+'</div>';
  if(a){h+='<p class="stmt" style="margin-top:18px">'+esc(WELCOME[a])+'</p>';
-  if(olds.length)h+='<p class="stmt" style="margin-top:18px">It\'s been a while since you last thought about you and '+esc(list_(olds))+'.</p><h1 class="q">'+(olds.length===1?"Would you like to look at that a little?":"Would you like to look at one of those more closely?")+'</h1><div class="opts pills">'+LOOK.map(function(x,i){return '<button type="button" class="opt'+(l===x?" on":"")+'" data-l="'+i+'">'+esc(x)+'</button>';}).join("")+'</div>';
+  if(olds.length)h+='<h1 class="q" style="margin-top:18px">It\'s been a while since you last thought about you and '+esc(list_(olds))+'.</h1><p class="stmt" style="margin-bottom:12px">'+(olds.length===1?"Would you like to look at that a little?":"Would you like to look at one of those more closely?")+'</p><div class="opts pills" style="margin-top:0">'+LOOK.map(function(x,i){return '<button type="button" class="opt'+(l===x?" on":"")+'" data-l="'+i+'">'+esc(x)+'</button>';}).join("")+'</div>';
   if(!olds.length||l)h+='<div class="row"><button class="btn" type="button" id="next">Continue</button></div>';}
  app.innerHTML=h;
  app.querySelectorAll(".opt[data-a]").forEach(function(b){b.addEventListener("click",function(){R.asked=ASKED[+b.getAttribute("data-a")];save(R);askedPage();});});
