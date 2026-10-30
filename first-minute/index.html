@@ -161,7 +161,7 @@ function back(){var h=hist.pop();if(h){cur=h[0];curArg=h[1];render();}}
 new MutationObserver(addBack).observe(app,{childList:true});
 function render(){cur(curArg);addBack();drawCrumbs();drawRail();window.scrollTo(0,0);}
 function addBack(){if(!hist.length||document.getElementById("back"))return;var r=app.querySelector(".row");if(!r){r=document.createElement("div");r.className="row";app.appendChild(r);}var b=document.createElement("button");b.type="button";b.id="back";b.className="btn ghost";b.textContent="Back";b.addEventListener("click",back);r.insertBefore(b,r.firstChild);}
-function crumbName(fn,arg){if(fn===whenPage)return "Home";if(fn===startWith)return "Begin";if(fn===dive)return "Right now";if(fn===areaQsPage)return words(row(arg));if(fn===feelPage)return "How do you feel about…";if(fn===explorePage)return "Explore";if(fn===askedPage)return "A question";if(fn===feelWhatPage)return "What I would like to feel";if(fn===notePage)return "Looking closer";if(fn===optionsPage)return words(row(arg));if(fn===finalPage)return "Next 5 minutes";if(fn===readyPage)return "Start or remind";if(fn===invite)return "Save my answers";if(fn===notNow)return "Not at this time";if(fn===remind)return "Email reminder";return "Thank you";}
+function crumbName(fn,arg){if(fn===whenPage)return "Home";if(fn===startWith)return "Begin";if(fn===dive)return "Right now";if(fn===explorePickPage)return "Explore";if(fn===areaQsPage)return words(row(arg));if(fn===feelPage)return "How do you feel about…";if(fn===explorePage)return "Explore";if(fn===askedPage)return "A question";if(fn===feelWhatPage)return "What I would like to feel";if(fn===notePage)return "Looking closer";if(fn===optionsPage)return words(row(arg));if(fn===finalPage)return "Next 5 minutes";if(fn===readyPage)return "Start or remind";if(fn===invite)return "Save my answers";if(fn===notNow)return "Not at this time";if(fn===remind)return "Email reminder";return "Thank you";}
 function drawRail(){var e=document.getElementById("rail"),R=load(),p=areasList(),k=cur===areaQsPage?curArg:"",i=p.indexOf(k);if(p.length<2||i<0){e.innerHTML="";return;}var did=R.areasDone||[];
  e.innerHTML='<div class="rdots">'+p.map(function(a,j){var d=did.indexOf(a)>-1,n=words(row(a));return '<button type="button" class="rdot'+(j===i?" now":"")+(d?" did":"")+'" data-a="'+a+'" aria-label="'+esc(n)+(d?", finished":"")+'"'+(j===i?' aria-current="step"':'')+'>'+row(a).n.split(" ")[0]+(d?'<span class="rchk" aria-hidden="true">✓</span>':'')+'</button>';}).join("")+'</div><p class="rname">'+(i+1)+' of '+p.length+'</p>';
  e.querySelectorAll(".rdot").forEach(function(b){b.addEventListener("click",function(){var a=b.getAttribute("data-a");if(a===k)return;R.exp=R.exp||{};R.exp[a]="Yes";save(R);go(areaQsPage,a);});});}
@@ -243,14 +243,27 @@ function dive(){
  var R=load(),L=areasList();R.exp=R.exp||{};
  function draw(){
   var y=window.scrollY,all=L.every(function(k){return R.rate[k];});
-  var h=L.map(function(k){var r=row(k),sel=R.rate[k]||0;return '<div class="qb"><h2>'+esc(r.n)+'</h2><p class="sub" style="margin:0 0 8px">Right now, I would rate '+esc(r.w)+' as:</p><div class="opts pills">'+LV.map(function(lb,i){return '<button type="button" class="opt'+(sel===i+1?" on":"")+'" data-r="'+k+'" data-v="'+(i+1)+'">'+(i+1)+' '+esc(lb)+'</button>';}).join("")+'</div>'+(sel?'<p class="sub" style="margin:14px 0 8px">Would you like to explore '+esc(r.w.replace(/^my /,"your "))+' a little more?</p><div class="opts pills">'+["Yes","No"].map(function(a){return '<button type="button" class="opt'+(R.exp[k]===a?" on":"")+'" data-e="'+k+'" data-a="'+a+'">'+a+'</button>';}).join("")+'</div>':'')+'</div>';}).join("");
+  var h=L.map(function(k){var r=row(k),sel=R.rate[k]||0;return '<div class="qb"><h2>'+esc(r.n)+'</h2><p class="sub" style="margin:0 0 8px">Right now, I would rate '+esc(r.w)+' as:</p><div class="opts pills">'+LV.map(function(lb,i){return '<button type="button" class="opt'+(sel===i+1?" on":"")+'" data-r="'+k+'" data-v="'+(i+1)+'">'+(i+1)+' '+esc(lb)+'</button>';}).join("")+'</div>'+'</div>';}).join("");
   if(all)h+='<div class="row"><button class="btn" type="button" id="next">Continue</button></div>';
   app.innerHTML=h;window.scrollTo(0,y);
-  app.querySelectorAll(".opt[data-r]").forEach(function(b){b.addEventListener("click",function(){var k=b.getAttribute("data-r"),v=+b.getAttribute("data-v");R.rate[k]=(R.rate[k]===v?0:v);if(!R.rate[k])delete R.exp[k];save(R);draw();});});
-  app.querySelectorAll(".opt[data-e]").forEach(function(b){b.addEventListener("click",function(){R.exp[b.getAttribute("data-e")]=b.getAttribute("data-a");save(R);draw();});});
-  var nb=document.getElementById("next");if(nb)nb.addEventListener("click",function(){var f=L.filter(function(a){return R.exp[a]==="Yes";})[0];if(f)go(areaQsPage,f);else go(finalPage);});
+  app.querySelectorAll(".opt[data-r]").forEach(function(b){b.addEventListener("click",function(){var k=b.getAttribute("data-r"),v=+b.getAttribute("data-v");R.rate[k]=(R.rate[k]===v?0:v);save(R);draw();});});
+  var nb=document.getElementById("next");if(nb)nb.addEventListener("click",function(){go(explorePickPage);});
  }
  draw();
+}
+function explorePickPage(){
+ var R=load(),L=areasList();R.exp=R.exp||{};
+ function first(){var f=L.filter(function(a){return R.exp[a]==="Yes";})[0];if(f)go(areaQsPage,f);else go(finalPage);}
+ if(L.length===1){var k=L[0],r=row(k);
+  app.innerHTML='<h1 class="q">Would you like to explore '+esc(r.w.replace(/^my /,"your "))+' a little more?</h1><div class="acts"><button class="btn" type="button" id="yes">Yes</button><button class="btn ghost" type="button" id="no">Not right now</button></div>';
+  document.getElementById("yes").addEventListener("click",function(){R.exp[k]="Yes";save(R);first();});
+  document.getElementById("no").addEventListener("click",function(){R.exp[k]="No";save(R);first();});
+  return;}
+ var any=L.some(function(a){return R.exp[a]==="Yes";});
+ app.innerHTML='<h1 class="q">Would you like to explore any of these a little more?</h1><div class="chks">'+L.map(function(a){var r=row(a);return '<label class="chk"><input type="checkbox" data-a="'+a+'"'+(R.exp[a]==="Yes"?" checked":"")+'><span>'+esc(r.n)+' · '+(R.rate[a]||"")+' '+esc(LV[(R.rate[a]||1)-1])+'</span></label>';}).join("")+'</div><div class="row"><button class="btn ghost" type="button" id="no">Not right now</button><button class="btn" type="button" id="next">Continue</button></div>';
+ app.querySelectorAll(".chk input").forEach(function(c){c.addEventListener("change",function(){R.exp[c.getAttribute("data-a")]=c.checked?"Yes":"No";save(R);});});
+ document.getElementById("no").addEventListener("click",function(){L.forEach(function(a){R.exp[a]="No";});save(R);go(finalPage);});
+ document.getElementById("next").addEventListener("click",first);
 }
 function areaQsPage(k){
  var R=load(),r=row(k);setExplore(k);
