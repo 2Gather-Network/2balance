@@ -216,7 +216,7 @@ function askedPage(){
  var R=load(),a=R.asked||"";
  app.innerHTML='<h1 class="q">Has anybody besides you ever asked you these questions?</h1><div class="opts pills">'+ASKED.map(function(x,i){return '<button type="button" class="opt'+(a===x?" on":"")+'" data-i="'+i+'">'+esc(x)+'</button>';}).join("")+'</div>'+(a?'<p class="stmt" style="margin-top:18px">'+esc(WELCOME[a])+'</p><div class="row"><button class="btn" type="button" id="next">Continue</button></div>':'');
  app.querySelectorAll(".opt").forEach(function(b){b.addEventListener("click",function(){R.asked=ASKED[+b.getAttribute("data-i")];save(R);askedPage();});});
- var n=document.getElementById("next");if(n)n.addEventListener("click",function(){R.look="";go(oldAreas().length?notePage:startWith);});
+ var n=document.getElementById("next");if(n)n.addEventListener("click",function(){go(oldAreas().length?notePage:startWith);});
 }
 var LOOK=["Yes","Not at this time, thank you"];
 function notePage(){
