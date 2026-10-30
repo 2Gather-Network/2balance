@@ -216,7 +216,7 @@ function startWith(){
  app.querySelectorAll(".opt").forEach(function(b){b.addEventListener("click",function(){var k=b.getAttribute("data-k"),i=R.picks.indexOf(k);if(i>-1)R.picks.splice(i,1);else R.picks.push(k);save(R);startWith();});});
  var n=document.getElementById("next");if(n)n.addEventListener("click",function(){if(me()||R.invited)go(dive,R.picks[0]);else go(invite);});
 }
-var HOME={body:["Nourished","Energized to move","Rested"],feel:["Connected"],energy:["Playful"],mind:["Natural"],imag:["Expression"]};
+var HOME={body:["Nourished","Energized to move","Rested"],feel:["Connected"],energy:[],mind:["Natural"],imag:["Expression"]};
 function afterArea(k){var p=load().picks||[],i=p.indexOf(k);return i>-1&&i<p.length-1?p[i+1]:"";}
 function setExplore(k){var o=HOME[k].slice();row(k).q.forEach(function(q,qi){if(q.br)dv(k).a[qi].forEach(function(l){if(q.br[l]&&o.indexOf(q.br[l])<0)o.push(q.br[l]);});});flow(k).explore=o;}
 function needWords(k){var F=flow(k),o=[];F.explore.forEach(function(x){var n=x==="Natural"||x==="Expression"?"Create":NEEDOF[x],has=x==="Expression"?((F.branch||{}).expression||[]).length:(F.opts[x]||[]).length||(x==="Natural"&&(F.subjects||[]).length);if(has&&o.indexOf(n)<0)o.push(n);});return o.join("|");}
@@ -269,10 +269,32 @@ function explorePickPage(){
  document.getElementById("next").addEventListener("click",first);
 }
 function areaQsPage(k){
- var R=load(),r=row(k);setExplore(k);
- app.innerHTML='<h1>'+esc(r.n)+'</h1><div id="optshost"></div><div class="row"><button class="btn" type="button" id="next">Continue</button></div>';
- optionsPage(k);
- document.getElementById("next").addEventListener("click",function(){R.areasDone=R.areasDone||[];if(R.areasDone.indexOf(k)<0)R.areasDone.push(k);dv(k).need=needWords(k);save(R);var nx=nextExplore(k);if(nx)go(areaQsPage,nx);else go(finalPage);});
+ var r=row(k),R=load(),D=dv(k);
+ function draw(){
+  setExplore(k);var y=window.scrollY;
+  var h='<h1>'+esc(r.n)+'</h1>';
+  r.q.forEach(function(q,qi){
+   if(r.noq)return;
+   if(q.after!==undefined&&!D.a[q.after].length)return;
+   var list=q.l.concat(D.own[qi]);
+   h+='<div class="qb"><h2>'+esc(q.t)+'</h2>'+(q.t==="What have you been feeling lately?"?'<p class="sub" style="margin:0 0 6px">Select all that apply.</p>':'');
+   if(q.cb){list.forEach(function(x,i){h+='<label class="chk"><input type="checkbox" data-q="'+qi+'" data-i="'+i+'"'+(D.a[qi].indexOf(x)>-1?" checked":"")+'><span>'+esc(x)+'</span></label>';});h+='<label class="chk"><input type="checkbox" class="oth" data-q="'+qi+'"><span>+ Other</span></label>';}
+   else h+=pillRow(list,D.a[qi],'data-q="'+qi+'"',true);
+   h+='<div class="ownhost" data-q="'+qi+'"></div></div>';
+  });
+  h+='<div id="optshost"></div><div class="row"><button class="btn" type="button" id="next">Continue</button></div>';
+  app.innerHTML=h;optionsPage(k);window.scrollTo(0,y);
+  r.q.forEach(function(q,qi){
+   var list=q.l.concat(D.own[qi]);
+   function toggle(v,on){var i=D.a[qi].indexOf(v);if(on&&i<0)D.a[qi].push(v);if(!on&&i>-1)D.a[qi].splice(i,1);save(R);}
+   app.querySelectorAll('.opt[data-q="'+qi+'"][data-i]').forEach(function(b){b.addEventListener("click",function(){var v=list[+b.getAttribute("data-i")];toggle(v,D.a[qi].indexOf(v)<0);draw();});});
+   app.querySelectorAll('.chk input[data-q="'+qi+'"][data-i]').forEach(function(c){c.addEventListener("change",function(){toggle(list[+c.getAttribute("data-i")],c.checked);if(q.br){setExplore(k);var yy=window.scrollY;optionsPage(k);window.scrollTo(0,yy);}});});
+   var o=app.querySelector('[data-q="'+qi+'"][data-other], .chk .oth[data-q="'+qi+'"]');
+   if(o)o.addEventListener(o.tagName==="INPUT"?"change":"click",function(){if(o.tagName==="INPUT")o.checked=false;ownBox(qi,function(v){if(D.own[qi].indexOf(v)<0&&q.l.indexOf(v)<0)D.own[qi].push(v);toggle(v,true);draw();});});
+  });
+  document.getElementById("next").addEventListener("click",function(){R.areasDone=R.areasDone||[];if(R.areasDone.indexOf(k)<0)R.areasDone.push(k);D.need=needWords(k);save(R);var nx=nextExplore(k);if(nx)go(areaQsPage,nx);else go(finalPage);});
+ }
+ draw();
 }
 function ownBox(qi,fn){var host=app.querySelector('.ownhost[data-q="'+qi+'"]');if(!host||host.firstChild)return;host.innerHTML='<div class="own"><input type="text" maxlength="60" placeholder="Ex: something of my own" aria-label="Add my own"><button class="btn ghost" type="button">Add</button></div>';var i=host.querySelector("input");function add(){var v=i.value.trim();if(v)fn(v);}host.querySelector("button").addEventListener("click",add);i.addEventListener("keydown",function(e){if(e.key==="Enter")add();});i.focus();}
 
@@ -524,7 +546,7 @@ function emo(x){return EMO[x]?EMO[x]+" ":"";}
 function optionsPage(k){
  var host=document.getElementById("optshost");
  var F=flow(k),h="";
- var br=F.branch=F.branch||{},oth=F.other=F.other||{},act=activeBr(F).filter(function(B){return B.k==="expression"||B.k==="self"||B.k==="others"||B.k==="place";});
+ var br=F.branch=F.branch||{},oth=F.other=F.other||{},act=activeBr(F);
  function drawB(B){if(k==="body"&&(B.k==="mealsNow"||B.k==="mealsWant")&&dv(k).a[1].indexOf("My body")<0)return;var ow=ownerOf(k,B.k);if(ow){h+=sumHTML(B.q,ow,B.k);return;}if(B.after&&!(br[B.after]||[]).length)return;var c=br[B.k]=br[B.k]||[];h+='<div class="qb">'+(B.chart?mealChart():'')+'<h2>'+esc(B.q)+'</h2><div class="opts pills">'+B.l.map(function(l,i){return '<button type="button" class="opt br'+(c.indexOf(l)>-1?" on":"")+(l==="+ Other"?" other":"")+'" data-b="'+esc(B.k)+'" data-i="'+i+'">'+emo(l)+esc(l)+'</button>';}).join("")+'</div>'+(c.indexOf("+ Other")>-1?'<div class="own"><input type="text" maxlength="80" data-o="'+esc(B.k)+'" value="'+esc(oth[B.k]||"")+'" aria-label="Other"></div>':'')+'</div>';}
  F.explore.forEach(function(x,xi){var q=(k==="energy"||k==="needs")&&x==="Playful"?"What energizes you?":"How do you like to "+EXP[x]+"?";
   var ow=ownerOf(k,x);
