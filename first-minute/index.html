@@ -243,7 +243,7 @@ function dive(){
  var R=load(),L=areasList();R.exp=R.exp||{};
  function draw(){
   var y=window.scrollY,all=L.every(function(k){return R.rate[k];});
-  var h=L.map(function(k){var r=row(k),sel=R.rate[k]||0;return '<div class="qb"><h2>'+esc(r.n)+'</h2><p class="sub" style="margin:0 0 8px">Right now, I would rate '+esc(r.w)+' as:</p><div class="opts pills">'+LV.map(function(lb,i){return '<button type="button" class="opt'+(sel===i+1?" on":"")+'" data-r="'+k+'" data-v="'+(i+1)+'">'+(i+1)+' '+esc(lb)+'</button>';}).join("")+'</div>'+'</div>';}).join("");
+  var h=L.map(function(k){var r=row(k),sel=R.rate[k]||0;return '<div class="qb"><h2>'+esc(r.n)+'</h2><p class="sub" style="margin:0 0 8px;font-size:14px;line-height:1.45">Right now, I would rate '+esc(r.w)+' as:</p><div class="opts pills">'+LV.map(function(lb,i){return '<button type="button" class="opt'+(sel===i+1?" on":"")+'" data-r="'+k+'" data-v="'+(i+1)+'">'+(i+1)+' '+esc(lb)+'</button>';}).join("")+'</div>'+'</div>';}).join("");
   if(all)h+='<div class="row"><button class="btn" type="button" id="next">Continue</button></div>';
   app.innerHTML=h;window.scrollTo(0,y);
   app.querySelectorAll(".opt[data-r]").forEach(function(b){b.addEventListener("click",function(){var k=b.getAttribute("data-r"),v=+b.getAttribute("data-v");R.rate[k]=(R.rate[k]===v?0:v);save(R);draw();});});
@@ -255,14 +255,14 @@ function explorePickPage(){
  var R=load(),L=areasList();R.exp=R.exp||{};
  function first(){var f=L.filter(function(a){return R.exp[a]==="Yes";})[0];if(f)go(areaQsPage,f);else go(finalPage);}
  if(L.length===1){var k=L[0],r=row(k);
-  app.innerHTML='<h1 class="q">Would you like to explore '+esc(r.w.replace(/^my /,"your "))+' a little more?</h1><div class="acts"><button class="btn" type="button" id="yes">Yes</button><button class="btn ghost" type="button" id="no">Not right now</button></div>';
+  app.innerHTML='<h1 class="q">Would you like to explore '+esc(r.w.replace(/^my /,"your "))+' a little more?</h1><div class="acts"><button class="btn" type="button" id="yes">Yes</button></div><div class="alts"><button class="lnk" type="button" id="no">Not right now, thank you</button></div>';
   document.getElementById("yes").addEventListener("click",function(){R.exp[k]="Yes";save(R);first();});
-  document.getElementById("no").addEventListener("click",function(){R.exp[k]="No";save(R);first();});
+  document.getElementById("no").addEventListener("click",function(){R.exp[k]="No";save(R);go(notNow);});
   return;}
  var any=L.some(function(a){return R.exp[a]==="Yes";});
- app.innerHTML='<h1 class="q">Would you like to explore any of these a little more?</h1><div class="chks">'+L.map(function(a){var r=row(a);return '<label class="chk"><input type="checkbox" data-a="'+a+'"'+(R.exp[a]==="Yes"?" checked":"")+'><span>'+esc(r.n)+' · '+(R.rate[a]||"")+' '+esc(LV[(R.rate[a]||1)-1])+'</span></label>';}).join("")+'</div><div class="row"><button class="btn ghost" type="button" id="no">Not right now</button><button class="btn" type="button" id="next">Continue</button></div>';
+ app.innerHTML='<h1 class="q">Would you like to explore any of these a little more?</h1><div class="chks">'+L.map(function(a){var r=row(a);return '<label class="chk"><input type="checkbox" data-a="'+a+'"'+(R.exp[a]==="Yes"?" checked":"")+'><span>'+esc(r.n)+' ('+(R.rate[a]||"")+' '+esc(LV[(R.rate[a]||1)-1].replace(/^./,function(c){return c.toLowerCase();}))+')</span></label>';}).join("")+'</div><div class="row"><button class="btn" type="button" id="next">Continue</button></div><div class="alts"><button class="lnk" type="button" id="no">Not right now, thank you</button></div>';
  app.querySelectorAll(".chk input").forEach(function(c){c.addEventListener("change",function(){R.exp[c.getAttribute("data-a")]=c.checked?"Yes":"No";save(R);});});
- document.getElementById("no").addEventListener("click",function(){L.forEach(function(a){R.exp[a]="No";});save(R);go(finalPage);});
+ document.getElementById("no").addEventListener("click",function(){L.forEach(function(a){R.exp[a]="No";});save(R);go(notNow);});
  document.getElementById("next").addEventListener("click",first);
 }
 function areaQsPage(k){
