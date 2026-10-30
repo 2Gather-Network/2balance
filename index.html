@@ -112,9 +112,8 @@ function dv(k){var D=MINE.dive[k]=MINE.dive[k]||{a:[[],[]],own:[[],[]],need:"",v
 function vals(){var o={},st="";ROWS.forEach(function(r){var D=dv(r.k),n=MINE.rate[r.k]||0;o[r.f.when]=MINE.when[r.k]||"";o[r.f.now]=n?LV[n-1]:"";o[r.f.q[0]]=D.a[0].join("|");o[r.f.q[1]]=D.a[1].join("|");o[r.f.vis]=D.vis;o[r.f.need]=D.need;if(MINE.start===r.k)st=words(r);});o.startWithFirst=st;return o;}
 function note(t){document.getElementById("sv").textContent=t;}
 function flush(){clearTimeout(timer);timer=null;var id=me();if(!id||looking)return;var all=vals(),out={},any=false;Object.keys(all).forEach(function(f){if(all[f]!==(sent[f]||"")){out[f]=all[f];any=true;}});if(!any)return;
- note("Saving…");
  fetch(GS+"?action=saveBalanceAnswers&appearId="+encodeURIComponent(id)+"&answers="+encodeURIComponent(JSON.stringify(out)),{keepalive:true}).then(function(r){return r.json();}).then(function(r){
-  if(r&&r.status==="ok"&&!(r.missing&&r.missing.length)){Object.keys(out).forEach(function(f){sent[f]=out[f];});note("Saved");try{localStorage.removeItem(HELD);}catch(e){}}
+  if(r&&r.status==="ok"&&!(r.missing&&r.missing.length)){Object.keys(out).forEach(function(f){sent[f]=out[f];});note("");try{localStorage.removeItem(HELD);}catch(e){}}
   else if(r&&r.status==="norow")note("Your answers could not be saved because your profile is not set up yet.");
   else if(r&&r.missing&&r.missing.length)note("Not saved yet: "+r.missing.length+" of these answers have no place on the sheet.");
   else note("Could not save. Try again.");
