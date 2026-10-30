@@ -187,7 +187,7 @@ function back(){var h=hist.pop();if(h){cur=h[0];curArg=h[1];render();}}
 new MutationObserver(addBack).observe(app,{childList:true});
 function render(){cur(curArg);addBack();drawCrumbs();drawRail();window.scrollTo(0,0);}
 function addBack(){if(!hist.length||document.getElementById("back"))return;var r=app.querySelector(".row");if(!r){r=document.createElement("div");r.className="row";app.appendChild(r);}var b=document.createElement("button");b.type="button";b.id="back";b.className="btn ghost";b.textContent="Back";b.addEventListener("click",back);r.insertBefore(b,r.firstChild);}
-function crumbName(fn,arg){if(fn===whenPage)return "Home";if(fn===startWith)return "Begin";if(fn===dive)return "Right now";if(fn===explorePickPage)return "Explore";if(fn===areaQsPage)return words(row(arg));if(fn===feelPage)return "How do you feel about…";if(fn===explorePage)return "Explore";if(fn===askedPage)return "A question";if(fn===feelWhatPage)return "What I would like to feel";if(fn===notePage)return "Looking closer";if(fn===optionsPage)return words(row(arg));if(fn===finalPage)return "Next 5 minutes";if(fn===readyPage)return "Start or remind";if(fn===invite)return "Save my answers";if(fn===notNow)return "Not at this time";if(fn===remind)return "Email reminder";return "Thank you";}
+function crumbName(fn,arg){if(fn===whenPage)return "Home";if(fn===startWith)return "Begin";if(fn===dive)return "Right now";if(fn===explorePickPage)return "Explore";if(fn===areaQsPage)return words(row(arg));if(fn===feelPage)return "How do you feel about…";if(fn===explorePage)return "Explore";if(fn===askedPage)return "A question";if(fn===feelWhatPage)return "What I would like to feel";if(fn===optionsPage)return words(row(arg));if(fn===finalPage)return "Next 5 minutes";if(fn===readyPage)return "Start or remind";if(fn===invite)return "Save my answers";if(fn===notNow)return "Not at this time";if(fn===remind)return "Email reminder";return "Thank you";}
 function drawRail(){var e=document.getElementById("rail"),R=load(),p=areasList().filter(function(a){return (R.exp||{})[a]==="Yes";}),k=cur===areaQsPage?curArg:"",i=p.indexOf(k);if(p.length<2||i<0){e.innerHTML="";return;}var did=R.areasDone||[];
  e.innerHTML='<div class="rdots">'+p.map(function(a,j){var d=did.indexOf(a)>-1,n=words(row(a));return '<button type="button" class="rdot'+(j===i?" now":"")+(d?" did":"")+'" data-a="'+a+'" aria-label="'+esc(n)+(d?", finished":"")+'"'+(j===i?' aria-current="step"':'')+'>'+ico(a,28)+(d?'<span class="rchk" aria-hidden="true">✓</span>':'')+'</button>';}).join("")+'</div><p class="rname">'+(i+1)+' of '+p.length+'</p>';
  e.querySelectorAll(".rdot").forEach(function(b){b.addEventListener("click",function(){var a=b.getAttribute("data-a");if(a===k)return;R.exp=R.exp||{};R.exp[a]="Yes";save(R);go(areaQsPage,a);});});}
@@ -216,18 +216,16 @@ function oldAreas(){var R=load();return ROWS.filter(function(r){return ["Last mo
 var ASKED=["Not before","Yes"];
 var WELCOME={"Yes":"Then you know how it can feel to be asked. We're glad you're here.","Not before":"Then this may be new for you. We're glad you're here."};
 function askedPage(){
- var R=load(),a=R.asked||"";
- app.innerHTML='<h1 class="q">Has anybody besides you ever asked you these questions?</h1><div class="opts pills">'+ASKED.map(function(x,i){return '<button type="button" class="opt'+(a===x?" on":"")+'" data-i="'+i+'">'+esc(x)+'</button>';}).join("")+'</div>'+(a?'<p class="stmt" style="margin-top:18px">'+esc(WELCOME[a])+'</p><div class="row"><button class="btn" type="button" id="next">Continue</button></div>':'');
- app.querySelectorAll(".opt").forEach(function(b){b.addEventListener("click",function(){R.asked=ASKED[+b.getAttribute("data-i")];save(R);askedPage();});});
- var n=document.getElementById("next");if(n)n.addEventListener("click",function(){go(oldAreas().length?notePage:startWith);});
+ var R=load(),a=R.asked||"",olds=oldAreas(),l=R.look||"",h='<h1 class="q">Has anybody besides you ever asked you these questions?</h1><div class="opts pills">'+ASKED.map(function(x,i){return '<button type="button" class="opt'+(a===x?" on":"")+'" data-a="'+i+'">'+esc(x)+'</button>';}).join("")+'</div>';
+ if(a){h+='<p class="stmt" style="margin-top:18px">'+esc(WELCOME[a])+'</p>';
+  if(olds.length)h+='<p class="stmt" style="margin-top:18px">It\'s been a while since you last thought about you and '+esc(list_(olds))+'.</p><h1 class="q">'+(olds.length===1?"Would you like to look at that a little?":"Would you like to look at one of those more closely?")+'</h1><div class="opts pills">'+LOOK.map(function(x,i){return '<button type="button" class="opt'+(l===x?" on":"")+'" data-l="'+i+'">'+esc(x)+'</button>';}).join("")+'</div>';
+  if(!olds.length||l)h+='<div class="row"><button class="btn" type="button" id="next">Continue</button></div>';}
+ app.innerHTML=h;
+ app.querySelectorAll(".opt[data-a]").forEach(function(b){b.addEventListener("click",function(){R.asked=ASKED[+b.getAttribute("data-a")];save(R);askedPage();});});
+ app.querySelectorAll(".opt[data-l]").forEach(function(b){b.addEventListener("click",function(){R.look=LOOK[+b.getAttribute("data-l")];save(R);askedPage();});});
+ var n=document.getElementById("next");if(n)n.addEventListener("click",function(){if(!olds.length){go(startWith);return;}if(R.look===LOOK[1]){go(notNow);return;}if(olds.length===1){R.start=olds[0].k;R.picks=[olds[0].k];save(R);if(me())go(dive,olds[0].k);else go(invite);}else if(me())go(startWith);else go(invite);});
 }
 var LOOK=["Yes","Not at this time, thank you"];
-function notePage(){
- var R=load(),olds=oldAreas(),a=R.look||"";
- app.innerHTML='<p class="stmt">It\'s been a while since you last thought about you and '+esc(list_(olds))+'.</p><h1 class="q">'+(olds.length===1?"Would you like to look at that a little?":"Would you like to look at one of those more closely?")+'</h1><div class="opts pills">'+LOOK.map(function(x,i){return '<button type="button" class="opt'+(a===x?" on":"")+'" data-i="'+i+'">'+esc(x)+'</button>';}).join("")+'</div>'+(a?'<div class="row"><button class="btn" type="button" id="next">Continue</button></div>':'');
- app.querySelectorAll(".opt").forEach(function(b){b.addEventListener("click",function(){R.look=LOOK[+b.getAttribute("data-i")];save(R);notePage();});});
- var n=document.getElementById("next");if(n)n.addEventListener("click",function(){if(R.look===LOOK[1]){go(notNow);return;}if(olds.length===1){R.start=olds[0].k;R.picks=[olds[0].k];save(R);if(me())go(dive,olds[0].k);else go(invite);}else if(me())go(startWith);else go(invite);});
-}
 function startWith(){
  var R=load();
  var list=ROWS.filter(function(r){return R.when[r.k]==="Last year"||R.when[r.k]==="In my life";}),calm=!oldAreas().length;
