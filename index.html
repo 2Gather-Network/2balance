@@ -279,7 +279,7 @@ function explorePickPage(){
  var R=load(),L=areasList();R.exp=R.exp||{};
  function first(){var f=L.filter(function(a){return R.exp[a]==="Yes";})[0];if(f)go(areaQsPage,f);else go(finalPage);}
  if(L.length===1){var k=L[0],r=row(k);
-  app.innerHTML='<h1 class="q">Would you like to explore '+esc(r.w.replace(/^my /,"your "))+' a little more?</h1><div class="acts"><button class="btn" type="button" id="yes">Yes</button></div><div class="invite"><div class="alts"><button class="lnk" type="button" id="no">Not right now, thank you</button></div></div>';
+  app.innerHTML='<h1 class="q">Would you like to explore '+esc(r.w.replace(/^my /,"your "))+' a little more?</h1><div class="row"><button class="btn" type="button" id="yes">Let\'s go!</button></div><div class="invite"><div class="alts"><button class="lnk" type="button" id="no">Not right now, thank you</button></div></div>';
   document.getElementById("yes").addEventListener("click",function(){R.exp[k]="Yes";save(R);first();});
   document.getElementById("no").addEventListener("click",function(){R.exp[k]="No";save(R);go(notNow);});
   return;}
