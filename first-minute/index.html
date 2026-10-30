@@ -163,6 +163,8 @@ function startWith(){
  var R=load();
  var list=ROWS.filter(function(r){return R.when[r.k]==="Last year"||R.when[r.k]==="In my life";});
  if(!list.length)list=ROWS;
+ var olds=ROWS.filter(function(r){return ["Last month","Last year","In my life"].indexOf(R.when[r.k])>-1;});
+ if(olds.length===1)R.start=olds[0].k;
  var pick=R.start&&list.some(function(r){return r.k===R.start;})?R.start:"";
  app.innerHTML='<p class="stmt">'+esc(STMT)+'</p><h1 class="q">Would you like to start with one of these?</h1><div class="opts pills">'+list.map(function(r){return '<button type="button" class="opt'+(pick===r.k?" on":"")+'" data-k="'+r.k+'">'+esc(r.n)+'</button>';}).join("")+'</div>'+(pick?'<div class="row"><button class="btn" type="button" id="next">Continue</button></div>':'');
  app.querySelectorAll(".opt").forEach(function(b){b.addEventListener("click",function(){var k=b.getAttribute("data-k");R.start=(R.start===k?"":k);save(R);startWith();});});
