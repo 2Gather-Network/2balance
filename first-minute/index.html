@@ -215,7 +215,7 @@ function startWith(){
 }
 var HOME={body:["Nourished","Energized to move","Rested"],feel:["Connected"],energy:[],mind:["Natural"],imag:["Expression"]};
 function afterArea(k){var p=load().picks||[],i=p.indexOf(k);return i>-1&&i<p.length-1?p[i+1]:"";}
-function setExplore(k){var o=HOME[k].filter(function(x){return !(k==="body"&&x==="Nourished"&&dv(k).a[1].indexOf("My body")<0);});row(k).q.forEach(function(q,qi){if(q.br)dv(k).a[qi].forEach(function(l){if(q.br[l]&&o.indexOf(q.br[l])<0)o.push(q.br[l]);});});flow(k).explore=o;}
+function setExplore(k){var o=HOME[k].slice();row(k).q.forEach(function(q,qi){if(q.br)dv(k).a[qi].forEach(function(l){if(q.br[l]&&o.indexOf(q.br[l])<0)o.push(q.br[l]);});});flow(k).explore=o;}
 function needWords(k){var F=flow(k),o=[];F.explore.forEach(function(x){var n=x==="Natural"||x==="Expression"?"Create":NEEDOF[x],has=x==="Expression"?((F.branch||{}).expression||[]).length:(F.opts[x]||[]).length||(x==="Natural"&&(F.subjects||[]).length);if(has&&o.indexOf(n)<0)o.push(n);});return o.join("|");}
 var HELD="bal-first-minute-held";
 function hold(){try{localStorage.setItem(HELD,JSON.stringify(MINE));}catch(e){}}
@@ -509,7 +509,7 @@ function optionsPage(k){
  var host=document.getElementById("optshost");
  var F=flow(k),h="";
  var br=F.branch=F.branch||{},oth=F.other=F.other||{},act=activeBr(F);
- function drawB(B){if(askedBefore(k,B.k))return;if(B.after&&!(br[B.after]||[]).length)return;var c=br[B.k]=br[B.k]||[];h+='<div class="qb">'+(B.chart?mealChart():'')+'<h2>'+esc(B.q)+'</h2><div class="opts pills">'+B.l.map(function(l,i){return '<button type="button" class="opt br'+(c.indexOf(l)>-1?" on":"")+(l==="+ Other"?" other":"")+'" data-b="'+esc(B.k)+'" data-i="'+i+'">'+esc(l)+'</button>';}).join("")+'</div>'+(c.indexOf("+ Other")>-1?'<div class="own"><input type="text" maxlength="80" data-o="'+esc(B.k)+'" value="'+esc(oth[B.k]||"")+'" aria-label="Other"></div>':'')+'</div>';}
+ function drawB(B){if(askedBefore(k,B.k))return;if(B.after&&!(br[B.after]||[]).length)return;if(k==="body"&&(B.k==="mealsNow"||B.k==="mealsWant")&&dv(k).a[1].indexOf("My body")<0)return;var c=br[B.k]=br[B.k]||[];h+='<div class="qb">'+(B.chart?mealChart():'')+'<h2>'+esc(B.q)+'</h2><div class="opts pills">'+B.l.map(function(l,i){return '<button type="button" class="opt br'+(c.indexOf(l)>-1?" on":"")+(l==="+ Other"?" other":"")+'" data-b="'+esc(B.k)+'" data-i="'+i+'">'+esc(l)+'</button>';}).join("")+'</div>'+(c.indexOf("+ Other")>-1?'<div class="own"><input type="text" maxlength="80" data-o="'+esc(B.k)+'" value="'+esc(oth[B.k]||"")+'" aria-label="Other"></div>':'')+'</div>';}
  F.explore.forEach(function(x,xi){var q=k==="energy"&&x==="Playful"?"What energizes you?":"How do you like to "+EXP[x]+"?";
   if(askedBefore(k,x))return;
   if(x==="Natural"){h+='<div data-gp="1"></div>';}else if(x==="Expression"){}else if(LISTS[x]){var cur=F.opts[x]=F.opts[x]||[];h+='<div class="qb"><h2>'+esc(q)+'</h2><div class="opts pills">'+LISTS[x].map(function(l,i){return '<button type="button" class="opt'+(cur.indexOf(l)>-1?" on":"")+(l==="+ Other"?" other":"")+'" data-x="'+xi+'" data-i="'+i+'">'+esc(l)+'</button>';}).join("")+'</div></div>';}
