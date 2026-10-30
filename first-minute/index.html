@@ -152,8 +152,8 @@ function pillRow(list,sel,attr,other){return '<div class="opts pills">'+list.map
 function list_(a){var n=a.map(function(r){return "your "+r.w.replace(/^my /,"");});return n.length<3?n.join(" and "):n.slice(0,-1).join(", ")+", and "+n[n.length-1];}
 function whenPage(){
  var R=load(),y=window.scrollY;
- var h='<h1 class="q">When did you last think about your relationship to the following?</h1>';
- ROWS.forEach(function(r){h+='<div class="wrow"><p class="wlbl">'+esc(r.n)+'</p>'+pillRow(WHEN,R.when[r.k]?[R.when[r.k]]:[],'data-r="'+r.k+'"',false)+'</div>';});
+ var h='<h1 class="q">When did you last think about you and your:</h1>';
+ ROWS.forEach(function(r){h+='<div class="wrow"><p class="wlbl">'+esc(r.n.replace(/^(\S+\s)My /,"$1").replace(/^(\S+\s)(.)/,function(m,a,b){return a+b.toUpperCase();}))+'</p>'+pillRow(WHEN,R.when[r.k]?[R.when[r.k]]:[],'data-r="'+r.k+'"',false)+'</div>';});
  var olds=ROWS.filter(function(r){return ["Last month","Last year","In my life"].indexOf(R.when[r.k])>-1;}),while_=olds.length>0;
  if(showHelp&&while_)h+='<div class="inv"><p>It\'s been a while since you last thought about your relationship to '+list_(olds)+'.</p><p>Would you like to explore '+(olds.length===1?"this":olds.length===2?"either of these":"any of these")+'?</p><button class="btn jc" type="button" id="learn">Continue</button></div>';
  else if(ROWS.every(function(r){return R.when[r.k];}))h+='<div class="row"><button class="btn" type="button" id="done">Continue</button></div>';
