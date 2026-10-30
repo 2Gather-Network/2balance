@@ -512,7 +512,7 @@ function optionsPage(k){
  var F=flow(k),h="";
  var br=F.branch=F.branch||{},oth=F.other=F.other||{},act=activeBr(F);
  function drawB(B){if(askedBefore(k,B.k))return;var c=br[B.k]=br[B.k]||[];h+='<div class="qb">'+(B.chart?mealChart():'')+'<h2>'+esc(B.q)+'</h2><div class="opts pills">'+B.l.map(function(l,i){return '<button type="button" class="opt br'+(c.indexOf(l)>-1?" on":"")+(l==="+ Other"?" other":"")+'" data-b="'+esc(B.k)+'" data-i="'+i+'">'+esc(l)+'</button>';}).join("")+'</div>'+(c.indexOf("+ Other")>-1?'<div class="own"><input type="text" maxlength="80" data-o="'+esc(B.k)+'" value="'+esc(oth[B.k]||"")+'" aria-label="Other"></div>':'')+'</div>';}
- F.explore.forEach(function(x,xi){var q="How do you like to "+EXP[x]+"?";
+ F.explore.forEach(function(x,xi){var q=k==="energy"&&x==="Playful"?"What energizes you?":"How do you like to "+EXP[x]+"?";
   if(askedBefore(k,x))return;
   if(x==="Natural"){h+='<div data-gp="1"></div>';}else if(x==="Expression"){}else if(LISTS[x]){var cur=F.opts[x]=F.opts[x]||[];h+='<div class="qb"><h2>'+esc(q)+'</h2><div class="opts pills">'+LISTS[x].map(function(l,i){return '<button type="button" class="opt'+(cur.indexOf(l)>-1?" on":"")+(l==="+ Other"?" other":"")+'" data-x="'+xi+'" data-i="'+i+'">'+esc(l)+'</button>';}).join("")+'</div></div>';}
   else{h+='<div class="qb"><h2>'+esc(TXT[x])+'</h2><div class="own"><input type="text" maxlength="80" data-t="'+xi+'" value="'+esc((F.opts[x]||[""])[0]||"")+'" aria-label="'+esc(TXT[x])+'"></div></div>';}if((F.opts[x]||[]).indexOf("+ Other")>-1)h+='<div class="own"><input type="text" maxlength="80" data-o="n:'+esc(x)+'" value="'+esc(oth["n:"+x]||"")+'" aria-label="Other"></div>';act.filter(function(B){return B.need===x;}).forEach(drawB);});
