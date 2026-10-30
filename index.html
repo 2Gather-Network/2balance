@@ -284,15 +284,231 @@ function explorePage(k){
  app.querySelectorAll('.chk input').forEach(function(c){c.addEventListener("change",function(){var v=D.feels[+c.getAttribute("data-i")],i=F.explore.indexOf(v);if(c.checked&&i<0)F.explore.push(v);if(!c.checked&&i>-1)F.explore.splice(i,1);});});
  document.getElementById("next").addEventListener("click",function(){if(one)F.explore=[D.feels[0]];if(row(k).direct){D.need=F.explore.map(function(x){return NEEDOF[x];}).join("|");save(load());}go(F.explore.length?optionsPage:finalPage,k);});
 }
+var _gpMethodPicked={};
+  function gpBlock(title, hint, body){
+    var w = document.createElement('div');
+    w.style.cssText = 'padding:16px 18px;margin:0 0 14px;border:1.5px solid #C9DFF3;border-radius:14px;background:#fff;';
+    w.setAttribute('data-gp-card','1');
+    var t = document.createElement('div'); t.className = 'gp-qtitle';
+    t.style.cssText = 'font-size:17px;font-weight:800;color:#1A2E42;margin-bottom:2px;';
+    t.textContent = title;
+    var h = document.createElement('div');
+    h.style.cssText = 'font-size:13.5px;color:#4B5A6D;margin-bottom:12px;';
+    h.textContent = hint;
+    w.appendChild(t); w.appendChild(h); w.appendChild(body);
+    return w;
+  }
+  var GP_STAGE_LIST = [
+    ['Analyzing', '\u{1F4CA}', 'p', 'researching, investigating, interviewing, comparing'],
+    ['Designing', '\u{1F3A8}', 'p', 'imagining, sketching, outlining, setting goals'],
+    ['Modeling', '\u{1F9E9}', 'p', 'prototyping, mocking up, simulating, diagramming'],
+    ['Planning', '\u{1F5C2}', 'p', 'organizing, scheduling, budgeting, prioritizing'],
+    ['Funding', '\u{1F4B0}', 'p', 'fundraising, investing, pitching, lending'],
+    ['Sourcing', '\u{1F50D}', 'p', 'gathering materials, finding suppliers, finding people, finding spaces'],
+    ['Making', '\u{1F6E0}\uFE0F', 'p', 'building, crafting, constructing, creating'],
+    ['Manufacturing', '\u{1F3ED}', 'p', 'producing, assembling, fabricating, processing'],
+    ['Testing', '\u{1F9EA}', 'p', 'checking quality, piloting, reviewing drafts, experimenting'],
+    ['Delivering', '\u{1F69A}', 'p', 'packaging, shipping, installing, launching'],
+    ['Demonstrating', '\u{1F4DA}', 'p', 'teaching, training, showing, explaining'],
+    ['Promoting', '\u{1F4E3}', 'p', 'storytelling, writing, photographing, marketing'],
+    ['Supporting', '\u{1F6DF}', 'p', 'helping, guiding, answering questions, troubleshooting'],
+    ['Repairing', '\u{1F527}', 'p', 'fixing, maintaining, restoring, mending'],
+    ['Evaluating', '\u2705', 'p', 'measuring results, assessing, surveying, reflecting'],
+    ['Improving', '\u{1F4C8}', 'p', 'listening, refining, iterating, updating'],
+    ['Repurposing', '\u267B\uFE0F', 'p', 'recycling, reselling, reusing, passing on'],
+    ['Advising', '\u{1F9ED}', 'a', 'consulting, advising, mentoring, recommending'],
+    ['Facilitating', '\u{1F300}', 'a', 'coaching, connecting, mediating, convening'],
+    ['Caring', '\u{1F33F}', 'a', 'healing, comforting, nurturing, tending']
+  ];
+  var _gpStageOpen = false;
+  var GP_METHOD_OLD = { 'organizing and planning': ['Planning'], 'repairing and fixing': ['Repairing'], 'demonstrating what i know': ['Demonstrating'], 'consulting and advising': ['Advising'], 'facilitating and coaching': ['Facilitating'], 'making and designing': ['Making', 'Designing'], 'caring and healing': ['Caring'], 'finding problems to fix': ['Analyzing'], 'diagnosing and treating': ['Caring'] };
+  function gpMethodsNorm(){
+    var names = {}; GP_STAGE_LIST.forEach(function(s){ names[s[0].toLowerCase()] = s[0]; });
+    Object.keys(_gpMethodPicked).forEach(function(k){
+      if (!_gpMethodPicked[k]) { delete _gpMethodPicked[k]; return; }
+      var bare = String(k).replace(/^[^A-Za-z]+/, '').trim().toLowerCase();
+      if (names[bare]) { if (names[bare] !== k) { delete _gpMethodPicked[k]; _gpMethodPicked[names[bare]] = true; } return; }
+      var to = GP_METHOD_OLD[bare];
+      if (to) { delete _gpMethodPicked[k]; to.forEach(function(n){ _gpMethodPicked[n] = true; }); }
+    });
+  }
+  function gpStagesBody(){
+    var body = document.createElement('div');
+    var paint = function(){
+      gpMethodsNorm();
+      body.innerHTML = '';
+      var names = GP_STAGE_LIST.filter(function(s){ return _gpMethodPicked[s[0]]; }).map(function(s){ return s[0]; });
+      var head = document.createElement('div');
+      head.style.cssText = 'display:flex;flex-direction:column;align-items:flex-start;gap:10px;';
+      var left = document.createElement('div');
+      left.style.cssText = 'display:flex;flex-wrap:wrap;gap:7px;min-width:0;';
+      if (names.length) {
+        names.forEach(function(n){
+          var c = document.createElement('span');
+          c.textContent = n;
+          c.style.cssText = 'font-size:13.5px;font-weight:700;padding:7px 14px;border-radius:20px;background:#1F699E;border:1px solid #1F699E;color:#fff;';
+          left.appendChild(c);
+        });
+      } else {
+        var none = document.createElement('span');
+        none.textContent = 'Nothing chosen yet.';
+        none.style.cssText = 'font-size:13.5px;color:#4B5A6D;';
+        left.appendChild(none);
+      }
+      var tg = document.createElement('button');
+      tg.type = 'button';
+      tg.setAttribute('aria-expanded', _gpStageOpen ? 'true' : 'false');
+      tg.textContent = _gpStageOpen ? 'Hide choices' : 'Show choices';
+      tg.style.cssText = 'font:inherit;font-size:13.5px;font-weight:700;padding:7px 14px;border-radius:20px;border:1.5px solid #1F699E;background:#fff;color:#1F699E;cursor:pointer;flex-shrink:0;';
+      tg.onclick = function(){ _gpStageOpen = !_gpStageOpen; paint(); };
+      head.appendChild(tg); head.appendChild(left);
+      body.appendChild(head);
+      if (_gpStageOpen) {
+        var mk = function(group){
+          var grid = document.createElement('div');
+          grid.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr));gap:12px;margin-top:12px;';
+          GP_STAGE_LIST.filter(function(s){ return s[2] === group; }).forEach(function(s){
+            var on = !!_gpMethodPicked[s[0]];
+            var b = document.createElement('button');
+            b.type = 'button';
+            b.setAttribute('aria-pressed', on ? 'true' : 'false');
+            b.style.cssText = 'font:inherit;text-align:left;cursor:pointer;color:#1A2E42;border-radius:14px;padding:10px 12px;display:flex;flex-direction:column;align-items:flex-start;gap:2px;'
+              + (on ? 'background:#EAF4FB;border:1.5px solid #1F699E;box-shadow:inset 0 0 0 1px #1F699E;' : 'background:#fff;border:1.5px solid #DDE3EA;');
+            var top = document.createElement('div');
+            top.style.cssText = 'display:flex;gap:8px;align-items:center;width:100%;';
+            var e = document.createElement('span'); e.textContent = s[1]; e.style.cssText = 'font-size:20px;line-height:1;';
+            var w = document.createElement('span'); w.textContent = s[0]; w.style.cssText = 'font-weight:800;font-size:16px;';
+            var t = document.createElement('span'); t.textContent = '✓';
+            t.style.cssText = 'margin-left:auto;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;'
+              + (on ? 'background:#1F699E;border:1.5px solid #1F699E;color:#fff;' : 'border:1.5px solid #DDE3EA;');
+            top.appendChild(e); top.appendChild(w); top.appendChild(t);
+            var v = document.createElement('div'); v.textContent = s[3]; v.style.cssText = 'font-size:12.5px;color:#6B7A8D;';
+            b.appendChild(top); b.appendChild(v);
+            b.onclick = function(){ if (_gpMethodPicked[s[0]]) delete _gpMethodPicked[s[0]]; else _gpMethodPicked[s[0]] = true; paint(); try { if (window.gpMethodsChanged) window.gpMethodsChanged(); } catch (e2) {} };
+            grid.appendChild(b);
+          });
+          return grid;
+        };
+        body.appendChild(mk('p'));
+        var rule = document.createElement('div');
+        rule.style.cssText = 'height:0;margin:10px 0 0;';
+        body.appendChild(rule);
+        body.appendChild(mk('a'));
+      }
+    };
+    window._gpPaintMethods = paint;
+    paint();
+    return body;
+  }
+  var GP_SUBJ_LIST = [
+    ['Art', '\u{1F3A8}', 'drawing, painting, sculpture, design'],
+    ['Biology', '\u{1F9EC}', 'living things, the body, plants, ecology'],
+    ['Chemistry', '⚗️', 'substances, reactions, mixing, lab work'],
+    ['Computers and coding', '\u{1F4BB}', 'programming, apps, data, troubleshooting'],
+    ['Drama and theater', '\u{1F3AD}', 'acting, staging, improv, directing'],
+    ['Economics', '\u{1F4C8}', 'money, markets, trade, budgets'],
+    ['Education and teaching', '\u{1F393}', 'teaching, tutoring, how people learn, schools'],
+    ['Engineering and building', '\u{1F3D7}️', 'designing, building, fixing, machines'],
+    ['English and writing', '✍️', 'grammar, essays, storytelling, editing'],
+    ['Foreign languages', '\u{1F5E3}️', 'speaking, translating, grammar, cultures'],
+    ['Geography', '\u{1F5FA}️', 'maps, places, landforms, cultures'],
+    ['Health', '\u{1FA7A}', 'nutrition, first aid, wellness, the body'],
+    ['History', '\u{1F3DB}️', 'past events, research, timelines, people’s stories'],
+    ['Math', '\u{1F522}', 'numbers, algebra, geometry, statistics'],
+    ['Music', '\u{1F3B5}', 'singing, instruments, rhythm, composing'],
+    ['Philosophy', '\u{1F914}', 'big questions, ethics, logic, debate'],
+    ['Physical education and sports', '⚽', 'fitness, teamwork, games, coaching'],
+    ['Physics', '\u{1F9F2}', 'motion, energy, forces, electricity'],
+    ['Professional', '\u{1F4BC}', 'selling, managing, starting, planning'],
+    ['Psychology', '\u{1F9E0}', 'behavior, emotions, why people do things'],
+    ['Public speaking', '\u{1F3A4}', 'presenting, debating, persuading, storytelling'],
+    ['Reading and literature', '\u{1F4D6}', 'novels, poetry, analysis, book clubs'],
+    ['Science', '\u{1F52C}', 'experiments, observing, lab work, the natural world'],
+    ['Social studies', '\u{1F465}', 'government, communities, civics, society']
+  ];
+  var _gpSubjPicked = {}, _gpSubjOpen = false;
+  function gpSubjectsBody(){
+    var body = document.createElement('div');
+    var paint = function(){
+      body.innerHTML = '';
+      var names = GP_SUBJ_LIST.filter(function(s){ return _gpSubjPicked[s[0]]; }).map(function(s){ return s[0]; });
+      var head = document.createElement('div');
+      head.style.cssText = 'display:flex;flex-direction:column;align-items:flex-start;gap:10px;';
+      var left = document.createElement('div');
+      left.style.cssText = 'display:flex;flex-wrap:wrap;gap:7px;min-width:0;';
+      if (names.length) {
+        names.forEach(function(n){
+          var c = document.createElement('span');
+          c.textContent = n;
+          c.style.cssText = 'font-size:13.5px;font-weight:700;padding:7px 14px;border-radius:20px;background:#1F699E;border:1px solid #1F699E;color:#fff;';
+          left.appendChild(c);
+        });
+      }
+      var tg = document.createElement('button');
+      tg.type = 'button';
+      tg.setAttribute('aria-expanded', _gpSubjOpen ? 'true' : 'false');
+      tg.textContent = _gpSubjOpen ? 'Hide subjects' : 'Show subjects';
+      tg.style.cssText = 'font:inherit;font-size:13.5px;font-weight:700;padding:7px 14px;border-radius:20px;border:1.5px solid #1F699E;background:#fff;color:#1F699E;cursor:pointer;';
+      tg.onclick = function(){ _gpSubjOpen = !_gpSubjOpen; paint(); };
+      head.appendChild(tg); if (names.length) { head.appendChild(left); }
+      body.appendChild(head);
+      if (_gpSubjOpen) {
+        var grid = document.createElement('div');
+        grid.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr));gap:12px;margin-top:12px;';
+        GP_SUBJ_LIST.forEach(function(s){
+          var on = !!_gpSubjPicked[s[0]];
+          var b = document.createElement('button');
+          b.type = 'button';
+          b.setAttribute('aria-pressed', on ? 'true' : 'false');
+          b.style.cssText = 'font:inherit;text-align:left;cursor:pointer;color:#1A2E42;border-radius:14px;padding:10px 12px;display:flex;flex-direction:column;align-items:flex-start;gap:2px;'
+            + (on ? 'background:#EAF4FB;border:1.5px solid #1F699E;box-shadow:inset 0 0 0 1px #1F699E;' : 'background:#fff;border:1.5px solid #DDE3EA;');
+          var top = document.createElement('div');
+          top.style.cssText = 'display:flex;gap:8px;align-items:center;width:100%;';
+          var e = document.createElement('span'); e.textContent = s[1]; e.style.cssText = 'font-size:20px;line-height:1;';
+          var w = document.createElement('span'); w.textContent = s[0]; w.style.cssText = 'font-weight:800;font-size:16px;';
+          var t = document.createElement('span'); t.textContent = '✓';
+          t.style.cssText = 'margin-left:auto;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;'
+            + (on ? 'background:#1F699E;border:1.5px solid #1F699E;color:#fff;' : 'border:1.5px solid #DDE3EA;');
+          top.appendChild(e); top.appendChild(w); top.appendChild(t);
+          var v = document.createElement('div'); v.textContent = s[2]; v.style.cssText = 'font-size:12.5px;color:#6B7A8D;';
+          b.appendChild(top); b.appendChild(v);
+          b.onclick = function(){ if (_gpSubjPicked[s[0]]) { delete _gpSubjPicked[s[0]]; } else { _gpSubjPicked[s[0]] = true; } paint(); try { gpTouchSave(); } catch (e) {} };
+          grid.appendChild(b);
+        });
+        body.appendChild(grid);
+      }
+    };
+    window._gpPaintSubj = paint;
+    paint();
+    return body;
+  }
+  function gpSubjWrap(first){
+    var w = document.createElement('div');
+    w.appendChild(first);
+    var h = document.createElement('div');
+    h.textContent = 'Subjects';
+    h.style.cssText = 'font-size:15px;font-weight:800;color:#1A2E42;margin:22px 0 4px;';
+    var sub = document.createElement('div');
+    sub.textContent = 'What you learn easily or have always been good at.';
+    sub.style.cssText = 'font-size:13.5px;color:#4B5A6D;margin:0 0 10px;';
+    w.appendChild(h); w.appendChild(sub); w.appendChild(gpSubjectsBody());
+    return w;
+  }
+var _gpLoaded=false;
+function gpLoad(k){var F=flow(k);_gpMethodPicked={};(F.opts.Expressed||[]).forEach(function(n){_gpMethodPicked[n]=true;});_gpSubjPicked={};(F.subjects||[]).forEach(function(n){_gpSubjPicked[n]=true;});gpMethodsNorm();}
+function gpSaveNow(k){var F=flow(k);gpMethodsNorm();F.opts.Expressed=Object.keys(_gpMethodPicked);F.subjects=Object.keys(_gpSubjPicked);save(MINE);}
+function gpNaturalBlock(k){gpLoad(k);window.gpMethodsChanged=function(){gpSaveNow(k);};window.gpTouchSave=function(){gpSaveNow(k);};return gpBlock('What comes most naturally to you?','How you like to help, rather than what you know.',gpSubjWrap(gpStagesBody()));}
+
 function optionsPage(k){
  var F=flow(k),h="";
  var br=F.branch=F.branch||{},oth=F.other=F.other||{},act=activeBr(F);
  function drawB(B){if(askedBefore(k,B.k))return;var c=br[B.k]=br[B.k]||[];h+='<div class="qb">'+(B.chart?mealChart():'')+'<h2>'+esc(B.q)+'</h2><div class="opts pills">'+B.l.map(function(l,i){return '<button type="button" class="opt br'+(c.indexOf(l)>-1?" on":"")+(l==="+ Other"?" other":"")+'" data-b="'+esc(B.k)+'" data-i="'+i+'">'+esc(l)+'</button>';}).join("")+'</div>'+(c.indexOf("+ Other")>-1?'<div class="own"><input type="text" maxlength="80" data-o="'+esc(B.k)+'" value="'+esc(oth[B.k]||"")+'" aria-label="Other"></div>':'')+'</div>';}
  F.explore.forEach(function(x,xi){var q=x==="Expressed"?"What comes most naturally to you?":"How do you like to "+EXP[x]+"?";
   if(askedBefore(k,x))return;
-  if(LISTS[x]){var cur=F.opts[x]=F.opts[x]||[];h+='<div class="qb"><h2>'+esc(q)+'</h2><div class="opts pills">'+LISTS[x].map(function(l,i){return '<button type="button" class="opt'+(cur.indexOf(l)>-1?" on":"")+(l==="+ Other"?" other":"")+'" data-x="'+xi+'" data-i="'+i+'">'+esc(l)+'</button>';}).join("")+'</div></div>';}
+  if(x==="Expressed"){h+='<div data-gp="1"></div>';}else if(LISTS[x]){var cur=F.opts[x]=F.opts[x]||[];h+='<div class="qb"><h2>'+esc(q)+'</h2><div class="opts pills">'+LISTS[x].map(function(l,i){return '<button type="button" class="opt'+(cur.indexOf(l)>-1?" on":"")+(l==="+ Other"?" other":"")+'" data-x="'+xi+'" data-i="'+i+'">'+esc(l)+'</button>';}).join("")+'</div></div>';}
   else{h+='<div class="qb"><h2>'+esc(TXT[x])+'</h2><div class="own"><input type="text" maxlength="80" data-t="'+xi+'" value="'+esc((F.opts[x]||[""])[0]||"")+'" aria-label="'+esc(TXT[x])+'"></div></div>';}if((F.opts[x]||[]).indexOf("+ Other")>-1)h+='<div class="own"><input type="text" maxlength="80" data-o="n:'+esc(x)+'" value="'+esc(oth["n:"+x]||"")+'" aria-label="Other"></div>';act.filter(function(B){return B.need===x;}).forEach(drawB);});
  app.innerHTML=h+'<div class="row"><button class="btn" type="button" id="next">Continue</button></div>';
+ var gph=app.querySelector('[data-gp]');if(gph)gph.replaceWith(gpNaturalBlock(k));
  var y=window.scrollY;
  app.querySelectorAll(".opt.br").forEach(function(b){b.addEventListener("click",function(){var B=act.filter(function(x){return x.k===b.getAttribute("data-b");})[0],v=B.l[+b.getAttribute("data-i")],c=br[B.k],i=c.indexOf(v);if(i>-1)c.splice(i,1);else{if(B.one)c.length=0;c.push(v);}optionsPage(k);window.scrollTo(0,y);});});
  app.querySelectorAll("input[data-o]").forEach(function(t){t.addEventListener("input",function(){oth[t.getAttribute("data-o")]=t.value.trim();});});
