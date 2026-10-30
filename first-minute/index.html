@@ -131,7 +131,7 @@ function ico(k,s){return '<svg class="ico" viewBox="0 0 48 48" width="'+s+'" hei
 function nm(r){return ico(r.k,24)+' '+esc(words(r));}
 function words(r){return r.n.replace(/^\S+\s+/,"");}
 function dv(k){var D=MINE.dive[k]=MINE.dive[k]||{a:[[],[]],own:[[],[]],need:"",feels:[]};while(D.a.length<3)D.a.push([]);while(D.own.length<3)D.own.push([]);return D;}
-var SAVE_NEW=false;
+var SAVE_NEW=true;
 var FMK={howIEatAndDrink:["body","opts","Nourished"],howIMove:["body","opts","Energized to move"],howIRest:["body","opts","Rested"],howIConnect:["energy","opts","Connected"],energizesMeKinds:["energy","opts","Playful"],mealsLandNow:["energy","branch","mealsNow"],mealsLandWant:["energy","branch","mealsWant"],connectSolo:["energy","branch","self"],connectWithOthers:["energy","branch","others"],connectPlaces:["energy","branch","place"]};
 function heldAns(key){var f=MINE.flow||{},out=[];Object.keys(f).forEach(function(j){var F=f[j],o=F.other||{},t=o["n:"+key]||o[key]||"";((F.opts||{})[key]||[]).concat((F.branch||{})[key]||[]).forEach(function(v){v=v==="+ Other"?t:v;if(v&&out.indexOf(v)<0)out.push(v);});});return out.join("|");}
 function areaWords(L){return L.map(function(k){return words(row(k));}).join("|");}
@@ -240,7 +240,7 @@ function afterArea(k){var p=load().picks||[],i=p.indexOf(k);return i>-1&&i<p.len
 function setExplore(k){var o=HOME[k].slice();row(k).q.forEach(function(q,qi){if(q.br)dv(k).a[qi].forEach(function(l){if(q.br[l]&&o.indexOf(q.br[l])<0)o.push(q.br[l]);});});flow(k).explore=o;}
 function needWords(k){var F=flow(k),o=[];F.explore.forEach(function(x){var n=x==="Natural"||x==="Expression"?"Create":NEEDOF[x],has=x==="Expression"?((F.branch||{}).expression||[]).length:(F.opts[x]||[]).length||(x==="Natural"&&(F.subjects||[]).length);if(has&&o.indexOf(n)<0)o.push(n);});return o.join("|");}
 var HELD="bal-first-minute-held";
-function hold(){try{var c=JSON.parse(JSON.stringify(MINE)),f=c.flow||{};Object.keys(f).forEach(function(j){if(f[j].opts)delete f[j].opts.Natural;if(f[j].branch)delete f[j].branch.expression;if(f[j].other)delete f[j].other.expression;delete f[j].subjects;});localStorage.setItem(HELD,JSON.stringify(c));}catch(e){}}
+function hold(){try{var c=JSON.parse(JSON.stringify(MINE)),f=c.flow||{};Object.keys(f).forEach(function(j){if(f[j].opts)delete f[j].opts.Natural;if(f[j].branch)delete f[j].branch.expression;if(f[j].other)delete f[j].other.expression;delete f[j].subjects;});c.at=Date.now();localStorage.setItem(HELD,JSON.stringify(c));}catch(e){}}
 function here(){return "/first-minute/";}
 function invite(){
  app.innerHTML='<div class="invite"><h2 class="ih">Sign up to save your answers</h2><p class="il">Your answers so far will be waiting for you, and you can carry on from here. Signing in lets this page remember how you respond. You can also keep exploring without an account.</p><div class="acts"><button class="btn" type="button" id="up">Sign up</button><button class="btn ghost" type="button" id="in">Sign in</button><button class="btn ghost" type="button" id="keep">Keep exploring</button></div><div class="alts"><button class="lnk" type="button" id="no">Not at this time, thank you</button></div></div>';
@@ -249,7 +249,7 @@ function invite(){
  document.getElementById("keep").addEventListener("click",function(){var R=load();R.invited=true;if(oldAreas().length>1)go(startWith);else go(dive,R.start);});
  document.getElementById("no").addEventListener("click",function(){go(notNow);});
 }
-function notNow(){app.innerHTML='<p class="stmt">If and when you\'re ready to begin, come back to explore how to tend to yourself. Start by exploring what you\'re good at, what lights you up, and where you get your energy.</p><div class="acts"><button class="btn" type="button" id="rem">Send me an email reminder</button></div>';
+function notNow(){try{localStorage.removeItem(HELD);}catch(e){}app.innerHTML='<p class="stmt">If and when you\'re ready to begin, come back to explore how to tend to yourself. Start by exploring what you\'re good at, what lights you up, and where you get your energy.</p><div class="acts"><button class="btn" type="button" id="rem">Send me an email reminder</button></div>';
  document.getElementById("rem").addEventListener("click",function(){go(remind);});}
 function remind(){
  app.innerHTML='<div class="invite"><h2 class="ih">Where should we send it?</h2><p class="il">We use your email once, to send this one reminder.</p><label class="elbl" for="em">Your email</label><div class="eform"><input id="em" type="email" autocomplete="email" inputmode="email"><button class="btn" type="button" id="sendrem">Send</button></div><p class="emsg" id="emsg" aria-live="polite"></p></div>';
@@ -609,7 +609,7 @@ function feelPage(){
  document.getElementById("done").addEventListener("click",function(){go(donePage);});
 }
 function donePage(){flush();markDone();app.innerHTML='<p class="stmt">Thank you for taking the time to explore. Whatever you noticed is a good place to begin. Come back any day, one day at a time.</p>'+(me()?'':'<p class="sub">Your answers are not saved because you are not signed in.</p>');}
-{var held=null;try{held=JSON.parse(localStorage.getItem(HELD)||"null");}catch(e){}
+{var held=null;try{held=JSON.parse(localStorage.getItem(HELD)||"null");if(held&&(!me()||!(Date.now()-held.at<3600000))){localStorage.removeItem(HELD);held=null;}}catch(e){}
  if(held&&held.when&&me()){MINE={when:held.when||{},rate:held.rate||{},dive:held.dive||{},start:held.start||"",picks:held.picks,flow:held.flow||{},asked:held.asked,look:held.look,exp:held.exp};hist=[[whenPage],[startWith]];cur=MINE.start?dive:startWith;curArg=MINE.start;}else cur=whenPage;
  render();lookUp();}
 })();
