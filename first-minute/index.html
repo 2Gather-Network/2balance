@@ -228,7 +228,7 @@ function feelPage(){
  app.querySelectorAll(".fbtn").forEach(function(b){b.addEventListener("click",function(){var k=b.getAttribute("data-r"),n=+b.getAttribute("data-v");R.rate[k]=(R.rate[k]===n?0:n);save(R);feelPage();});});
  document.getElementById("done").addEventListener("click",function(){go(donePage);});
 }
-function donePage(){flush();app.innerHTML='<h1>Thank you</h1>'+(me()?'':'<p class="sub">Your answers are not saved because you are not signed in.</p>');}
+function donePage(){flush();app.innerHTML='<p class="stmt">Thank you for taking this first minute. Whatever you noticed is a good place to begin. Come back any day, one day at a time.</p>'+(me()?'':'<p class="sub">Your answers are not saved because you are not signed in.</p>');}
 if(new URLSearchParams(location.search).get("mockup")!=="1"){app.innerHTML='<h1>2Balance</h1><p class="sub">Coming soon.</p>';}else{var held=null;try{held=JSON.parse(localStorage.getItem(HELD)||"null");}catch(e){}
  if(held&&held.when&&me()){MINE={when:held.when||{},rate:held.rate||{},dive:held.dive||{},start:held.start||""};hist=[[whenPage],[startWith]];cur=MINE.start?dive:startWith;curArg=MINE.start;}else cur=whenPage;
  render();lookUp();}
