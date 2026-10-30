@@ -238,24 +238,24 @@ function remind(){
  document.getElementById("sendrem").addEventListener("click",send);em.addEventListener("keydown",function(e){if(e.key==="Enter")send();});
 }
 function dive(arg){
- var k=typeof arg==="string"?arg:arg.k,r=row(k),R=load(),D=dv(k);
+ var k=typeof arg==="string"?arg:arg.k,step=typeof arg==="string"?0:arg.s,r=row(k),R=load(),D=dv(k);
  flow(k).explore=HOME[k].slice();
  function draw(){
   var y=window.scrollY;
   var h='<h1>'+esc(r.n)+'</h1>';
-  h+='<div class="qb"><h2>Right now, I would rate '+esc(r.w)+' as:</h2>'+keyHTML()+'<div class="fseg lvl">'+LV.map(function(lb,i){return '<button type="button" class="opt fbtn'+((R.rate[k]||0)===i+1?" on":"")+'" data-q="level" data-v="'+(i+1)+'" aria-label="'+(i+1)+' '+esc(lb)+'">'+(i+1)+'</button>';}).join("")+'</div></div>';
+  if(step===0)h+='<div class="qb"><h2>Right now, I would rate '+esc(r.w)+' as:</h2>'+keyHTML()+'<div class="fseg lvl">'+LV.map(function(lb,i){return '<button type="button" class="opt fbtn'+((R.rate[k]||0)===i+1?" on":"")+'" data-q="level" data-v="'+(i+1)+'" aria-label="'+(i+1)+' '+esc(lb)+'">'+(i+1)+'</button>';}).join("")+'</div></div>';
   r.q.forEach(function(q,qi){
-   if(r.noq)return;
+   if(r.noq||step!==1)return;
    var list=q.l.concat(D.own[qi]);
    h+='<div class="qb"><h2>'+esc(q.t)+'</h2>'+(q.t==="What have you been feeling lately?"?'<p class="sub" style="margin:0 0 6px">Select all that apply.</p>':'');
    if(q.cb){list.forEach(function(x,i){h+='<label class="chk"><input type="checkbox" data-q="'+qi+'" data-i="'+i+'"'+(D.a[qi].indexOf(x)>-1?" checked":"")+'><span>'+esc(x)+'</span></label>';});h+='<label class="chk"><input type="checkbox" class="oth" data-q="'+qi+'"><span>+ Other</span></label>';}
    else h+=pillRow(list,D.a[qi],'data-q="'+qi+'"',true);
    h+='<div class="ownhost" data-q="'+qi+'"></div></div>';
   });
-  if(r.f.vis)h+='<div class="qb"><h2>What\'s your greatest, grandest vision for '+esc(r.vis)+'?</h2><div class="own"><textarea id="vis" aria-label="My vision">'+esc(D.vis)+'</textarea></div></div>';
-  h+='<div id="optshost"></div>';
-  if(R.rate[k])h+='<div class="row"><button class="btn" type="button" id="next">Continue</button></div>';
-  app.innerHTML=h;optionsPage(k);window.scrollTo(0,y);
+  if(step===1&&r.f.vis)h+='<div class="qb"><h2>What\'s your greatest, grandest vision for '+esc(r.vis)+'?</h2><div class="own"><textarea id="vis" aria-label="My vision">'+esc(D.vis)+'</textarea></div></div>';
+  if(step===1)h+='<div id="optshost"></div>';
+  if(step===1||R.rate[k])h+='<div class="row"><button class="btn" type="button" id="next">Continue</button></div>';
+  app.innerHTML=h;if(step===1)optionsPage(k);window.scrollTo(0,y);
   app.querySelectorAll('.opt[data-q="level"]').forEach(function(b){b.addEventListener("click",function(){var v=+b.getAttribute("data-v");R.rate[k]=(R.rate[k]===v?0:v);save(R);draw();});});
   var vb=document.getElementById("vis");if(vb)vb.addEventListener("input",function(e){D.vis=e.target.value;save(R);});
   r.q.forEach(function(q,qi){
@@ -266,7 +266,7 @@ function dive(arg){
    var o=app.querySelector('[data-q="'+qi+'"][data-other], .chk .oth[data-q="'+qi+'"]');
    if(o)o.addEventListener(o.tagName==="INPUT"?"change":"click",function(){if(o.tagName==="INPUT")o.checked=false;ownBox(qi,function(v){if(D.own[qi].indexOf(v)<0&&q.l.indexOf(v)<0)D.own[qi].push(v);toggle(v,true);draw();});});
   });
-  var nb=document.getElementById("next");if(nb)nb.addEventListener("click",function(){var nx=afterArea(k);R.areasDone=R.areasDone||[];if(R.areasDone.indexOf(k)<0)R.areasDone.push(k);D.need=needWords(k);save(R);if(nx)go(dive,nx);else go(finalPage,k);});
+  var nb=document.getElementById("next");if(nb)nb.addEventListener("click",function(){if(step===0){go(dive,{k:k,s:1});return;}var nx=afterArea(k);R.areasDone=R.areasDone||[];if(R.areasDone.indexOf(k)<0)R.areasDone.push(k);D.need=needWords(k);save(R);if(nx)go(dive,nx);else go(finalPage,k);});
  }
  draw();
 }
