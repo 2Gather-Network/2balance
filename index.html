@@ -134,6 +134,7 @@ function ico(k,s){return '<svg class="ico" viewBox="0 0 48 48" width="'+s+'" hei
 function nm(r){return ico(r.k,24)+' '+esc(words(r));}
 function words(r){return r.n.replace(/^\S+\s+/,"");}
 function dv(k){var D=MINE.dive[k]=MINE.dive[k]||{a:[[],[]],own:[[],[]],need:"",feels:[]};while(D.a.length<3)D.a.push([]);while(D.own.length<3)D.own.push([]);return D;}
+var SAVE_NEW=false;
 var FMK={howIEatAndDrink:["body","opts","Nourished"],howIMove:["body","opts","Energized to move"],howIRest:["body","opts","Rested"],howIConnect:["energy","opts","Connected"],energizesMeKinds:["energy","opts","Playful"],mealsLandNow:["energy","branch","mealsNow"],mealsLandWant:["energy","branch","mealsWant"],connectSolo:["energy","branch","self"],connectWithOthers:["energy","branch","others"],connectPlaces:["energy","branch","place"]};
 function heldAns(key){var f=MINE.flow||{},out=[];Object.keys(f).forEach(function(j){var F=f[j],o=F.other||{},t=o["n:"+key]||o[key]||"";((F.opts||{})[key]||[]).concat((F.branch||{})[key]||[]).forEach(function(v){v=v==="+ Other"?t:v;if(v&&out.indexOf(v)<0)out.push(v);});});return out.join("|");}
 function areaWords(L){return L.map(function(k){return words(row(k));}).join("|");}
@@ -153,7 +154,7 @@ function fillMore(take){function list(v){return v.split("|").map(function(x){ret
  if((v=take("energizesMeEnjoy"))){var E=flow("energy");E.branch=E.branch||{};list(v).forEach(function(x){var c=Object.keys(RECS).filter(function(k){return RECS[k].indexOf(x)>-1;})[0]||"Other",b="rec:"+c;E.branch[b]=E.branch[b]||[];E.branch[b].push(x);});}
  if((v=take("next5MinutesPick")))flow("needs").final=list(v);
  if((v=take("next5MinutesStart")))MINE.startChoice=v;}
-function vals(){var o={},st="";ROWS.forEach(function(r){var D=dv(r.k),n=MINE.rate[r.k]||0;o[r.f.when]=MINE.when[r.k]||"";o[r.f.now]=n?LV[n-1]:"";r.f.q.forEach(function(fq,qi){o[fq]=D.a[qi].join("|");});if(r.f.vis)o[r.f.vis]=D.vis;o[r.f.need]=D.need;if(MINE.start===r.k)st=words(r);});o.startWithFirst=st;return moreVals(o);}
+function vals(){var o={},st="";ROWS.forEach(function(r){var D=dv(r.k),n=MINE.rate[r.k]||0;o[r.f.when]=MINE.when[r.k]||"";o[r.f.now]=n?LV[n-1]:"";r.f.q.forEach(function(fq,qi){o[fq]=D.a[qi].join("|");});if(r.f.vis)o[r.f.vis]=D.vis;o[r.f.need]=D.need;if(MINE.start===r.k)st=words(r);});o.startWithFirst=st;return SAVE_NEW?moreVals(o):o;}
 function markDone(){try{if(!me())return;localStorage.setItem("cw-firstmin",JSON.stringify({who:String(CW.me().id||"").split(".").join("").toLowerCase(),yes:true}));}catch(e){}}
 function note(t){document.getElementById("sv").textContent=t;}
 function wait(on){var e=document.getElementById("cwl");if(on&&!e){e=document.createElement("div");e.id="cwl";e.className="cw-loading";e.textContent="Looking for your earlier answers…";var c=document.querySelector(".card");c.parentNode.insertBefore(e,c);}else if(!on&&e)e.remove();}
@@ -175,7 +176,7 @@ function fill(d){var cur0=vals();
   if(take("startWithFirst")===words(r))MINE.start=r.k;
  });
  sent.startWithFirst=String(d.startWithFirst==null?"":d.startWithFirst).trim();
- fillMore(take);
+ if(SAVE_NEW)fillMore(take);
 }
 function lookUp(){var id=me();if(!id)return;looking=true;wait(true);
  var ask=function(){return fetch(GS+"?action=getIntake&appearId="+encodeURIComponent(id)).then(function(r){return r.json();}).then(function(d){if(!d||d.status==="error")throw new Error("no");return d;});};
@@ -279,7 +280,7 @@ function explorePickPage(){
  var R=load(),L=areasList();R.exp=R.exp||{};
  function first(){var f=L.filter(function(a){return R.exp[a]==="Yes";})[0];if(f)go(areaQsPage,f);else go(finalPage);}
  if(L.length===1){var k=L[0],r=row(k);
-  app.innerHTML='<h1 class="q">Would you like to explore '+esc(r.w.replace(/^my /,"your "))+' a little more?</h1><div class="row"><button class="btn" type="button" id="yes">Let\'s go!</button></div><div class="invite"><div class="alts"><button class="lnk" type="button" id="no">Not right now, thank you</button></div></div>';
+  app.innerHTML='<h1 class="q">Would you like to explore '+esc(r.w.replace(/^my /,"your "))+' a little more?</h1><div class="row" style="margin-top:0;padding-top:24px"><button class="btn" type="button" id="yes">Let\'s go!</button></div><div class="invite"><div class="alts"><button class="lnk" type="button" id="no">Not right now, thank you</button></div></div>';
   document.getElementById("yes").addEventListener("click",function(){R.exp[k]="Yes";save(R);first();});
   document.getElementById("no").addEventListener("click",function(){R.exp[k]="No";save(R);go(notNow);});
   return;}
