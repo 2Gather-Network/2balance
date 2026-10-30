@@ -122,7 +122,7 @@ var NE={"Rest":"💙","Eat and drink":"🥘","Move":"🌀","Play":"🏓","Connec
 var STMT="At 2Balance, you are invited to explore how you relate to the who, what, where, when, how, and why of your life as a daily practice. As you do, we support you to reawaken to balance, joy, connection, and fulfillment in how you experience and engage with anything in life.";
 function keyHTML(){return '<div class="keybox">'+LV.map(function(lb,i){return '<span class="kit"><span class="kc">'+(i+1)+'</span>'+esc(lb)+'</span>';}).join("")+'</div>';}
 function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");}
-var GS="https://cw-api-gate.jessieupp.workers.dev",sent={},timer=null,looking=false;
+var GS="https://cw-api-gate.jessieupp.workers.dev",sent={},timer=null,looking=false,readOk=false;
 function load(){return MINE;}
 function save(t){MINE=t;clearTimeout(timer);timer=setTimeout(flush,1500);}
 function me(){try{var m=window.CW&&CW.me&&CW.me();if(!m||!m.id||m.viewing||!CW.passParam())return "";return m.id;}catch(e){return "";}}
@@ -154,7 +154,7 @@ function vals(){var o={},st="";ROWS.forEach(function(r){var D=dv(r.k),n=MINE.rat
 function markDone(){try{if(!me())return;localStorage.setItem("cw-firstmin",JSON.stringify({who:String(CW.me().id||"").split(".").join("").toLowerCase(),yes:true}));}catch(e){}}
 function note(t){document.getElementById("sv").textContent=t;}
 function wait(on){var e=document.getElementById("cwl");if(on&&!e){e=document.createElement("div");e.id="cwl";e.className="cw-loading";e.textContent="Looking for your earlier answers…";var c=document.querySelector(".card");c.parentNode.insertBefore(e,c);}else if(!on&&e)e.remove();}
-function flush(){clearTimeout(timer);timer=null;var id=me();if(!id||looking)return;var all=vals(),out={},any=false;Object.keys(all).forEach(function(f){if(all[f]!==(sent[f]||"")){out[f]=all[f];any=true;}});if(!any)return;
+function flush(){clearTimeout(timer);timer=null;var id=me();if(!id||looking)return;var all=vals(),out={},any=false;if(!readOk){delete all.howIMove;delete all.howIRest;}Object.keys(all).forEach(function(f){if(all[f]!==(sent[f]||"")){out[f]=all[f];any=true;}});if(!any)return;
  fetch(GS+"?action=saveBalanceAnswers&appearId="+encodeURIComponent(id)+"&answers="+encodeURIComponent(JSON.stringify(out)),{keepalive:true}).then(function(r){return r.json();}).then(function(r){
   if(r&&r.status==="ok"&&!(r.missing&&r.missing.length)){Object.keys(out).forEach(function(f){sent[f]=out[f];});note("");try{localStorage.removeItem(HELD);}catch(e){}}
   else if(r&&r.status==="norow")note("Your answers could not be saved because your profile is not set up yet.");
@@ -176,7 +176,7 @@ function fill(d){var cur0=vals();
 }
 function lookUp(){var id=me();if(!id)return;looking=true;wait(true);
  var ask=function(){return fetch(GS+"?action=getIntake&appearId="+encodeURIComponent(id)).then(function(r){return r.json();}).then(function(d){if(!d||d.status==="error")throw new Error("no");return d;});};
- ask().catch(function(){return new Promise(function(ok){setTimeout(ok,2000);}).then(ask);}).then(function(d){fill((d&&d.data)||{});if(ROWS.every(function(r){return MINE.when[r.k];}))markDone();looking=false;wait(false);if(cur){cur(curArg);drawCrumbs();}flush();}).catch(function(){looking=false;wait(false);note("Your earlier answers could not be loaded.");});}
+ ask().catch(function(){return new Promise(function(ok){setTimeout(ok,2000);}).then(ask);}).then(function(d){fill((d&&d.data)||{});readOk=!!(d&&d.data);if(ROWS.every(function(r){return MINE.when[r.k];}))markDone();looking=false;wait(false);if(cur){cur(curArg);drawCrumbs();}flush();}).catch(function(){looking=false;wait(false);note("Your earlier answers could not be loaded.");});}
 document.addEventListener("visibilitychange",function(){if(document.hidden)flush();});
 window.addEventListener("pagehide",flush);
 function go(fn,arg){hist.push([cur,curArg]);cur=fn;curArg=arg;render();}
@@ -241,7 +241,7 @@ function afterArea(k){var p=load().picks||[],i=p.indexOf(k);return i>-1&&i<p.len
 function setExplore(k){var o=HOME[k].slice();row(k).q.forEach(function(q,qi){if(q.br)dv(k).a[qi].forEach(function(l){if(q.br[l]&&o.indexOf(q.br[l])<0)o.push(q.br[l]);});});flow(k).explore=o;}
 function needWords(k){var F=flow(k),o=[];F.explore.forEach(function(x){var n=x==="Natural"||x==="Expression"?"Create":NEEDOF[x],has=x==="Expression"?((F.branch||{}).expression||[]).length:(F.opts[x]||[]).length||(x==="Natural"&&(F.subjects||[]).length);if(has&&o.indexOf(n)<0)o.push(n);});return o.join("|");}
 var HELD="bal-first-minute-held";
-function hold(){try{localStorage.setItem(HELD,JSON.stringify(MINE));}catch(e){}}
+function hold(){try{var c=JSON.parse(JSON.stringify(MINE)),f=c.flow||{};Object.keys(f).forEach(function(j){if(f[j].opts)delete f[j].opts.Natural;if(f[j].branch)delete f[j].branch.expression;if(f[j].other)delete f[j].other.expression;delete f[j].subjects;});localStorage.setItem(HELD,JSON.stringify(c));}catch(e){}}
 function here(){return "/first-minute/";}
 function invite(){
  app.innerHTML='<div class="invite"><h2 class="ih">Sign up to save your answers</h2><p class="il">Your answers so far will be waiting for you, and you can carry on from here. Signing in lets this page remember how you respond. You can also keep exploring without an account.</p><div class="acts"><button class="btn" type="button" id="up">Sign up</button><button class="btn ghost" type="button" id="in">Sign in</button><button class="btn ghost" type="button" id="keep">Keep exploring</button></div><div class="alts"><button class="lnk" type="button" id="no">Not at this time, thank you</button></div></div>';
