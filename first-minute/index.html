@@ -161,10 +161,10 @@ function back(){var h=hist.pop();if(h){cur=h[0];curArg=h[1];render();}}
 new MutationObserver(addBack).observe(app,{childList:true});
 function render(){cur(curArg);addBack();drawCrumbs();drawRail();window.scrollTo(0,0);}
 function addBack(){if(!hist.length||document.getElementById("back"))return;var r=app.querySelector(".row");if(!r){r=document.createElement("div");r.className="row";app.appendChild(r);}var b=document.createElement("button");b.type="button";b.id="back";b.className="btn ghost";b.textContent="Back";b.addEventListener("click",back);r.insertBefore(b,r.firstChild);}
-function crumbName(fn,arg){if(fn===whenPage)return "Home";if(fn===startWith)return "Begin";if(fn===dive)return words(row(typeof arg==="string"?arg:arg.k));if(fn===feelPage)return "How do you feel about…";if(fn===explorePage)return "Explore";if(fn===askedPage)return "A question";if(fn===feelWhatPage)return "What I would like to feel";if(fn===notePage)return "Looking closer";if(fn===optionsPage)return words(row(arg));if(fn===finalPage)return "Next 5 minutes";if(fn===needsPage)return "Explore";if(fn===needQsPage)return "How you like to";if(fn===readyPage)return "Start or remind";if(fn===invite)return "Save my answers";if(fn===notNow)return "Not at this time";if(fn===remind)return "Email reminder";return "Thank you";}
-function drawRail(){var e=document.getElementById("rail"),R=load(),p=R.picks||[],k=cur===dive?(typeof curArg==="string"?curArg:curArg&&curArg.k):"",i=p.indexOf(k);if(p.length<2||i<0){e.innerHTML="";return;}var did=R.areasDone||[];
+function crumbName(fn,arg){if(fn===whenPage)return "Home";if(fn===startWith)return "Begin";if(fn===dive)return "Right now";if(fn===areaQsPage)return words(row(arg));if(fn===feelPage)return "How do you feel about…";if(fn===explorePage)return "Explore";if(fn===askedPage)return "A question";if(fn===feelWhatPage)return "What I would like to feel";if(fn===notePage)return "Looking closer";if(fn===optionsPage)return words(row(arg));if(fn===finalPage)return "Next 5 minutes";if(fn===readyPage)return "Start or remind";if(fn===invite)return "Save my answers";if(fn===notNow)return "Not at this time";if(fn===remind)return "Email reminder";return "Thank you";}
+function drawRail(){var e=document.getElementById("rail"),R=load(),p=areasList(),k=cur===areaQsPage?curArg:"",i=p.indexOf(k);if(p.length<2||i<0){e.innerHTML="";return;}var did=R.areasDone||[];
  e.innerHTML='<div class="rdots">'+p.map(function(a,j){var d=did.indexOf(a)>-1,n=words(row(a));return '<button type="button" class="rdot'+(j===i?" now":"")+(d?" did":"")+'" data-a="'+a+'" aria-label="'+esc(n)+(d?", finished":"")+'"'+(j===i?' aria-current="step"':'')+'>'+row(a).n.split(" ")[0]+(d?'<span class="rchk" aria-hidden="true">✓</span>':'')+'</button>';}).join("")+'</div><p class="rname">'+(i+1)+' of '+p.length+'</p>';
- e.querySelectorAll(".rdot").forEach(function(b){b.addEventListener("click",function(){var a=b.getAttribute("data-a");if(a===k)return;function move(){save(R);go(dive,a);}if(R.rate[k]){move();return;}var q=document.createElement("div");q.className="rask";q.innerHTML='<p class="rname">Are you sure you want to continue without answering the scale?</p><div class="row"><button class="btn ghost" type="button" id="rstay">Stay here</button><button class="btn" type="button" id="rgo">Yes, continue</button></div>';var old=e.querySelector(".rask");if(old)old.remove();e.appendChild(q);document.getElementById("rstay").addEventListener("click",function(){q.remove();});document.getElementById("rgo").addEventListener("click",move);});});}
+ e.querySelectorAll(".rdot").forEach(function(b){b.addEventListener("click",function(){var a=b.getAttribute("data-a");if(a===k)return;R.exp=R.exp||{};R.exp[a]="Yes";save(R);go(areaQsPage,a);});});}
 function drawCrumbs(){var nav=document.getElementById("crumbs"),trail=hist.concat([[cur,curArg]]);if(trail.length<2){nav.innerHTML="";return;}
 
  function kk(t){return typeof t[1]==="string"?t[1]:(t[1]&&t[1].k);}
@@ -213,7 +213,7 @@ function startWith(){
  app.querySelectorAll(".opt").forEach(function(b){b.addEventListener("click",function(){var k=b.getAttribute("data-k"),i=R.picks.indexOf(k);if(i>-1)R.picks.splice(i,1);else R.picks.push(k);save(R);startWith();});});
  var n=document.getElementById("next");if(n)n.addEventListener("click",function(){if(me()||R.invited)go(dive,R.picks[0]);else go(invite);});
 }
-var HOME={body:["Nourished","Energized to move","Rested"],feel:["Connected"],energy:[],mind:["Natural"],imag:["Expression"]};
+var HOME={body:["Nourished","Energized to move","Rested"],feel:["Connected"],energy:["Playful"],mind:["Natural"],imag:["Expression"]};
 function afterArea(k){var p=load().picks||[],i=p.indexOf(k);return i>-1&&i<p.length-1?p[i+1]:"";}
 function setExplore(k){var o=HOME[k].slice();row(k).q.forEach(function(q,qi){if(q.br)dv(k).a[qi].forEach(function(l){if(q.br[l]&&o.indexOf(q.br[l])<0)o.push(q.br[l]);});});flow(k).explore=o;}
 function needWords(k){var F=flow(k),o=[];F.explore.forEach(function(x){var n=x==="Natural"||x==="Expression"?"Create":NEEDOF[x],has=x==="Expression"?((F.branch||{}).expression||[]).length:(F.opts[x]||[]).length||(x==="Natural"&&(F.subjects||[]).length);if(has&&o.indexOf(n)<0)o.push(n);});return o.join("|");}
@@ -237,27 +237,26 @@ function remind(){
   fetch(GS+"?action=requestBalanceReminder&email="+encodeURIComponent(v)).then(function(r){return r.json();}).then(function(r){msg.textContent=r&&r.status==="ok"?"One reminder is on its way.":"We could not send it. Please try again.";}).catch(function(){msg.textContent="We could not send it. Please try again.";});}
  document.getElementById("sendrem").addEventListener("click",send);em.addEventListener("keydown",function(e){if(e.key==="Enter")send();});
 }
-function dive(arg){
- var k=typeof arg==="string"?arg:arg.k,r=row(k),R=load();
+function areasList(){var R=load();return R.picks&&R.picks.length?R.picks.slice():ROWS.map(function(r){return r.k;});}
+function nextExplore(k){var R=load(),L=areasList().filter(function(a){return (R.exp||{})[a]==="Yes";}),i=L.indexOf(k);return L[i+1]||"";}
+function dive(){
+ var R=load(),L=areasList();R.exp=R.exp||{};
  function draw(){
-  var h='<h1>'+esc(r.n)+'</h1><div class="qb"><h2>Right now, I would rate '+esc(r.w)+' as:</h2><div class="opts pills">'+LV.map(function(lb,i){return '<button type="button" class="opt'+((R.rate[k]||0)===i+1?" on":"")+'" data-v="'+(i+1)+'">'+(i+1)+' '+esc(lb)+'</button>';}).join("")+'</div></div>';
-  if(R.rate[k])h+='<div class="row"><button class="btn" type="button" id="next">Continue</button></div>';
-  app.innerHTML=h;
-  app.querySelectorAll(".opt").forEach(function(b){b.addEventListener("click",function(){var v=+b.getAttribute("data-v");R.rate[k]=(R.rate[k]===v?0:v);save(R);draw();});});
-  var nb=document.getElementById("next");if(nb)nb.addEventListener("click",function(){var nx=afterArea(k);R.areasDone=R.areasDone||[];if(R.areasDone.indexOf(k)<0)R.areasDone.push(k);save(R);if(nx)go(dive,nx);else go(needsPage);});
+  var y=window.scrollY,all=L.every(function(k){return R.rate[k];});
+  var h=L.map(function(k){var r=row(k),sel=R.rate[k]||0;return '<div class="qb"><h2>'+esc(r.n)+'</h2><p class="sub" style="margin:0 0 8px">Right now, I would rate '+esc(r.w)+' as:</p><div class="opts pills">'+LV.map(function(lb,i){return '<button type="button" class="opt'+(sel===i+1?" on":"")+'" data-r="'+k+'" data-v="'+(i+1)+'">'+(i+1)+' '+esc(lb)+'</button>';}).join("")+'</div>'+(sel?'<p class="sub" style="margin:14px 0 8px">Would you like to explore '+esc(r.w.replace(/^my /,"your "))+' a little more?</p><div class="opts pills">'+["Yes","No"].map(function(a){return '<button type="button" class="opt'+(R.exp[k]===a?" on":"")+'" data-e="'+k+'" data-a="'+a+'">'+a+'</button>';}).join("")+'</div>':'')+'</div>';}).join("");
+  if(all)h+='<div class="row"><button class="btn" type="button" id="next">Continue</button></div>';
+  app.innerHTML=h;window.scrollTo(0,y);
+  app.querySelectorAll(".opt[data-r]").forEach(function(b){b.addEventListener("click",function(){var k=b.getAttribute("data-r"),v=+b.getAttribute("data-v");R.rate[k]=(R.rate[k]===v?0:v);if(!R.rate[k])delete R.exp[k];save(R);draw();});});
+  app.querySelectorAll(".opt[data-e]").forEach(function(b){b.addEventListener("click",function(){R.exp[b.getAttribute("data-e")]=b.getAttribute("data-a");save(R);draw();});});
+  var nb=document.getElementById("next");if(nb)nb.addEventListener("click",function(){var f=L.filter(function(a){return R.exp[a]==="Yes";})[0];if(f)go(areaQsPage,f);else go(finalPage);});
  }
  draw();
 }
-function needsPage(){
- var R=load(),pick=R.needs=R.needs||[];
- app.innerHTML='<h1 class="q">Would you like to explore these?</h1><div class="chks">'+ALLN.map(function(n,i){return '<label class="chk"><input type="checkbox" data-i="'+i+'"'+(pick.indexOf(n)>-1?" checked":"")+'><span>'+NE[n]+' '+esc(FE[n])+'</span></label>';}).join("")+'</div><div class="row"><button class="btn" type="button" id="next">Continue</button></div>';
- app.querySelectorAll(".chk input").forEach(function(c){c.addEventListener("change",function(){var n=ALLN[+c.getAttribute("data-i")],i=pick.indexOf(n);if(c.checked&&i<0)pick.push(n);if(!c.checked&&i>-1)pick.splice(i,1);save(R);});});
- document.getElementById("next").addEventListener("click",function(){var F=flow("needs"),list=ALLN.filter(function(n){return pick.indexOf(n)>-1;});F.explore=list.map(function(n){return n==="Create"?"Natural":FE[n];});(R.picks||[]).forEach(function(a){dv(a).need=list.join("|");});save(R);go(list.length?needQsPage:finalPage);});
-}
-function needQsPage(){
- app.innerHTML='<div id="optshost"></div><div class="row"><button class="btn" type="button" id="next">Continue</button></div>';
- optionsPage("needs");
- document.getElementById("next").addEventListener("click",function(){go(finalPage);});
+function areaQsPage(k){
+ var R=load(),r=row(k);setExplore(k);
+ app.innerHTML='<h1>'+esc(r.n)+'</h1><div id="optshost"></div><div class="row"><button class="btn" type="button" id="next">Continue</button></div>';
+ optionsPage(k);
+ document.getElementById("next").addEventListener("click",function(){R.areasDone=R.areasDone||[];if(R.areasDone.indexOf(k)<0)R.areasDone.push(k);dv(k).need=needWords(k);save(R);var nx=nextExplore(k);if(nx)go(areaQsPage,nx);else go(finalPage);});
 }
 function ownBox(qi,fn){var host=app.querySelector('.ownhost[data-q="'+qi+'"]');if(!host||host.firstChild)return;host.innerHTML='<div class="own"><input type="text" maxlength="60" placeholder="Ex: something of my own" aria-label="Add my own"><button class="btn ghost" type="button">Add</button></div>';var i=host.querySelector("input");function add(){var v=i.value.trim();if(v)fn(v);}host.querySelector("button").addEventListener("click",add);i.addEventListener("keydown",function(e){if(e.key==="Enter")add();});i.focus();}
 
@@ -500,7 +499,7 @@ function sumHTML(title,j,key){return '<div class="qb"><h2>'+esc(title)+'</h2><p 
 function optionsPage(k){
  var host=document.getElementById("optshost");
  var F=flow(k),h="";
- var br=F.branch=F.branch||{},oth=F.other=F.other||{},act=k==="needs"?[]:activeBr(F);
+ var br=F.branch=F.branch||{},oth=F.other=F.other||{},act=activeBr(F).filter(function(B){return B.k==="expression";});
  function drawB(B){if(k==="body"&&(B.k==="mealsNow"||B.k==="mealsWant")&&dv(k).a[1].indexOf("My body")<0)return;var ow=ownerOf(k,B.k);if(ow){h+=sumHTML(B.q,ow,B.k);return;}if(B.after&&!(br[B.after]||[]).length)return;var c=br[B.k]=br[B.k]||[];h+='<div class="qb">'+(B.chart?mealChart():'')+'<h2>'+esc(B.q)+'</h2><div class="opts pills">'+B.l.map(function(l,i){return '<button type="button" class="opt br'+(c.indexOf(l)>-1?" on":"")+(l==="+ Other"?" other":"")+'" data-b="'+esc(B.k)+'" data-i="'+i+'">'+esc(l)+'</button>';}).join("")+'</div>'+(c.indexOf("+ Other")>-1?'<div class="own"><input type="text" maxlength="80" data-o="'+esc(B.k)+'" value="'+esc(oth[B.k]||"")+'" aria-label="Other"></div>':'')+'</div>';}
  F.explore.forEach(function(x,xi){var q=(k==="energy"||k==="needs")&&x==="Playful"?"What energizes you?":"How do you like to "+EXP[x]+"?";
   var ow=ownerOf(k,x);
@@ -518,8 +517,7 @@ function optionsPage(k){
 function finalPage(){
  var F=flow("needs"),pool=[];
  var DOIT={"With nature":"Be in nature","With animals":"Spend time with an animal","With something I believe in":"Spend time with something I believe in"};
- F.explore.forEach(function(x){(F.opts[x]||[]).forEach(function(v){if(x==="Connected"){if(!DOIT[v])return;v=DOIT[v];}if(pool.indexOf(v)<0)pool.push(v);});});
- var ot=F.other||{};Object.keys(ot).forEach(function(kk){if(ot[kk]&&pool.indexOf(ot[kk])<0)pool.push(ot[kk]);});
+ var RR=load();areasList().filter(function(a){return (RR.exp||{})[a]==="Yes";}).forEach(function(a){var A=flow(a);A.explore.forEach(function(x){(A.opts[x]||[]).forEach(function(v){if(x==="Connected"){if(!DOIT[v])return;v=DOIT[v];}if(pool.indexOf(v)<0)pool.push(v);});});var ot=A.other||{};Object.keys(ot).forEach(function(kk){if(ot[kk]&&kk!=="expression"&&pool.indexOf(ot[kk])<0)pool.push(ot[kk]);});});
  pool=pool.filter(function(v){return v!=="+ Other";});
  DOVERBS.forEach(function(v){if(pool.length<5&&pool.indexOf(v)<0)pool.push(v);});
  pool.push("+ Other");
