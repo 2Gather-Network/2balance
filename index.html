@@ -83,7 +83,7 @@ var MINE={when:{},rate:{},dive:{}};
 var WHEN=["Today","Last week","Last month","Last year","In my life"];
 var LV=["Not where I want it","Getting there","Good","Great"];
 var ROWS=[
-{k:"body",f:{when:"lastThoughtAboutBody",now:"bodyFeelsNow",q:["bodyMoreOf","bodyWhere"],need:"bodyNext5Minutes"},n:"🌍 My body and surroundings",w:"my body and surroundings",v:"feel",
+{k:"body",noq:1,f:{when:"lastThoughtAboutBody",now:"bodyFeelsNow",q:["bodyMoreOf","bodyWhere"],need:"bodyNext5Minutes"},n:"🌍 My body and surroundings",w:"my body and surroundings",v:"feel",
  q:[{t:"What would you like to feel more of as a result of your surroundings?",l:["Safety","Grounding","Structure","Strength","Health","Comfort","Nurturing","Order","Attractiveness"]},
     {t:"Where would you like to experience what you selected above?",after:0,l:["My body","My home","My workspace","My neighborhood","Nature near me","My things","My relationships","My wardrobe"]}],
  needs:["Move","Rest","Eat and drink"]},
@@ -216,7 +216,7 @@ function startWith(){
  app.querySelectorAll(".opt").forEach(function(b){b.addEventListener("click",function(){var k=b.getAttribute("data-k"),i=R.picks.indexOf(k);if(i>-1)R.picks.splice(i,1);else R.picks.push(k);save(R);startWith();});});
  var n=document.getElementById("next");if(n)n.addEventListener("click",function(){if(me()||R.invited)go(dive,R.picks[0]);else go(invite);});
 }
-var HOME={body:["Nourished","Energized to move","Rested"],feel:["Connected"],energy:[],mind:["Natural"],imag:["Expression"]};
+var HOME={body:["Nourished","Energized to move","Rested"],feel:[],energy:["Connected"],mind:["Natural"],imag:["Expression"]};
 function afterArea(k){var p=load().picks||[],i=p.indexOf(k);return i>-1&&i<p.length-1?p[i+1]:"";}
 function setExplore(k){var o=HOME[k].slice();row(k).q.forEach(function(q,qi){if(q.br)dv(k).a[qi].forEach(function(l){if(q.br[l]&&o.indexOf(q.br[l])<0)o.push(q.br[l]);});});flow(k).explore=o;}
 function needWords(k){var F=flow(k),o=[];F.explore.forEach(function(x){var n=x==="Natural"||x==="Expression"?"Create":NEEDOF[x],has=x==="Expression"?((F.branch||{}).expression||[]).length:(F.opts[x]||[]).length||(x==="Natural"&&(F.subjects||[]).length);if(has&&o.indexOf(n)<0)o.push(n);});return o.join("|");}
