@@ -164,10 +164,10 @@ function back(){var h=hist.pop();if(h){cur=h[0];curArg=h[1];render();}}
 new MutationObserver(addBack).observe(app,{childList:true});
 function render(){cur(curArg);addBack();drawCrumbs();drawRail();window.scrollTo(0,0);}
 function addBack(){if(!hist.length||document.getElementById("back"))return;var r=app.querySelector(".row");if(!r){r=document.createElement("div");r.className="row";app.appendChild(r);}var b=document.createElement("button");b.type="button";b.id="back";b.className="btn ghost";b.textContent="Back";b.addEventListener("click",back);r.insertBefore(b,r.firstChild);}
-function crumbName(fn,arg){if(fn===whenPage)return "Home";if(fn===startWith)return "Begin";if(fn===dive)return words(row(typeof arg==="string"?arg:arg.k));if(fn===feelPage)return "How do you feel about…";if(fn===explorePage)return "Explore";if(fn===askedPage)return "A question";if(fn===feelWhatPage)return "What I would like to feel";if(fn===notePage)return "Looking closer";if(fn===optionsPage)return words(row(arg));if(fn===finalPage)return "Next 5 minutes";if(fn===invite)return "Save my answers";if(fn===notNow)return "Not at this time";if(fn===remind)return "Email reminder";return "Thank you";}
+function crumbName(fn,arg){if(fn===whenPage)return "Home";if(fn===startWith)return "Begin";if(fn===dive)return words(row(typeof arg==="string"?arg:arg.k));if(fn===feelPage)return "How do you feel about…";if(fn===explorePage)return "Explore";if(fn===askedPage)return "A question";if(fn===feelWhatPage)return "What I would like to feel";if(fn===notePage)return "Looking closer";if(fn===optionsPage)return words(row(arg));if(fn===finalPage)return "Next 5 minutes";if(fn===needsPage)return "Explore";if(fn===needQsPage)return "How you like to";if(fn===readyPage)return "Start or remind";if(fn===invite)return "Save my answers";if(fn===notNow)return "Not at this time";if(fn===remind)return "Email reminder";return "Thank you";}
 function drawRail(){var e=document.getElementById("rail"),R=load(),p=R.picks||[],k=cur===dive?(typeof curArg==="string"?curArg:curArg&&curArg.k):"",i=p.indexOf(k);if(p.length<2||i<0){e.innerHTML="";return;}var did=R.areasDone||[];
  e.innerHTML='<div class="rdots">'+p.map(function(a,j){var d=did.indexOf(a)>-1,n=words(row(a));return '<button type="button" class="rdot'+(j===i?" now":"")+(d?" did":"")+'" data-a="'+a+'" aria-label="'+esc(n)+(d?", finished":"")+'"'+(j===i?' aria-current="step"':'')+'>'+row(a).n.split(" ")[0]+(d?'<span class="rchk" aria-hidden="true">✓</span>':'')+'</button>';}).join("")+'</div><p class="rname">'+(i+1)+' of '+p.length+'</p>';
- e.querySelectorAll(".rdot").forEach(function(b){b.addEventListener("click",function(){var a=b.getAttribute("data-a");if(a===k)return;function move(){dv(k).need=needWords(k);save(R);go(dive,a);}if(R.rate[k]){move();return;}var q=document.createElement("div");q.className="rask";q.innerHTML='<p class="rname">Are you sure you want to continue without answering the scale?</p><div class="row"><button class="btn ghost" type="button" id="rstay">Stay here</button><button class="btn" type="button" id="rgo">Yes, continue</button></div>';var old=e.querySelector(".rask");if(old)old.remove();e.appendChild(q);document.getElementById("rstay").addEventListener("click",function(){q.remove();});document.getElementById("rgo").addEventListener("click",move);});});}
+ e.querySelectorAll(".rdot").forEach(function(b){b.addEventListener("click",function(){var a=b.getAttribute("data-a");if(a===k)return;function move(){save(R);go(dive,a);}if(R.rate[k]){move();return;}var q=document.createElement("div");q.className="rask";q.innerHTML='<p class="rname">Are you sure you want to continue without answering the scale?</p><div class="row"><button class="btn ghost" type="button" id="rstay">Stay here</button><button class="btn" type="button" id="rgo">Yes, continue</button></div>';var old=e.querySelector(".rask");if(old)old.remove();e.appendChild(q);document.getElementById("rstay").addEventListener("click",function(){q.remove();});document.getElementById("rgo").addEventListener("click",move);});});}
 function drawCrumbs(){var nav=document.getElementById("crumbs"),trail=hist.concat([[cur,curArg]]);if(trail.length<2){nav.innerHTML="";return;}
 
  function kk(t){return typeof t[1]==="string"?t[1]:(t[1]&&t[1].k);}
@@ -241,38 +241,26 @@ function remind(){
  document.getElementById("sendrem").addEventListener("click",send);em.addEventListener("keydown",function(e){if(e.key==="Enter")send();});
 }
 function dive(arg){
- var k=typeof arg==="string"?arg:arg.k,step=typeof arg==="string"?0:arg.s,r=row(k),R=load(),D=dv(k);
- setExplore(k);
+ var k=typeof arg==="string"?arg:arg.k,r=row(k),R=load();
  function draw(){
-  setExplore(k);var y=window.scrollY;
-  var h='<h1>'+esc(r.n)+'</h1>';
-  if(step===0)h+='<div class="qb"><h2>Right now, I would rate '+esc(r.w)+' as:</h2>'+keyHTML()+'<div class="fseg lvl">'+LV.map(function(lb,i){return '<button type="button" class="opt fbtn'+((R.rate[k]||0)===i+1?" on":"")+'" data-q="level" data-v="'+(i+1)+'" aria-label="'+(i+1)+' '+esc(lb)+'">'+(i+1)+'</button>';}).join("")+'</div></div>';
-  r.q.forEach(function(q,qi){
-   if(r.noq||step!==1)return;
-   if(q.after!==undefined&&!D.a[q.after].length)return;
-   var list=q.l.concat(D.own[qi]);
-   h+='<div class="qb"><h2>'+esc(q.t)+'</h2>'+(q.t==="What have you been feeling lately?"?'<p class="sub" style="margin:0 0 6px">Select all that apply.</p>':'');
-   if(q.cb){list.forEach(function(x,i){h+='<label class="chk"><input type="checkbox" data-q="'+qi+'" data-i="'+i+'"'+(D.a[qi].indexOf(x)>-1?" checked":"")+'><span>'+esc(x)+'</span></label>';});h+='<label class="chk"><input type="checkbox" class="oth" data-q="'+qi+'"><span>+ Other</span></label>';}
-   else h+=pillRow(list,D.a[qi],'data-q="'+qi+'"',true);
-   h+='<div class="ownhost" data-q="'+qi+'"></div></div>';
-  });
-  if(step===1&&r.f.vis)h+='<div class="qb"><h2>What\'s your greatest, grandest vision for '+esc(r.vis)+'?</h2><div class="own"><textarea id="vis" aria-label="My vision">'+esc(D.vis)+'</textarea></div></div>';
-  if(step===1)h+='<div id="optshost"></div>';
-  if(step===1||R.rate[k])h+='<div class="row"><button class="btn" type="button" id="next">Continue</button></div>';
-  app.innerHTML=h;if(step===1)optionsPage(k);window.scrollTo(0,y);
-  app.querySelectorAll('.opt[data-q="level"]').forEach(function(b){b.addEventListener("click",function(){var v=+b.getAttribute("data-v");R.rate[k]=(R.rate[k]===v?0:v);save(R);draw();});});
-  var vb=document.getElementById("vis");if(vb)vb.addEventListener("input",function(e){D.vis=e.target.value;save(R);});
-  r.q.forEach(function(q,qi){
-   var list=q.l.concat(D.own[qi]);
-   function toggle(v,on){var i=D.a[qi].indexOf(v);if(on&&i<0)D.a[qi].push(v);if(!on&&i>-1)D.a[qi].splice(i,1);save(R);}
-   app.querySelectorAll('.opt[data-q="'+qi+'"][data-i]').forEach(function(b){b.addEventListener("click",function(){var v=list[+b.getAttribute("data-i")];toggle(v,D.a[qi].indexOf(v)<0);draw();});});
-   app.querySelectorAll('.chk input[data-q="'+qi+'"][data-i]').forEach(function(c){c.addEventListener("change",function(){toggle(list[+c.getAttribute("data-i")],c.checked);if(q.br){setExplore(k);optionsPage(k);}});});
-   var o=app.querySelector('[data-q="'+qi+'"][data-other], .chk .oth[data-q="'+qi+'"]');
-   if(o)o.addEventListener(o.tagName==="INPUT"?"change":"click",function(){if(o.tagName==="INPUT")o.checked=false;ownBox(qi,function(v){if(D.own[qi].indexOf(v)<0&&q.l.indexOf(v)<0)D.own[qi].push(v);toggle(v,true);draw();});});
-  });
-  var nb=document.getElementById("next");if(nb)nb.addEventListener("click",function(){if(step===0){go(dive,{k:k,s:1});return;}var nx=afterArea(k);R.areasDone=R.areasDone||[];if(R.areasDone.indexOf(k)<0)R.areasDone.push(k);D.need=needWords(k);save(R);if(nx)go(dive,nx);else go(finalPage,k);});
+  var h='<h1>'+esc(r.n)+'</h1><div class="qb"><h2>Right now, I would rate '+esc(r.w)+' as:</h2><div class="opts pills">'+LV.map(function(lb,i){return '<button type="button" class="opt'+((R.rate[k]||0)===i+1?" on":"")+'" data-v="'+(i+1)+'">'+(i+1)+' '+esc(lb)+'</button>';}).join("")+'</div></div>';
+  if(R.rate[k])h+='<div class="row"><button class="btn" type="button" id="next">Continue</button></div>';
+  app.innerHTML=h;
+  app.querySelectorAll(".opt").forEach(function(b){b.addEventListener("click",function(){var v=+b.getAttribute("data-v");R.rate[k]=(R.rate[k]===v?0:v);save(R);draw();});});
+  var nb=document.getElementById("next");if(nb)nb.addEventListener("click",function(){var nx=afterArea(k);R.areasDone=R.areasDone||[];if(R.areasDone.indexOf(k)<0)R.areasDone.push(k);save(R);if(nx)go(dive,nx);else go(needsPage);});
  }
  draw();
+}
+function needsPage(){
+ var R=load(),pick=R.needs=R.needs||[];
+ app.innerHTML='<h1 class="q">Would you like to explore these?</h1><div class="chks">'+ALLN.map(function(n,i){return '<label class="chk"><input type="checkbox" data-i="'+i+'"'+(pick.indexOf(n)>-1?" checked":"")+'><span>'+NE[n]+' '+esc(FE[n])+'</span></label>';}).join("")+'</div><div class="row"><button class="btn" type="button" id="next">Continue</button></div>';
+ app.querySelectorAll(".chk input").forEach(function(c){c.addEventListener("change",function(){var n=ALLN[+c.getAttribute("data-i")],i=pick.indexOf(n);if(c.checked&&i<0)pick.push(n);if(!c.checked&&i>-1)pick.splice(i,1);save(R);});});
+ document.getElementById("next").addEventListener("click",function(){var F=flow("needs"),list=ALLN.filter(function(n){return pick.indexOf(n)>-1;});F.explore=list.map(function(n){return n==="Create"?"Natural":FE[n];});(R.picks||[]).forEach(function(a){dv(a).need=list.join("|");});save(R);go(list.length?needQsPage:finalPage);});
+}
+function needQsPage(){
+ app.innerHTML='<div id="optshost"></div><div class="row"><button class="btn" type="button" id="next">Continue</button></div>';
+ optionsPage("needs");
+ document.getElementById("next").addEventListener("click",function(){go(finalPage);});
 }
 function ownBox(qi,fn){var host=app.querySelector('.ownhost[data-q="'+qi+'"]');if(!host||host.firstChild)return;host.innerHTML='<div class="own"><input type="text" maxlength="60" placeholder="Ex: something of my own" aria-label="Add my own"><button class="btn ghost" type="button">Add</button></div>';var i=host.querySelector("input");function add(){var v=i.value.trim();if(v)fn(v);}host.querySelector("button").addEventListener("click",add);i.addEventListener("keydown",function(e){if(e.key==="Enter")add();});i.focus();}
 
@@ -515,9 +503,9 @@ function sumHTML(title,j,key){return '<div class="qb"><h2>'+esc(title)+'</h2><p 
 function optionsPage(k){
  var host=document.getElementById("optshost");
  var F=flow(k),h="";
- var br=F.branch=F.branch||{},oth=F.other=F.other||{},act=activeBr(F);
+ var br=F.branch=F.branch||{},oth=F.other=F.other||{},act=k==="needs"?[]:activeBr(F);
  function drawB(B){if(k==="body"&&(B.k==="mealsNow"||B.k==="mealsWant")&&dv(k).a[1].indexOf("My body")<0)return;var ow=ownerOf(k,B.k);if(ow){h+=sumHTML(B.q,ow,B.k);return;}if(B.after&&!(br[B.after]||[]).length)return;var c=br[B.k]=br[B.k]||[];h+='<div class="qb">'+(B.chart?mealChart():'')+'<h2>'+esc(B.q)+'</h2><div class="opts pills">'+B.l.map(function(l,i){return '<button type="button" class="opt br'+(c.indexOf(l)>-1?" on":"")+(l==="+ Other"?" other":"")+'" data-b="'+esc(B.k)+'" data-i="'+i+'">'+esc(l)+'</button>';}).join("")+'</div>'+(c.indexOf("+ Other")>-1?'<div class="own"><input type="text" maxlength="80" data-o="'+esc(B.k)+'" value="'+esc(oth[B.k]||"")+'" aria-label="Other"></div>':'')+'</div>';}
- F.explore.forEach(function(x,xi){var q=k==="energy"&&x==="Playful"?"What energizes you?":"How do you like to "+EXP[x]+"?";
+ F.explore.forEach(function(x,xi){var q=(k==="energy"||k==="needs")&&x==="Playful"?"What energizes you?":"How do you like to "+EXP[x]+"?";
   var ow=ownerOf(k,x);
   if(ow){h+=sumHTML(x==="Natural"?"What comes most naturally to you?":q,ow,x);}else if(x==="Natural"){h+='<div data-gp="1"></div>';}else if(x==="Expression"){}else if(LISTS[x]){var cur=F.opts[x]=F.opts[x]||[];h+='<div class="qb"><h2>'+esc(q)+'</h2><div class="opts pills">'+LISTS[x].map(function(l,i){return '<button type="button" class="opt'+(cur.indexOf(l)>-1?" on":"")+(l==="+ Other"?" other":"")+'" data-x="'+xi+'" data-i="'+i+'">'+esc(l)+'</button>';}).join("")+'</div></div>';}
   else{h+='<div class="qb"><h2>'+esc(TXT[x])+'</h2><div class="own"><input type="text" maxlength="80" data-t="'+xi+'" value="'+esc((F.opts[x]||[""])[0]||"")+'" aria-label="'+esc(TXT[x])+'"></div></div>';}if((F.opts[x]||[]).indexOf("+ Other")>-1)h+='<div class="own"><input type="text" maxlength="80" data-o="n:'+esc(x)+'" value="'+esc(oth["n:"+x]||"")+'" aria-label="Other"></div>';act.filter(function(B){return B.need===x;}).forEach(drawB);});
@@ -530,24 +518,25 @@ function optionsPage(k){
  host.querySelectorAll(".opt:not(.br)").forEach(function(b){b.addEventListener("click",function(){var x=F.explore[+b.getAttribute("data-x")],v=LISTS[x][+b.getAttribute("data-i")],c=F.opts[x],i=c.indexOf(v);if(i>-1)c.splice(i,1);else c.push(v);var yy=window.scrollY;optionsPage(k);window.scrollTo(0,yy);});});
  host.querySelectorAll("input[data-t]").forEach(function(t){t.addEventListener("input",function(){F.opts[F.explore[+t.getAttribute("data-t")]]=[t.value.trim()].filter(Boolean);});});
 }
-function finalPage(k){
- var F=flow(k),pool=[],ks=load().picks&&load().picks.indexOf(k)>-1?load().picks:[k];
+function finalPage(){
+ var F=flow("needs"),pool=[];
  var DOIT={"With nature":"Be in nature","With animals":"Spend time with an animal","With something I believe in":"Spend time with something I believe in"};
- ks.forEach(function(kk){var F=flow(kk);
  F.explore.forEach(function(x){(F.opts[x]||[]).forEach(function(v){if(x==="Connected"){if(!DOIT[v])return;v=DOIT[v];}if(pool.indexOf(v)<0)pool.push(v);});});
- var br=F.branch||{},NP={};EXTRA.forEach(function(B){NP[B.k]=1;});Object.keys(br).forEach(function(kk){if(NP[kk])return;br[kk].forEach(function(v){if(pool.indexOf(v)<0)pool.push(v);});});var ot=F.other||{};Object.keys(ot).forEach(function(kk){if(ot[kk]&&!NP[kk]&&pool.indexOf(ot[kk])<0)pool.push(ot[kk]);});pool=pool.filter(function(v){return v!=="+ Other"&&RECS[v]===undefined;});
- F.explore.forEach(function(x){if(x==="Connected"||x==="Playful"||!LISTS[x])return;LISTS[x].forEach(function(v){if(pool.length<5&&v!=="+ Other"&&pool.indexOf(v)<0)pool.push(v);});});
- });
+ var ot=F.other||{};Object.keys(ot).forEach(function(kk){if(ot[kk]&&pool.indexOf(ot[kk])<0)pool.push(ot[kk]);});
+ pool=pool.filter(function(v){return v!=="+ Other";});
  DOVERBS.forEach(function(v){if(pool.length<5&&pool.indexOf(v)<0)pool.push(v);});
  pool.push("+ Other");
- var h='<h1 class="q">In the next 5 minutes, what would you like to do that inspires you?</h1>';
- if(pool.length)h+='<div class="opts pills">'+pool.map(function(v,i){return '<button type="button" class="opt'+(F.final.indexOf(v)>-1?" on":"")+(v==="+ Other"?" other":"")+'" data-i="'+i+'">'+esc(v)+'</button>';}).join("")+'</div>'+(F.final.indexOf("+ Other")>-1?'<div class="own"><input type="text" maxlength="80" id="finoth" value="'+esc(F.finalOther||"")+'" aria-label="Other"></div>':'');
- else h+='<div class="own"><input type="text" maxlength="80" id="fin" value="'+esc(F.final[0]||"")+'" aria-label="What inspires you"></div>';
+ var h='<h1 class="q">In the next 5 minutes, what would you like to do that inspires you?</h1><div class="opts pills">'+pool.map(function(v,i){return '<button type="button" class="opt'+(F.final.indexOf(v)>-1?" on":"")+(v==="+ Other"?" other":"")+'" data-i="'+i+'">'+esc(v)+'</button>';}).join("")+'</div>'+(F.final.indexOf("+ Other")>-1?'<div class="own"><input type="text" maxlength="80" id="finoth" value="'+esc(F.finalOther||"")+'" aria-label="Other"></div>':'');
  app.innerHTML=h+'<div class="row"><button class="btn" type="button" id="next">Continue</button></div>';
- app.querySelectorAll(".opt").forEach(function(b){b.addEventListener("click",function(){var v=pool[+b.getAttribute("data-i")],i=F.final.indexOf(v);if(i>-1)F.final.splice(i,1);else F.final.push(v);finalPage(k);});});
+ app.querySelectorAll(".opt").forEach(function(b){b.addEventListener("click",function(){var v=pool[+b.getAttribute("data-i")],i=F.final.indexOf(v);if(i>-1)F.final.splice(i,1);else F.final.push(v);finalPage();});});
  var fo=document.getElementById("finoth");if(fo)fo.addEventListener("input",function(){F.finalOther=fo.value.trim();});
- var fi=document.getElementById("fin");if(fi)fi.addEventListener("input",function(){F.final=[fi.value.trim()].filter(Boolean);});
- document.getElementById("next").addEventListener("click",function(){go(donePage);});
+ document.getElementById("next").addEventListener("click",function(){go(readyPage);});
+}
+function readyPage(){
+ var F=flow("needs"),mine=F.final.filter(function(v){return v!=="+ Other";}).concat(F.finalOther?[F.finalOther]:[]);
+ app.innerHTML='<h1 class="q">Your next 5 minutes</h1>'+(mine.length?'<div class="opts pills">'+mine.map(function(v){return '<span class="opt on">'+esc(v)+'</span>';}).join("")+'</div>':'')+'<div class="acts"><button class="btn" type="button" id="now">Start now</button><button class="btn ghost" type="button" id="later">Remind me</button></div>';
+ document.getElementById("now").addEventListener("click",function(){go(donePage);});
+ document.getElementById("later").addEventListener("click",function(){go(remind);});
 }
 function feelPage(){
  var R=load(),y=window.scrollY;
