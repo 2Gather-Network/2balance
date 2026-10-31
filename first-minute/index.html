@@ -227,7 +227,7 @@ function welcomePage(){
 }
 function whenPage(){
  var R=load();
- var h='<h1 class="q">When did you last think about you and…</h1>';
+ var h='<h1 class="q">When did you last think about you and…</h1><p class="stmt" style="margin:0 0 18px;color:#4B5A6D">These five ask how you pay attention to your life, not what you do.</p>';
  ROWS.forEach(function(r){h+='<div class="wrow"><p class="wlbl">'+ico(r.k,24)+' '+esc(words(r).replace(/^My /,"Your ").replace(/^./,function(c){return c.toUpperCase();}))+'</p>'+pillRow(WHEN,R.when[r.k]?[R.when[r.k]]:[],'data-r="'+r.k+'"',false)+'</div>';});
  var olds=ROWS.filter(function(r){return ["Last month","Last year","In my life"].indexOf(R.when[r.k])>-1;}),while_=olds.length>0;
  if(ROWS.every(function(r){return R.when[r.k];}))h+='<div class="row"><button class="btn" type="button" id="done">Continue</button></div>';
