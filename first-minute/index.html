@@ -60,7 +60,7 @@
 .fseg.lvl{max-width:220px;}
 .card{display:flex;flex-direction:column;}#app{flex:1;display:flex;flex-direction:column;}#app>.row{margin-top:auto;padding-top:44px;}
 .stack{display:flex;flex-direction:column;gap:10px;margin-top:20px;}.stack .btn{width:100%;margin:0;}.cheer{font-size:56px;line-height:1;margin:0 0 14px;animation:cheer .6s ease-out;}@keyframes cheer{0%{transform:scale(.3);opacity:0;}70%{transform:scale(1.2);opacity:1;}100%{transform:scale(1);}}@media(prefers-reduced-motion:reduce){.cheer{animation:none;}}
-.welc{text-align:center;}.ibtn{font:inherit;font-size:13px;font-weight:700;font-style:normal;width:22px;height:22px;line-height:18px;padding:0;margin-left:4px;vertical-align:2px;border-radius:50%;border:1.5px solid var(--brand);background:#fff;color:var(--brand);cursor:pointer;}.hnote{color:#4B5A6D;margin:0 0 18px;}.wchips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:22px 0 56px;}.wchips span{background:#E3EFF9;color:#1A2E42;border-radius:999px;padding:6px 14px;font-size:15px;}.welc .row{justify-content:center;}.welc .row .btn{margin:0;width:auto;min-width:200px;}.stmt{font:inherit;font-size:16px;font-weight:400;line-height:1.55;color:#1A2E42;margin:0 0 20px;}
+.welc{text-align:center;}.ibtn{font:inherit;font-size:13px;font-weight:700;font-style:normal;width:22px;height:22px;line-height:18px;padding:0;margin-left:4px;vertical-align:2px;border-radius:50%;border:1.5px solid var(--brand);background:#fff;color:var(--brand);cursor:pointer;}.hnote{color:#4B5A6D;margin:0 0 18px;}.glbl{font-size:13px;font-weight:700;color:#4B5A6D;margin:14px 0 6px;}.wchips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:22px 0 56px;}.wchips span{background:#E3EFF9;color:#1A2E42;border-radius:999px;padding:6px 14px;font-size:15px;}.welc .row{justify-content:center;}.welc .row .btn{margin:0;width:auto;min-width:200px;}.stmt{font:inherit;font-size:16px;font-weight:400;line-height:1.55;color:#1A2E42;margin:0 0 20px;}
 .sv{margin:14px 0 0;padding:11px 14px;border-radius:10px;background:#FBE9E7;border:1px solid #E8B0A5;color:#7A2410;font-size:14px;}.sv:empty{display:none;}.cw-loading{display:inline-flex;align-items:center;gap:8px;background:#1F699E;color:#fff;font-size:13px;font-weight:700;padding:8px 16px;border-radius:20px;white-space:nowrap;margin:0 0 14px;animation:cw-breathe 1.6s ease-in-out infinite;}@keyframes cw-breathe{0%,100%{opacity:1}50%{opacity:.62}}@media(prefers-reduced-motion:reduce){.cw-loading{animation:none;}}
 h1.q,.qb h2{font-size:17px;font-weight:800;line-height:1.35;color:#1A2E42;letter-spacing:0;}h1.q{font-size:20px;line-height:1.3;margin:0 0 12px;}h1.q+.opts{margin-top:0;}.invite .ih{font-size:20px;font-weight:800;line-height:1.3;color:#1A2E42;margin:0 0 6px;}.invite .il{font-size:15px;font-weight:400;line-height:1.5;color:#1A2E42;margin:0 0 20px;}.invite .acts{display:flex;gap:12px;flex-wrap:wrap;}.invite .acts .btn{margin-left:0;}.invite .elbl{display:block;font-size:15px;font-weight:700;color:#1A2E42;margin:0 0 6px;}.invite .eform{display:flex;gap:12px;flex-wrap:wrap;}.invite .eform input{flex:1 1 220px;min-width:0;min-height:44px;font:inherit;font-size:15px;padding:0 16px;border:1.5px solid #C9DFF3;border-radius:26px;}.invite .eform .btn{margin-left:0;}.invite .emsg{font-size:15px;line-height:1.5;color:#1A2E42;margin:12px 0 0;}.stmt+.acts{margin-top:0;}.invite .alts{margin-top:8px;display:flex;flex-direction:column;}.invite .alts .lnk{background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;text-align:left;font-family:inherit;display:flex;align-items:center;min-height:44px;margin:0;font-size:15px;font-weight:400;color:#1F699E;}
 .inv .lnk{display:block;margin-top:12px;font:inherit;font-size:15px;color:var(--brand);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;text-align:left;}
@@ -82,12 +82,12 @@ var WHEN=["Today","Last week","Last month","Last year","In my life"];
 var LV=["Not where I want it","Getting there","Good","Great"];
 var ROWS=[
 {k:"body",noq:1,f:{when:"lastThoughtAboutBody",now:"bodyFeelsNow",q:["bodyMoreOf","bodyWhere"],need:"bodyNext5Minutes"},n:"🌍 My body and physical surroundings",w:"my body and physical surroundings",v:"feel",
- q:[{t:"What would you like to feel more of as a result of your surroundings?",l:["Safety","Grounding","Structure","Strength","Health","Comfort","Nurturing","Order","Attractiveness"]},
+ q:[{t:"How would you like to feel as a result of your surroundings?",l:["Safety","Grounding","Structure","Strength","Health","Comfort","Nurturing","Order","Attractiveness"]},
     {t:"Where would you like to experience what you selected above?",after:0,l:["My body","My home","My workspace","My neighborhood","Nature near me","My things","My relationships","My wardrobe"]}],
  needs:["Move","Rest","Eat and drink"]},
 {k:"feel",f:{when:"lastThoughtAboutFeelings",now:"feelingsFeelNow",q:["feelingsLately","feelingsMoreOf"],need:"feelingsNext5Minutes"},n:"🌊 My feelings",w:"my feelings",v:"feel",
  q:[{t:"What have you been feeling lately?",l:["Happy","Sad","Angry","Afraid","Calm","Tender","Numb","Grateful"]},
-    {t:"Are there any feelings you would like to have more of?",l:["Empathy","Ease","Being heard","Caring","Tenderness","Well-being"]}],
+    {t:"Which feelings would you like to experience more?",l:["Empathy","Ease","Being heard","Caring","Tenderness","Well-being"]}],
  needs:["Connect","Rest","Create"]},
 {k:"energy",f:{when:"lastThoughtAboutEnergy",now:"energyFeelsNow",q:["energyNotServing"],need:"energyNext5Minutes"},n:"🔥 My energy",w:"my energy",v:"feels",
  q:[
@@ -100,7 +100,7 @@ var ROWS=[
  needs:["Rest","Create","Connect"]},
 {k:"imag",f:{when:"lastThoughtAboutImagination",now:"imaginationFeelsNow",q:["imaginationMoreOf","imaginationWhen"],need:"imaginationNext5Minutes"},n:"✨ My imagination",w:"my imagination",v:"feels",
  q:[{t:"What would you like to experience more?",one:1,l:["Inspiration","Ah-ha!'s","Possibility","Creativity","Wonder","Abundance"]},
-    {t:"Where are you, what are you doing, and/or when does it come to you?",after:0,tf:function(a){var n=a.map(function(x){return x.charAt(0).toLowerCase()+x.slice(1);}),j=n.length>1?n.slice(0,-1).join(", ")+" and "+n[n.length-1]:n[0];return "Where are you, what are you doing, and/or when "+(n.length>1?"do ":"does ")+j+" come to you?";},dk:"Not sure yet? People often find it in stillness, with others, or looking at something that exists. Tap any that sound close.",l:["With others in a room","At a talk","On my own","In stillness","During rest","Looking at something that exists","Social media","Podcasts","Making things","Outdoors","I don't know"]}],
+    {t:"Where are you, what are you doing, and/or when does it come to you?",after:0,tf:function(a){var n=a.map(function(x){return x.charAt(0).toLowerCase()+x.slice(1);}),j=n.length>1?n.slice(0,-1).join(", ")+" and "+n[n.length-1]:n[0];return "Where are you, what are you doing, and/or when "+(n.length>1?"do ":"does ")+j+" come to you?";},dk:"Not sure yet? People often find it in stillness, with others, or looking at something that exists. Tap any that sound close.",grp:[["With people",2],["Alone",3],["Taking in",3],["Doing",2]],l:["With others in a room","At a talk","On my own","In stillness","During rest","Looking at something that exists","Social media","Podcasts","Creating things","Outdoors","I don't know"]}],
  needs:["Create","Play","Rest"]}];
 var FE={"Connect":"Connected","Create":"Expressed","Eat and drink":"Nourished","Move":"Energized to move","Play":"Playful","Rest":"Rested"};
 var LAB={mind:{"Connected":"How to connect through my mind","Expressed":"How to express my mind","Nourished":"How to nourish my mind","Energized to move":"How to energize my mind","Playful":"How to have fun with my mind","Rested":"How to rest my mind"}};
@@ -116,7 +116,7 @@ function mealChart(){var h='<table class="mchart"><thead><tr><th></th><th>Whole 
 function activeBr(F){var a=[],cp=F.opts.Connected||[],pl=F.opts.Playful||[];BRANCH.forEach(function(B){if(F.explore.indexOf("Connected")>-1&&cp.indexOf(B.on)>-1)a.push({need:"Connected",k:B.k,q:B.q,l:B.l});});EXTRA.forEach(function(B){if(F.explore.indexOf(B.need)>-1)a.push(B);});if(F.explore.indexOf("Playful")>-1)pl.forEach(function(t){if(RECS[t])a.push({need:"Playful",k:"rec:"+t,q:t+": which do you enjoy?",l:RECS[t].concat("+ Other")});});var ro=(F.branch||{})["rec:Other"]||[];F.recOwn=F.recOwn||[];ro.forEach(function(v){if(F.recOwn.indexOf(v)<0)F.recOwn.push(v);});if(F.explore.indexOf("Playful")>-1&&F.recOwn.length)a.push({need:"Playful",k:"rec:Other",q:"What else you enjoy:",l:F.recOwn.slice(),nopool:1});return a;}
 Object.keys(LISTS).forEach(function(x){if(LISTS[x].indexOf("+ Other")<0)LISTS[x].push("+ Other");});
 BRANCH.concat(EXTRA).forEach(function(B){if(!B.one&&B.l.indexOf("+ Other")<0)B.l=B.l.concat("+ Other");});
-var TXT={"Connected":"Who would you like to connect with?","Nourished":"What would you like to eat or drink?"};
+var TXT={"Connected":"Which connection(s) would you like to make?","Nourished":"What would you like to eat or drink?"};
 var ALLN=["Connect","Create","Eat and drink","Move","Play","Rest"];
 var NEEDOF={};ALLN.forEach(function(n){NEEDOF[FE[n]]=n;});
 var NE={"Rest":"💙","Eat and drink":"🥘","Move":"🌀","Play":"🏓","Connect":"🌐","Create":"🎨"};
@@ -220,8 +220,16 @@ function drawCrumbs(){var nav=document.getElementById("crumbs"),trail=hist.conca
  nav.querySelectorAll("button[data-c]").forEach(function(b){b.addEventListener("click",function(){var i=+b.getAttribute("data-c"),t=hist[i];fwd=hist.slice(i+1).concat([[cur,curArg]]).concat(fwd);hist=hist.slice(0,i);cur=t[0];curArg=t[1];render();});});
  if(fwd.length){nav.insertAdjacentHTML("beforeend",fwd.map(function(t,j){return '<span aria-hidden="true">/</span><button type="button" class="fw" data-f="'+j+'">'+esc(crumbName(t[0],t[1]))+'</button>';}).join(""));nav.querySelectorAll("button[data-f]").forEach(function(b){b.addEventListener("click",function(){forward(+b.getAttribute("data-f"));});});}}
 function row(k){for(var i=0;i<ROWS.length;i++)if(ROWS[i].k===k)return ROWS[i];}
-var EMO2={"Inspiration":"\u{1F4AB}","Ah-ha!'s":"\u{1F4A1}","Possibility":"\u{1FA9F}","Creativity":"\u{1F3A8}","Wonder":"\u{1F31F}","Abundance":"\u{1F33E}","With others in a room":"\u{1F465}","At a talk":"\u{1F3A4}","On my own":"\u{1F464}","In stillness":"\u{1F56F}\u{FE0F}","During rest":"\u{1FAB7}","Looking at something that exists":"\u{1F440}","Social media":"\u{1F4F1}","Podcasts":"\u{1F3A7}","Making things":"\u{1F6E0}\u{FE0F}","Outdoors":"\u{1F332}","I don't know":"\u2753"};
+var EMO2={"Inspiration":"\u{1F4AB}","Ah-ha!'s":"\u{1F4A1}","Possibility":"\u{1FA9F}","Creativity":"\u{1F3A8}","Wonder":"\u{1F31F}","Abundance":"\u{1F33E}","With others in a room":"\u{1F465}","At a talk":"\u{1F3A4}","On my own":"\u{1F464}","In stillness":"\u{1F56F}\u{FE0F}","During rest":"\u{1FAB7}","Looking at something that exists":"\u{1F440}","Social media":"\u{1F4F1}","Podcasts":"\u{1F3A7}","Creating things":"\u{1F6E0}\u{FE0F}","Outdoors":"\u{1F332}","I don't know":"\u2753"};
 function emo2(x){return EMO2[x]?EMO2[x]+" ":"";}
+var MORE={};
+function grpRow(key,q,list,sel,attr){var n=0,hid=[],h="";q.grp.forEach(function(g,gi){var idx=[];for(var i=0;i<g[1];i++)idx.push(n++);g.idx=idx;if(gi>=2)idx.forEach(function(i){hid.push(i);});});
+ var open=!!MORE[key]||hid.some(function(i){return sel.indexOf(list[i])>-1;});
+ function btn(i){return '<button type="button" class="opt'+(sel.indexOf(list[i])>-1?" on":"")+'" '+attr+' data-i="'+i+'">'+emo2(list[i])+esc(list[i])+'</button>';}
+ q.grp.forEach(function(g,gi){if(gi>=2&&!open)return;h+='<p class="glbl">'+esc(g[0])+'</p><div class="opts pills">'+g.idx.map(btn).join("")+'</div>';});
+ var tail=[];for(var i=n;i<list.length;i++)tail.push(i);
+ h+='<div class="opts pills" style="margin-top:12px">'+tail.map(btn).join("")+'<button type="button" class="opt other" '+attr+' data-other="1">+ Other</button><button type="button" class="opt" data-more="'+key+'">'+(open?"Show fewer":"Show more")+'</button></div>';
+ return h;}
 function pillRow(list,sel,attr,other){return '<div class="opts pills">'+list.map(function(x,i){return '<button type="button" class="opt'+(sel.indexOf(x)>-1?" on":"")+'" '+attr+' data-i="'+i+'">'+emo2(x)+esc(x)+'</button>';}).join("")+(other?'<button type="button" class="opt other" '+attr+' data-other="1">+ Other</button>':'')+'</div>';}
 
 function list_(a){var n=a.map(function(r){return "your "+r.w.replace(/^my /,"");});return n.length<3?n.join(" and "):n.slice(0,-1).join(", ")+", and "+n[n.length-1];}
@@ -341,13 +349,14 @@ function areaQsPage(k){
    var list=q.l.concat(D.own[qi]);
    h+='<div class="qb"><h2>'+esc(q.tf?q.tf(D.a[q.after]):q.t)+'</h2>'+(q.t==="What have you been feeling lately?"?'<p class="sub" style="margin:0 0 6px">Select all that apply.</p>':'');
    if(q.cb){list.forEach(function(x,i){h+='<label class="chk"><input type="checkbox" data-q="'+qi+'" data-i="'+i+'"'+(D.a[qi].indexOf(x)>-1?" checked":"")+'><span>'+esc(x)+'</span></label>';});h+='<label class="chk"><input type="checkbox" class="oth" data-q="'+qi+'"><span>+ Other</span></label>';}
-   else h+=pillRow(list,D.a[qi],'data-q="'+qi+'"',true);
+   else h+=q.grp?grpRow(k+":"+qi,q,list,D.a[qi],'data-q="'+qi+'"'):pillRow(list,D.a[qi],'data-q="'+qi+'"',true);
    h+=(q.dk&&D.a[qi].indexOf("I don't know")>-1?'<p class="stmt" style="margin:10px 0 0;color:#4B5A6D">'+esc(q.dk)+'</p>':'')+'<div class="ownhost" data-q="'+qi+'"></div></div>';
   });
   h+='<div id="optshost"></div><div class="row"><button class="btn" type="button" id="next">Continue</button></div>';
   app.innerHTML=h;optionsPage(k);window.scrollTo(0,y);
   r.q.forEach(function(q,qi){
    var list=q.l.concat(D.own[qi]);
+   app.querySelectorAll('.opt[data-more="'+k+":"+qi+'"]').forEach(function(b){b.addEventListener("click",function(){var kk=b.getAttribute("data-more");MORE[kk]=!MORE[kk];draw();});});
    function toggle(v,on){var i=D.a[qi].indexOf(v);if(on&&i<0){if(q.one)D.a[qi].length=0;D.a[qi].push(v);}if(!on&&i>-1)D.a[qi].splice(i,1);save(R);}
    app.querySelectorAll('.opt[data-q="'+qi+'"][data-i]').forEach(function(b){b.addEventListener("click",function(){var v=list[+b.getAttribute("data-i")];toggle(v,D.a[qi].indexOf(v)<0);draw();});});
    app.querySelectorAll('.chk input[data-q="'+qi+'"][data-i]').forEach(function(c){c.addEventListener("change",function(){toggle(list[+c.getAttribute("data-i")],c.checked);if(q.br){setExplore(k);save(MINE);var yy=window.scrollY;optionsPage(k);window.scrollTo(0,yy);}});});
