@@ -228,13 +228,12 @@ function welcomePage(){
 var RINFO={body:'How you notice and care for your body, where you live, who you spend time with, and what you surround yourself with.',feel:'What you feel and how emotions move through you.',energy:'How you notice what gives you energy (what lights you up) and what drains it (when you need to recover).',mind:'How you pay attention to yourself and the world around you, and how you notice yourself making decisions.',imag:'How you look at what\'s possible.'};
 function whenPage(){
  var R=load();
- var h='<h1 class="q">When did you last think about you and… <button type="button" class="ibtn" id="hi" aria-label="What these five ask" aria-expanded="false">i</button></h1><p class="stmt hnote" id="hn" hidden>These five ask how you pay attention to your life, not what you do.</p>';
+ var h='<h1 class="q">When did you last think about you and…</h1>';
  ROWS.forEach(function(r){h+='<div class="wrow"><p class="wlbl">'+ico(r.k,24)+' '+esc(words(r).replace(/^My /,"Your ").replace(/^./,function(c){return c.toUpperCase();}))+' <button type="button" class="ibtn" data-n="'+r.k+'" aria-label="What this means" aria-expanded="false">i</button></p><p class="stmt hnote" id="n-'+r.k+'" style="margin:0 0 10px" hidden>'+RINFO[r.k]+'</p>'+pillRow(WHEN,R.when[r.k]?[R.when[r.k]]:[],'data-r="'+r.k+'"',false)+'</div>';});
  var olds=ROWS.filter(function(r){return ["Last month","Last year","In my life"].indexOf(R.when[r.k])>-1;}),while_=olds.length>0;
  if(ROWS.every(function(r){return R.when[r.k];}))h+='<div class="row"><button class="btn" type="button" id="done">Continue</button></div>';
  app.innerHTML=h;
  app.querySelectorAll(".ibtn[data-n]").forEach(function(b){b.addEventListener("click",function(){var n=document.getElementById("n-"+b.getAttribute("data-n"));n.hidden=!n.hidden;b.setAttribute("aria-expanded",n.hidden?"false":"true");});});
- var hi=document.getElementById("hi");if(hi)hi.addEventListener("click",function(){var n=document.getElementById("hn");n.hidden=!n.hidden;hi.setAttribute("aria-expanded",n.hidden?"false":"true");});
  app.querySelectorAll(".opt[data-r]").forEach(function(b){b.addEventListener("click",function(){var k=b.getAttribute("data-r"),v=WHEN[+b.getAttribute("data-i")];var at=window.scrollY,picked=R.when[k]!==v;R.when[k]=picked?v:"";save(R);showHelp=false;whenPage();window.scrollTo(0,at);if(picked)downToNext(k,at);});});
  var d=document.getElementById("done");if(d)d.addEventListener("click",function(){go(askedPage);});
 }
