@@ -139,13 +139,20 @@ function dv(k){var D=MINE.dive[k]=MINE.dive[k]||{a:[[],[]],own:[[],[]],need:"",f
 var SAVE_NEW=true;
 var FMK={howIEatAndDrink:["body","opts","Nourished"],howIMove:["body","opts","Energized to move"],howIRest:["body","opts","Rested"],howIConnect:["energy","opts","Connected"],energizesMeKinds:["energy","opts","Playful"],mealsLandNow:["energy","branch","mealsNow"],mealsLandWant:["energy","branch","mealsWant"],connectSolo:["energy","branch","self"],connectWithOthers:["energy","branch","others"],connectPlaces:["energy","branch","place"]};
 function heldAns(key){var f=MINE.flow||{},out=[];Object.keys(f).forEach(function(j){var F=f[j],o=F.other||{},t=o["n:"+key]||o[key]||"";((F.opts||{})[key]||[]).concat((F.branch||{})[key]||[]).forEach(function(v){v=v==="+ Other"?t:v;if(v&&out.indexOf(v)<0)out.push(v);});});return out.join("|");}
+function subjAll(){var f=MINE.flow||{},out=[];Object.keys(f).forEach(function(j){(f[j].subjects||[]).forEach(function(v){if(out.indexOf(v)<0)out.push(v);});});return out.join("|");}
+function fillThree(d){function list(v){return String(v==null?"":v).split("|").map(function(x){return x.trim();}).filter(Boolean);}
+ function settle(n,sv,now){var h=list(now());sent[n]=h.length===sv.length&&h.every(function(x){return sv.indexOf(x)>-1;})?h.join("|"):sv.join("|");}
+ var sm=list(d.methods),F=flow("mind"),hm=list(heldAns("Natural"));sm.forEach(function(x){if(hm.indexOf(x)<0)(F.opts.Natural=F.opts.Natural||[]).push(x);});settle("methods",sm,function(){return heldAns("Natural");});
+ var ss=list(d.subjects),hs=list(subjAll());ss.forEach(function(x){if(hs.indexOf(x)<0)(F.subjects=F.subjects||[]).push(x);});settle("subjects",ss,subjAll);
+ var se=list(d.expression),I=flow("imag"),he=list(heldAns("expression")),L=(EXTRA.filter(function(x){return x.k==="expression";})[0]||{l:[]}).l,odd=se.filter(function(x){return he.indexOf(x)<0&&L.indexOf(x)<0;});I.branch=I.branch||{};I.branch.expression=I.branch.expression||[];I.other=I.other||{};
+ se.forEach(function(x){if(he.indexOf(x)>-1)return;if(odd.length===1&&x===odd[0]&&!I.other.expression&&I.branch.expression.indexOf("+ Other")<0){I.branch.expression.push("+ Other");I.other.expression=x;}else I.branch.expression.push(x);});settle("expression",se,function(){return heldAns("expression");});}
 function areaWords(L){return L.map(function(k){return words(row(k));}).join("|");}
 function moreVals(o){Object.keys(FMK).forEach(function(n){o[n]=heldAns(FMK[n][2]);});
  o.askedBefore=MINE.asked||"";o.lookCloser=MINE.look||"";o.startWithAreas=areaWords(MINE.picks||[]);
  o.exploreAreas=areaWords(ROWS.map(function(r){return r.k;}).filter(function(k){return (MINE.exp||{})[k]==="Yes";}));
  o.energyUnderwhelmed=dv("energy").a[1].join("|");
  var en=[],f=MINE.flow||{};Object.keys(f).forEach(function(j){var B=f[j].branch||{};Object.keys(B).forEach(function(b){if(b.indexOf("rec:")===0)B[b].forEach(function(v){if(v!=="+ Other"&&en.indexOf(v)<0)en.push(v);});});});o.energizesMeEnjoy=en.join("|");
- var N=flow("needs"),fin=N.final.filter(function(v){return v!=="+ Other";}).concat(N.finalOther?[N.finalOther]:[]);o.next5MinutesPick=fin.join("|");o.next5MinutesStart=MINE.startChoice||"";if(BUDDY_MATCH){o.accountabilityBuddyIdeal=MINE.buddyIdeal||"";o.accountabilityBuddyWilling=MINE.buddyWilling||"";}return o;}
+ var N=flow("needs"),fin=N.final.filter(function(v){return v!=="+ Other";}).concat(N.finalOther?[N.finalOther]:[]);o.next5MinutesPick=fin.join("|");o.next5MinutesStart=MINE.startChoice||"";o.methods=heldAns("Natural");o.subjects=subjAll();o.expression=heldAns("expression");if(BUDDY_MATCH){o.accountabilityBuddyIdeal=MINE.buddyIdeal||"";o.accountabilityBuddyWilling=MINE.buddyWilling||"";}return o;}
 function fillMore(take){function list(v){return v.split("|").map(function(x){return x.trim();}).filter(Boolean);}
  Object.keys(FMK).forEach(function(n){var v=take(n);if(!v)return;var m=FMK[n],F=flow(m[0]);F[m[1]]=F[m[1]]||{};F[m[1]][m[2]]=list(v);});
  var v;if((v=take("askedBefore")))MINE.asked=v;if((v=take("lookCloser")))MINE.look=v;
@@ -160,9 +167,10 @@ function vals(){var o={},st="";ROWS.forEach(function(r){var D=dv(r.k),n=MINE.rat
 function markDone(){try{if(!me())return;localStorage.setItem("cw-firstmin",JSON.stringify({who:String(CW.me().id||"").split(".").join("").toLowerCase(),yes:true}));}catch(e){}}
 function note(t){document.getElementById("sv").textContent=t;}
 function wait(on){var e=document.getElementById("cwl");if(on&&!e){e=document.createElement("div");e.id="cwl";e.className="cw-loading";e.textContent="Looking for your earlier answers…";var c=document.querySelector(".card");c.parentNode.insertBefore(e,c);}else if(!on&&e)e.remove();}
-function flush(){clearTimeout(timer);timer=null;var id=me();if(!id||looking)return;var all=vals(),out={},any=false;if(!readOk){delete all.howIMove;delete all.howIRest;}Object.keys(all).forEach(function(f){if(all[f]!==(sent[f]||"")){out[f]=all[f];any=true;}});if(!any)return;
+function flush(){clearTimeout(timer);timer=null;var id=me();if(!id||looking)return;var all=vals(),out={},any=false;if(!readOk){delete all.howIMove;delete all.howIRest;delete all.methods;delete all.subjects;delete all.expression;}Object.keys(all).forEach(function(f){if(all[f]!==(sent[f]||"")){out[f]=all[f];any=true;}});if(!any)return;
  fetch(GS+"?action=saveBalanceAnswers&appearId="+encodeURIComponent(id)+"&answers="+encodeURIComponent(JSON.stringify(out)),{keepalive:true}).then(function(r){return r.json();}).then(function(r){
-  if(r&&r.status==="ok"&&!(r.missing&&r.missing.length)){Object.keys(out).forEach(function(f){sent[f]=out[f];});note("");try{localStorage.removeItem(HELD);}catch(e){}}
+  if(r&&r.tooLong&&r.tooLong.length){note("Not saved yet: this answer is too long to keep. Please shorten it.");}
+  else if(r&&r.status==="ok"&&!(r.missing&&r.missing.length)){Object.keys(out).forEach(function(f){sent[f]=out[f];});note("");try{localStorage.removeItem(HELD);}catch(e){}}
   else if(r&&r.status==="norow")note("Your answers could not be saved because your profile is not set up yet.");
   else if(r&&r.missing&&r.missing.length)note("Not saved yet: "+r.missing.length+" of these answers have no place on the sheet.");
   else note("Could not save. Try again.");
@@ -178,7 +186,7 @@ function fill(d){var cur0=vals();
   if(take("startWithFirst")===words(r))MINE.start=r.k;
  });
  sent.startWithFirst=String(d.startWithFirst==null?"":d.startWithFirst).trim();
- if(SAVE_NEW)fillMore(take);
+ if(SAVE_NEW){fillMore(take);fillThree(d);}
 }
 function lookUp(){var id=me();if(!id)return;looking=true;wait(true);
  var ask=function(){return fetch(GS+"?action=getIntake&appearId="+encodeURIComponent(id)).then(function(r){return r.json();}).then(function(d){if(!d||d.status==="error")throw new Error("no");return d;});};
@@ -256,7 +264,7 @@ function invite(){
 }
 function notNow(){try{localStorage.removeItem(HELD);}catch(e){}app.innerHTML='<p class="stmt">If and when you\'re ready to begin, come back to explore how to tend to yourself. Start by exploring what you\'re good at, what lights you up, and where you get your energy.</p><div class="acts"><button class="btn" type="button" id="rem">Send me an email reminder</button></div>';
  document.getElementById("rem").addEventListener("click",function(){go(remind);});}
-var REMIND_SELF=false,BUDDY_MATCH=false;
+var REMIND_SELF=true,BUDDY_MATCH=false;
 function remindMe(id){
  app.innerHTML='<div class="invite"><h2 class="ih" id="rh">Sending your reminder…</h2></div>';
  function say(t){var e=document.getElementById("rh");if(e)e.textContent=t;}
