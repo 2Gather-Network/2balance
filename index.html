@@ -620,7 +620,7 @@ function buddyScript(){finish();var mine=nextPicks(),t="My next 5 minutes: "+(mi
  var c=document.getElementById("cp");c.addEventListener("click",function(){try{navigator.clipboard.writeText(t).then(function(){c.textContent="Copied";}).catch(function(){c.textContent="Please select the words above";});}catch(e){c.textContent="Please select the words above";}});
 }
 function buddyIdeal(){
- app.innerHTML='<h1 class="q">Who would be your ideal buddy?</h1><p class="stmt" style="margin-bottom:12px">Ideas: where they are or virtual, someone you know within 2 degrees, open to anyone, gender.</p><textarea id="ideal" maxlength="500" rows="4" aria-label="Who would be your ideal buddy?" style="width:100%;box-sizing:border-box;font:inherit;padding:11px 14px;border:1.5px solid var(--brand);border-radius:12px">'+esc(MINE.buddyIdeal||"")+'</textarea><div class="stack"><button class="btn" type="button" id="ok">Continue</button></div>';
+ app.innerHTML='<h1 class="q">Who would be a helpful accountability buddy?</h1><p class="stmt" style="margin-bottom:12px">Ideas include: local, virtual, within your circle, within 2 degrees, open to anyone...</p><textarea id="ideal" maxlength="500" rows="4" aria-label="Who would be a helpful accountability buddy?" style="width:100%;box-sizing:border-box;font:inherit;padding:11px 14px;border:1.5px solid var(--brand);border-radius:12px">'+esc(MINE.buddyIdeal||"")+'</textarea><div class="stack"><button class="btn" type="button" id="ok">Continue</button></div>';
  document.getElementById("ok").addEventListener("click",function(){var v=document.getElementById("ideal").value.trim();if(!v)return;MINE.buddyIdeal=v;save(MINE);go(buddyWilling);});
 }
 function buddyWilling(){
