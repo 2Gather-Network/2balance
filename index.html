@@ -281,7 +281,7 @@ function askedPage(){
  app.innerHTML=h;
  app.querySelectorAll(".opt[data-a]").forEach(function(b){b.addEventListener("click",function(){R.asked=ASKED[+b.getAttribute("data-a")];save(R);askedPage();});});
  app.querySelectorAll(".opt[data-l]").forEach(function(b){b.addEventListener("click",function(){R.look=LOOK[+b.getAttribute("data-l")];save(R);askedPage();});});
- var n=document.getElementById("next");if(n)n.addEventListener("click",function(){if(!olds.length){go(startWith);return;}if(R.look===LOOK[1]){go(notNow);return;}if(olds.length===1){R.start=olds[0].k;R.picks=[olds[0].k];save(R);if(me())go(dive,olds[0].k);else go(invite);}else if(me())go(startWith);else go(invite);});
+ var n=document.getElementById("next");if(n)n.addEventListener("click",function(){if(!olds.length){R.picks=null;save(R);go(explorePickPage);return;}if(R.look===LOOK[1]){go(notNow);return;}R.picks=null;R.invitedFor="explore";save(R);if(me())go(explorePickPage);else go(invite);});
 }
 var LOOK=["Yes","Not at this time, thank you"];
 function startWith(){
@@ -347,10 +347,10 @@ function dive(){
  draw();
 }
 function explorePickPage(){
- var R=load(),L=areasList();R.exp=R.exp||{};
+ var R=load(),L=areasList();if(!R.exp){R.exp={};oldAreas().forEach(function(r){R.exp[r.k]="Yes";});}
  function first(){var f=L.filter(function(a){return R.exp[a]==="Yes";})[0];if(f)go(areaQsPage,f);else go(finalPage);}
  var any=L.some(function(a){return R.exp[a]==="Yes";});
- app.innerHTML='<h1 class="q">Would you like to explore any of these a little more?</h1><div class="chks">'+L.map(function(a){var r=row(a);return '<label class="chk"><input type="checkbox" data-a="'+a+'"'+(R.exp[a]==="Yes"?" checked":"")+'><span>'+nm(r)+' ('+(R.rate[a]||"")+' '+esc(LV[(R.rate[a]||1)-1].replace(/^./,function(c){return c.toLowerCase();}))+')</span></label>';}).join("")+'</div><div class="row"><button class="btn" type="button" id="next">Continue</button></div><div class="invite"><div class="alts"><button class="lnk" type="button" id="no">Not right now, thank you</button></div></div>';
+ app.innerHTML='<h1 class="q">Which ones would you like to explore a little more?</h1><div class="chks">'+L.map(function(a){var r=row(a);return '<label class="chk"><input type="checkbox" data-a="'+a+'"'+(R.exp[a]==="Yes"?" checked":"")+'><span>'+nm(r)+' ('+(R.rate[a]||"")+' '+esc(LV[(R.rate[a]||1)-1].replace(/^./,function(c){return c.toLowerCase();}))+')</span></label>';}).join("")+'</div><div class="row"><button class="btn" type="button" id="next">Continue</button></div><div class="invite"><div class="alts"><button class="lnk" type="button" id="no">Not right now, thank you</button></div></div>';
  app.querySelectorAll(".chk input").forEach(function(c){c.addEventListener("change",function(){R.exp[c.getAttribute("data-a")]=c.checked?"Yes":"No";save(R);});});
  document.getElementById("no").addEventListener("click",function(){L.forEach(function(a){R.exp[a]="No";});save(R);go(notNow);});
  document.getElementById("next").addEventListener("click",first);
@@ -715,7 +715,7 @@ function feelPage(){
 }
 function donePage(){flush();markDone();app.innerHTML='<p class="stmt">Thank you for taking the time to explore. Whatever you noticed is a good place to begin. Come back any day, one day at a time.</p>'+(me()?'':'<p class="sub">Your answers are not saved because you are not signed in.</p>');}
 {var held=null;try{held=JSON.parse(localStorage.getItem(HELD)||"null");if(held&&(!me()||!(Date.now()-held.at<3600000))){localStorage.removeItem(HELD);held=null;}}catch(e){}
- if(held&&held.when&&me()){MINE={when:held.when||{},rate:held.rate||{},dive:held.dive||{},start:held.start||"",picks:held.picks,flow:held.flow||{},asked:held.asked,look:held.look,exp:held.exp};hist=[[whenPage],[startWith]];cur=MINE.start?dive:startWith;curArg=MINE.start;}else cur=welcomed()?whenPage:welcomePage;
+ if(held&&held.when&&me()){MINE={when:held.when||{},rate:held.rate||{},dive:held.dive||{},start:held.start||"",picks:held.picks,flow:held.flow||{},asked:held.asked,look:held.look,exp:held.exp};hist=[[whenPage],[askedPage]];cur=explorePickPage;curArg="";}else cur=welcomed()?whenPage:welcomePage;
  render();lookUp();}
 })();
 </script>
