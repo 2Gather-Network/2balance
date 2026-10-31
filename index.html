@@ -261,13 +261,13 @@ function welcomePage(){
 var RINFO={body:'How you notice and care for your body, where you live, who you spend time with, and what you surround yourself with.',feel:'What you feel and how emotions move through you.',energy:'How you notice what gives you energy (what lights you up) and what drains it (when you need to recover).',mind:'How you pay attention to yourself and the world around you, and how you notice yourself making decisions.',imag:'How you look at what\'s possible.'};
 function whenPage(){
  var R=load();
- var h='<h1 class="q">When did you last think about you and…</h1>';
- ROWS.forEach(function(r){h+='<div class="wrow"><p class="wlbl">'+ico(r.k,24)+' '+esc(words(r).replace(/^My /,"Your ").replace(/^./,function(c){return c.toUpperCase();}))+' <button type="button" class="ibtn" data-n="'+r.k+'" aria-label="What this means" aria-expanded="false">i</button></p><p class="stmt hnote" id="n-'+r.k+'" style="margin:0 0 10px" hidden>'+RINFO[r.k]+'</p>'+pillRow(WHEN,R.when[r.k]?[R.when[r.k]]:[],'data-r="'+r.k+'"',false)+'</div>';});
- var olds=ROWS.filter(function(r){return ["Last month","Last year","In my life"].indexOf(R.when[r.k])>-1;}),while_=olds.length>0;
- if(ROWS.every(function(r){return R.when[r.k];}))h+='<div class="row"><button class="btn" type="button" id="done">Continue</button></div>';
+ var h='';
+ ROWS.forEach(function(r){var yw=r.w.replace(/^my /,"your "),sel=R.rate[r.k]||0;h+='<div class="wrow"><p class="wlbl">'+ico(r.k,24)+' When did you last think about '+esc(yw)+'? <button type="button" class="ibtn" data-n="'+r.k+'" aria-label="What this means" aria-expanded="false">i</button></p><p class="stmt hnote" id="n-'+r.k+'" style="margin:0 0 10px" hidden>'+RINFO[r.k]+'</p>'+pillRow(WHEN,R.when[r.k]?[R.when[r.k]]:[],'data-r="'+r.k+'"',false)+(R.when[r.k]?'<p class="sub" style="margin:14px 0 8px;font-size:14px;line-height:1.45">Right now, I would rate '+esc(r.w)+' as:</p><div class="opts pills">'+LV.map(function(lb,i){return '<button type="button" class="opt'+(sel===i+1?" on":"")+'" data-rr="'+r.k+'" data-rv="'+(i+1)+'">'+(i+1)+' '+esc(lb)+'</button>';}).join("")+'</div>':'')+'</div>';});
+ if(ROWS.every(function(r){return R.when[r.k]&&R.rate[r.k];}))h+='<div class="row"><button class="btn" type="button" id="done">Continue</button></div>';
  app.innerHTML=h;
  app.querySelectorAll(".ibtn[data-n]").forEach(function(b){b.addEventListener("click",function(){var n=document.getElementById("n-"+b.getAttribute("data-n"));n.hidden=!n.hidden;b.setAttribute("aria-expanded",n.hidden?"false":"true");});});
- app.querySelectorAll(".opt[data-r]").forEach(function(b){b.addEventListener("click",function(){var k=b.getAttribute("data-r"),v=WHEN[+b.getAttribute("data-i")];var at=window.scrollY,picked=R.when[k]!==v;R.when[k]=picked?v:"";save(R);showHelp=false;whenPage();window.scrollTo(0,at);if(picked)downToNext(k,at);});});
+ app.querySelectorAll(".opt[data-r]").forEach(function(b){b.addEventListener("click",function(){var k=b.getAttribute("data-r"),v=WHEN[+b.getAttribute("data-i")];var at=window.scrollY,picked=R.when[k]!==v;R.when[k]=picked?v:"";if(!picked)R.rate[k]=0;save(R);showHelp=false;whenPage();window.scrollTo(0,at);});});
+ app.querySelectorAll(".opt[data-rr]").forEach(function(b){b.addEventListener("click",function(){var k=b.getAttribute("data-rr"),n=+b.getAttribute("data-rv");var at=window.scrollY;R.rate[k]=(R.rate[k]===n?0:n);save(R);whenPage();window.scrollTo(0,at);if(R.rate[k])downToNext(k,at);});});
  var d=document.getElementById("done");if(d)d.addEventListener("click",function(){go(askedPage);});
 }
 function oldAreas(){var R=load();return ROWS.filter(function(r){return ["Last month","Last year","In my life"].indexOf(R.when[r.k])>-1;});}
