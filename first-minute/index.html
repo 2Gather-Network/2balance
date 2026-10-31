@@ -168,13 +168,13 @@ function wait(on){var e=document.getElementById("cwl");if(on&&!e){e=document.cre
 var NOT_KEPT="Not saved yet: we could not load your earlier answers, so some of your picks are only on this screen.",DROPPED=["howIMove","howIRest","methods","subjects","expression"],rereads=0,rereadAt=0;
 function holding(all){return !readOk&&DROPPED.some(function(f){return all[f]!=="";});}
 function flush(){clearTimeout(timer);timer=null;var id=me();if(!id||looking)return;var all=vals(),out={},any=false,hd=holding(all);if(hd&&!document.hidden&&rereads<3&&Date.now()-rereadAt>20000){rereads++;rereadAt=Date.now();lookUp();return;}if(!readOk)DROPPED.forEach(function(f){delete all[f];});Object.keys(all).forEach(function(f){if(all[f]!==(sent[f]||"")){out[f]=all[f];any=true;}});if(hd)note(NOT_KEPT);if(!any)return;
- var base=GS+"?action=saveBalanceAnswers&appearId="+encodeURIComponent(id)+"&answers=",TOO="Not saved yet: this answer is too long to keep. Please shorten it.",big=false,bad=false,parts=[],c={};
+ var base=GS+"?action=saveBalanceAnswers&appearId="+encodeURIComponent(id)+"&answers=",TOO="Not saved yet: this answer is too long to keep. Please shorten it.",big=false,bad=false,good=0,parts=[],c={};
  function over(o){return (base+encodeURIComponent(JSON.stringify(o))).length>5500;}
  Object.keys(out).forEach(function(f){var one={};one[f]=out[f];if(over(one)){big=true;return;}var t=JSON.parse(JSON.stringify(c));t[f]=out[f];if(over(t)){parts.push(c);c=one;}else c=t;});if(Object.keys(c).length)parts.push(c);
  if(big)note(TOO);
  parts.forEach(function(o){fetch(base+encodeURIComponent(JSON.stringify(o)),{keepalive:true}).then(function(r){return r.json();}).then(function(r){
   if(r&&r.tooLong&&r.tooLong.length){bad=true;note(TOO);}
-  else if(r&&r.status==="ok"&&!(r.missing&&r.missing.length)){Object.keys(o).forEach(function(f){sent[f]=o[f];});if(!bad)note(big?TOO:(hd?NOT_KEPT:""));try{localStorage.removeItem(HELD);}catch(e){}}
+  else if(r&&r.status==="ok"&&!(r.missing&&r.missing.length)){Object.keys(o).forEach(function(f){sent[f]=o[f];});if(!bad)note(big?TOO:(hd?NOT_KEPT:""));good++;if(good===parts.length&&!big){try{localStorage.removeItem(HELD);}catch(e){}}}
   else if(r&&r.status==="norow"){bad=true;note("Your answers could not be saved because your profile is not set up yet.");}
   else if(r&&r.missing&&r.missing.length){bad=true;note("Not saved yet: "+r.missing.length+" of these answers have no place on the sheet.");}
   else{bad=true;note("Could not save. Try again.");}
