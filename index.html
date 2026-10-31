@@ -671,8 +671,12 @@ function readyPage(){
 }
 function nextPicks(){var F=flow("needs");return F.final.filter(function(v){return v!=="+ Other";}).concat(F.finalOther?[F.finalOther]:[]);}
 function finish(){flush();markDone();}
-function startYes(){finish();app.innerHTML='<div class="cheer" aria-hidden="true">🎉</div><h1 class="q">Yes! Way to go.</h1><p class="stmt">You said yes to yourself. Enjoy your next 5 minutes. Come back any day, one day at a time.</p>';}
-function startLater(){finish();app.innerHTML='<h1 class="q">You\'ve got this.</h1><p class="stmt">You know exactly when you\'ll be able to do this. It will be here when you\'re ready.</p>';}
+var MORECAT={body:"skills",feel:"cares",energy:"joys",mind:"skills",imag:"joys"},MORENAME={joys:"Joys",cares:"Cares",skills:"Skills"};
+function moreEnd(){var R=load(),o=[];ROWS.forEach(function(r){if((R.exp||{})[r.k]==="Yes"){var c=MORECAT[r.k];if(o.indexOf(c)<0)o.push(c);}});["joys","cares","skills"].forEach(function(c){if(o.indexOf(c)<0)o.push(c);});
+ var d=document.createElement("div");d.className="invite";d.style.marginTop="26px";d.innerHTML='<h2 class="ih">Would you like to explore more?</h2><div class="opts pills" style="margin-top:12px">'+o.map(function(c){return '<button type="button" class="opt" data-more-go="'+c+'">'+MORENAME[c]+'</button>';}).join("")+'</div>';
+ app.appendChild(d);d.querySelectorAll("button[data-more-go]").forEach(function(b){b.addEventListener("click",function(){flush();location.href="/ikigai/?step="+b.getAttribute("data-more-go");});});}
+function startYes(){finish();app.innerHTML='<div class="cheer" aria-hidden="true">🎉</div><h1 class="q">Yes! Way to go.</h1><p class="stmt">You said yes to yourself. Enjoy your next 5 minutes. Come back any day, one day at a time.</p>';moreEnd();}
+function startLater(){finish();app.innerHTML='<h1 class="q">You\'ve got this.</h1><p class="stmt">You know exactly when you\'ll be able to do this. It will be here when you\'re ready.</p>';moreEnd();}
 var NUDGES=[["An email reminder","Email"],["An accountability buddy","Buddy"],["A few kind words","Kind words"],["Make it smaller","Smaller"],["+ Other","Other"]];
 function setNudge(w){MINE.startChoice="I need more of a nudge: "+w;save(MINE);}
 function startNudge(){
@@ -698,8 +702,8 @@ function buddyWilling(){
  document.getElementById("yes").addEventListener("click",function(){end("Yes");});
  document.getElementById("no").addEventListener("click",function(){end("Not right now");});
 }
-function nudgeKind(){finish();app.innerHTML='<h1 class="q">You already took the first step.</h1><p class="stmt">You stopped to ask what you need. That counts. Five minutes is small enough to begin, and it is yours.</p>';}
-function nudgeSmaller(){finish();app.innerHTML='<h1 class="q">Try just one minute.</h1><p class="stmt">Set a timer and begin. One minute counts, and you can stop when it ends.</p>';}
+function nudgeKind(){finish();app.innerHTML='<h1 class="q">You already took the first step.</h1><p class="stmt">You stopped to ask what you need. That counts. Five minutes is small enough to begin, and it is yours.</p>';moreEnd();}
+function nudgeSmaller(){finish();app.innerHTML='<h1 class="q">Try just one minute.</h1><p class="stmt">Set a timer and begin. One minute counts, and you can stop when it ends.</p>';moreEnd();}
 function nudgeOther(){
  app.innerHTML='<h1 class="q">What would nudge you?</h1><input id="ot" class="oth" type="text" maxlength="200" aria-label="What would nudge you?" style="width:100%;box-sizing:border-box;font:inherit;padding:11px 14px;border:1.5px solid var(--brand);border-radius:12px"><div class="stack"><button class="btn" type="button" id="ok">Done</button></div>';
  document.getElementById("ok").addEventListener("click",function(){var v=document.getElementById("ot").value.trim();if(!v)return;setNudge("Other: "+v);finish();app.innerHTML='<h1 class="q">Thank you for telling us.</h1><p class="stmt">This helps us build the nudges people want. You can come back any day, one day at a time.</p>';});
