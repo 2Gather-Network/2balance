@@ -205,14 +205,15 @@ function row(k){for(var i=0;i<ROWS.length;i++)if(ROWS[i].k===k)return ROWS[i];}
 function pillRow(list,sel,attr,other){return '<div class="opts pills">'+list.map(function(x,i){return '<button type="button" class="opt'+(sel.indexOf(x)>-1?" on":"")+'" '+attr+' data-i="'+i+'">'+esc(x)+'</button>';}).join("")+(other?'<button type="button" class="opt other" '+attr+' data-other="1">+ Other</button>':'')+'</div>';}
 
 function list_(a){var n=a.map(function(r){return "your "+r.w.replace(/^my /,"");});return n.length<3?n.join(" and "):n.slice(0,-1).join(", ")+", and "+n[n.length-1];}
+function downToNext(k,at){var rows=app.querySelectorAll(".wrow"),i=ROWS.map(function(r){return r.k;}).indexOf(k),n=rows[i+1]||document.getElementById("done");if(!n)return;var b=n.getBoundingClientRect();if(b.bottom>window.innerHeight)window.scrollTo(0,Math.max(at,at+b.bottom-window.innerHeight+16));}
 function whenPage(){
- var R=load(),y=window.scrollY;
+ var R=load();
  var h='<h1 class="q">When did you last think about you and your…</h1>';
  ROWS.forEach(function(r){h+='<div class="wrow"><p class="wlbl">'+ico(r.k,24)+' '+esc(words(r).replace(/^My /,"").replace(/^./,function(c){return c.toUpperCase();}))+'</p>'+pillRow(WHEN,R.when[r.k]?[R.when[r.k]]:[],'data-r="'+r.k+'"',false)+'</div>';});
  var olds=ROWS.filter(function(r){return ["Last month","Last year","In my life"].indexOf(R.when[r.k])>-1;}),while_=olds.length>0;
  if(ROWS.every(function(r){return R.when[r.k];}))h+='<div class="row"><button class="btn" type="button" id="done">Continue</button></div>';
  app.innerHTML=h;
- app.querySelectorAll(".opt[data-r]").forEach(function(b){b.addEventListener("click",function(){var k=b.getAttribute("data-r"),v=WHEN[+b.getAttribute("data-i")];R.when[k]=(R.when[k]===v?"":v);save(R);showHelp=false;whenPage();window.scrollTo(0,y);});});
+ app.querySelectorAll(".opt[data-r]").forEach(function(b){b.addEventListener("click",function(){var k=b.getAttribute("data-r"),v=WHEN[+b.getAttribute("data-i")];var at=window.scrollY,picked=R.when[k]!==v;R.when[k]=picked?v:"";save(R);showHelp=false;whenPage();window.scrollTo(0,at);if(picked)downToNext(k,at);});});
  var d=document.getElementById("done");if(d)d.addEventListener("click",function(){go(askedPage);});
 }
 function oldAreas(){var R=load();return ROWS.filter(function(r){return ["Last month","Last year","In my life"].indexOf(R.when[r.k])>-1;});}
