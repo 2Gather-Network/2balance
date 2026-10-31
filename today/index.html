@@ -12,6 +12,7 @@
 -->
 <html lang="en">
 <head>
+<script>try{if(localStorage.getItem("cw-id")||localStorage.getItem("appear-id"))document.write('<script src="https://2balance.network/nav/identity.js?v=39"><\/script>');}catch(e){}</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
@@ -289,7 +290,12 @@ var FSC=["Not at all","A little","Mostly","Fully"];
 function tday(){var d=new Date();return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();}
 function loadT(){var t=null;try{t=JSON.parse(localStorage.getItem(TKEY)||"null");}catch(e){}if(!t||t.date!==tday())t={date:tday(),important:"",move:[],rest:[],connect:"",enth:0,feel:{},own:{move:[],rest:[]}};if(!t.feel)t.feel={};return t;}
 function saveT(t){try{localStorage.setItem(TKEY,JSON.stringify(t));}catch(e){}}
-function todayPage(){
+var TI_GS="https://cw-api-gate.jessieupp.workers.dev",TI_MAP={move:"howIMove",rest:"howIRest",play:"energizesMeEnjoy"},tiHave=null,tiAsked=false;
+function tiMe(){try{var m=window.CW&&CW.me&&CW.me();if(!m||!m.id||m.viewing||!CW.passParam())return "";return m.id;}catch(e){return "";}}
+function tiRead(){var id=tiMe();if(!id||tiAsked)return;tiAsked=true;fetch(TI_GS+"?action=getIntake&appearId="+encodeURIComponent(id)).then(function(r){return r.json();}).then(function(d){if(d&&d.status!=="error"&&d.data)tiHave=d.data;}).catch(function(){});}
+function tiSend(){var id=tiMe();if(!id||!tiHave)return;var T=loadT(),out={},any=false;Object.keys(TI_MAP).forEach(function(k){var f=TI_MAP[k],v=(T[k]||[]).filter(function(x){return x!=="+ Other";}).join("|");if(v&&!String(tiHave[f]==null?"":tiHave[f]).trim()){out[f]=v;any=true;}});if(!any)return;fetch(TI_GS+"?action=saveBalanceAnswers&appearId="+encodeURIComponent(id)+"&answers="+encodeURIComponent(JSON.stringify(out)),{keepalive:true}).then(function(r){return r.json();}).then(function(r){if(r&&r.status==="ok"&&!(r.missing&&r.missing.length))Object.keys(out).forEach(function(f){tiHave[f]=out[f];});}).catch(function(){});}
+document.addEventListener("visibilitychange",function(){if(document.hidden)tiSend();});
+function todayPage(){tiRead();
  var T=loadT();if(!T.care)T.care=[];if(!T.play)T.play=[];if(!T.create)T.create=[];if(!T.own.play)T.own.play=[];if(!T.own.create)T.own.create=[];
  var lists={
   move:(S.joy&&S.joy.move&&S.joy.move.length)?S.joy.move.slice():["Workout","Walk","Stretch","Garden","Cycle","Swim","Run","Dance","Sport"],
@@ -324,7 +330,7 @@ function todayPage(){
    var i=T[k].indexOf(v);if(i>-1){T[k].splice(i,1);b.classList.remove("on");}else{T[k].push(v);b.classList.add("on");}saveT(T);});});});
  app.querySelectorAll(".star").forEach(function(b){b.addEventListener("click",function(){var n=+b.getAttribute("data-s");T.enth=(T.enth===n?0:n);saveT(T);todayPage();});});
  document.getElementById("treset").addEventListener("click",function(){try{localStorage.removeItem(TKEY);}catch(e){}todayPage();});
- document.getElementById("tdone").addEventListener("click",function(){go(todayDone);});
+ document.getElementById("tdone").addEventListener("click",function(){tiSend();go(todayDone);});
  window.scrollTo(0,y);
 }
 function todayDone(){app.innerHTML='<h1>Your day is designed</h1><p class="sub">This is a mockup, so nothing goes to your profile yet.</p>';}
