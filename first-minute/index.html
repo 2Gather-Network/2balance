@@ -654,7 +654,7 @@ function finalPage(){
  pool=pool.filter(function(v){return v!=="+ Other";});
  DOVERBS.forEach(function(v){if(pool.length<5&&pool.indexOf(v)<0)pool.push(v);});
  pool.push("+ Other");
- var h='<h1 class="q">In the next 5 minutes, what would you like to do that inspires you?</h1><div class="opts pills">'+pool.map(function(v,i){return '<button type="button" class="opt'+(F.final.indexOf(v)>-1?" on":"")+(v==="+ Other"?" other":"")+'" data-i="'+i+'">'+emo(v)+esc(v)+'</button>';}).join("")+'</div>'+(F.final.indexOf("+ Other")>-1?'<div class="own"><input type="text" maxlength="80" id="finoth" value="'+esc(F.finalOther||"")+'" aria-label="Other"></div>':'');
+ var h='<h1 class="q">In the next 5 minutes, what could you do that inspires you?</h1><div class="opts pills">'+pool.map(function(v,i){return '<button type="button" class="opt'+(F.final.indexOf(v)>-1?" on":"")+(v==="+ Other"?" other":"")+'" data-i="'+i+'">'+emo(v)+esc(v)+'</button>';}).join("")+'</div>'+(F.final.indexOf("+ Other")>-1?'<div class="own"><input type="text" maxlength="80" id="finoth" value="'+esc(F.finalOther||"")+'" aria-label="Other"></div>':'');
  app.innerHTML=h+'<div class="row"><button class="btn" type="button" id="next">Continue</button></div>';
  app.querySelectorAll(".opt").forEach(function(b){b.addEventListener("click",function(){var v=pool[+b.getAttribute("data-i")],i=F.final.indexOf(v);if(i>-1)F.final.splice(i,1);else F.final.push(v);save(MINE);finalPage();});});
  var fo=document.getElementById("finoth");if(fo)fo.addEventListener("input",function(){F.finalOther=fo.value.trim();save(MINE);});
@@ -662,10 +662,10 @@ function finalPage(){
 }
 var DOABLE=DOVERBS.concat(["Be in nature","Spend time with an animal","Spend time with something I believe in","Walk","Stretch","Garden","Cycle","Swim","Run","Dance"]);
 function readyPage(){
- var mine=nextPicks(),choices=["Yes, I'm on it","I need more of a nudge","I need to postpone this until later"],pages=[startYes,startNudge,startLater];
- var said=mine.every(function(v){return DOABLE.indexOf(v)>-1;}),w=mine.join(" and ").toLowerCase();
- app.innerHTML='<h1 class="q">'+(!mine.length?"Would you like to start now?":said?"Can you "+esc(w)+" within the next 5 minutes?":"Can you do this within the next 5 minutes?")+'</h1>'+(mine.length&&!said?'<p class="stmt" style="margin-bottom:0">'+esc(mine.join(" and "))+'</p>':'')+'<div class="stack">'+choices.map(function(c,i){return '<button class="btn'+(i?" ghost":"")+'" type="button" data-i="'+i+'">'+esc(c)+'</button>';}).join("")+'</div>';
- app.querySelectorAll(".stack .btn").forEach(function(b){b.addEventListener("click",function(){var i=+b.getAttribute("data-i");MINE.startChoice=choices[i];save(MINE);go(pages[i]);});});
+ var mine=nextPicks(),choices=["Yes, I'm on it!","I need more of a nudge","I need to postpone this until later"],pages=[startYes,startNudge,startLater];
+ var said=mine.every(function(v){return DOABLE.indexOf(v)>-1;}),w=mine.join(" or ").toLowerCase();
+ app.innerHTML='<h1 class="q">'+(!mine.length?"Would you like to start now?":said?"Can you "+esc(w)+" within the next 5 minutes?":"Can you do this within the next 5 minutes?")+'</h1>'+(mine.length&&!said?'<p class="stmt" style="margin-bottom:0">'+esc(mine.join(" and "))+'</p>':'')+'<div class="stack"><button class="btn" type="button" data-i="0">'+esc(choices[0])+'</button></div><div class="invite"><div class="alts">'+[1,2].map(function(i){return '<button class="lnk" type="button" data-i="'+i+'">'+esc(choices[i])+'</button>';}).join("")+'</div></div>';
+ app.querySelectorAll(".stack .btn,.alts .lnk").forEach(function(b){b.addEventListener("click",function(){var i=+b.getAttribute("data-i");MINE.startChoice=choices[i];save(MINE);go(pages[i]);});});
 }
 function nextPicks(){var F=flow("needs");return F.final.filter(function(v){return v!=="+ Other";}).concat(F.finalOther?[F.finalOther]:[]);}
 function finish(){flush();markDone();}
@@ -674,7 +674,7 @@ function moreEnd(){var R=load(),o=[];ROWS.forEach(function(r){if((R.exp||{})[r.k
  var d=document.createElement("div");d.className="invite";d.style.marginTop="26px";d.innerHTML='<h2 class="ih">Would you like to explore more?</h2><div class="opts pills" style="margin-top:12px"><button type="button" class="opt" data-more-go="yes">Yes</button><button type="button" class="opt" data-more-go="no">Not now</button></div>';
  app.appendChild(d);d.querySelectorAll("button[data-more-go]").forEach(function(b){b.addEventListener("click",function(){if(b.getAttribute("data-more-go")==="no"){d.remove();return;}flush();location.href="/ikigai/?step="+o[0];});});}
 function startYes(){finish();app.innerHTML='<div class="cheer" aria-hidden="true">🎉</div><h1 class="q">Yes! Way to go.</h1><p class="stmt">You said yes to yourself. Enjoy your next 5 minutes. Come back any day, one day at a time.</p>';moreEnd();}
-function startLater(){finish();app.innerHTML='<h1 class="q">You\'ve got this.</h1><p class="stmt">You know exactly when you\'ll be able to do this. It will be here when you\'re ready.</p>';moreEnd();}
+function startLater(){finish();app.innerHTML='<h1 class="q">You\'ve got this.</h1><p class="stmt">You know exactly when you\'ll be able to do this. It will be here when you\'re ready.</p><p class="stmt" style="margin-bottom:0">Would you like an email nudge for later?</p><div class="invite"><div class="alts"><button class="lnk" type="button" id="mailnudge">Email me a nudge</button></div></div>';document.getElementById("mailnudge").addEventListener("click",function(){go(remind);});moreEnd();}
 var NUDGES=[["An email reminder","Email"],["An accountability buddy","Buddy"],["A few kind words","Kind words"],["Make it smaller","Smaller"],["+ Other","Other"]];
 function setNudge(w){MINE.startChoice="I need more of a nudge: "+w;save(MINE);}
 function startNudge(){
