@@ -232,7 +232,7 @@ function grpRow(key,q,list,sel,attr){var n=0,hid=[],h="";q.grp.forEach(function(
  if(open)q.grp.forEach(function(g){h+='<p class="glbl">'+esc(g[0])+'</p><div class="opts pills">'+g.idx.map(btn).join("")+'</div>';});
  else h+='<div class="opts pills">'+[0,1,2,3,4,5].map(btn).join("")+'</div>';
  var tail=[];for(var i=open?n:n+1;i<list.length;i++)tail.push(i);
- h+='<div class="opts pills" style="margin-top:12px">'+tail.map(btn).join("")+'<button type="button" class="opt other" '+attr+' data-other="1">+ Other</button><button type="button" class="opt" data-more="'+key+'">'+(open?"Show fewer":"Show more")+'</button></div>';
+ h+='<div class="opts pills" style="margin-top:12px">'+tail.map(btn).join("")+'<button type="button" class="opt other" '+attr+' data-other="1">+ Other</button><button type="button" class="opt other" data-more="'+key+'">'+(open?"Show fewer":"Show more")+'</button></div>';
  return h;}
 function pillRow(list,sel,attr,other){return '<div class="opts pills">'+list.map(function(x,i){return '<button type="button" class="opt'+(sel.indexOf(x)>-1?" on":"")+'" '+attr+' data-i="'+i+'">'+emo2(x)+esc(x)+'</button>';}).join("")+(other?'<button type="button" class="opt other" '+attr+' data-other="1">+ Other</button>':'')+'</div>';}
 
