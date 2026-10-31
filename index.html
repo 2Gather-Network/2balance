@@ -604,9 +604,11 @@ function finalPage(){
  var fo=document.getElementById("finoth");if(fo)fo.addEventListener("input",function(){F.finalOther=fo.value.trim();save(MINE);});
  document.getElementById("next").addEventListener("click",function(){go(readyPage);});
 }
+var DOABLE=DOVERBS.concat(["Be in nature","Spend time with an animal","Spend time with something I believe in","Walk","Stretch","Garden","Cycle","Swim","Run","Dance"]);
 function readyPage(){
  var mine=nextPicks(),choices=["Yes, I'm on it","I need more of a nudge","I need to postpone this until later"],pages=[startYes,startNudge,startLater];
- app.innerHTML='<h1 class="q">Would you like to start now?</h1>'+(mine.length?'<p class="stmt" style="margin-bottom:0">'+esc(mine.join(" and "))+', for the next 5 minutes</p>':'')+'<div class="stack">'+choices.map(function(c,i){return '<button class="btn'+(i?" ghost":"")+'" type="button" data-i="'+i+'">'+esc(c)+'</button>';}).join("")+'</div>';
+ var said=mine.every(function(v){return DOABLE.indexOf(v)>-1;}),w=mine.join(" and ").toLowerCase();
+ app.innerHTML='<h1 class="q">'+(!mine.length?"Would you like to start now?":said?"Can you "+esc(w)+" within the next 5 minutes?":"Can you do this within the next 5 minutes?")+'</h1>'+(mine.length&&!said?'<p class="stmt" style="margin-bottom:0">'+esc(mine.join(" and "))+'</p>':'')+'<div class="stack">'+choices.map(function(c,i){return '<button class="btn'+(i?" ghost":"")+'" type="button" data-i="'+i+'">'+esc(c)+'</button>';}).join("")+'</div>';
  app.querySelectorAll(".stack .btn").forEach(function(b){b.addEventListener("click",function(){var i=+b.getAttribute("data-i");MINE.startChoice=choices[i];save(MINE);go(pages[i]);});});
 }
 function nextPicks(){var F=flow("needs");return F.final.filter(function(v){return v!=="+ Other";}).concat(F.finalOther?[F.finalOther]:[]);}
