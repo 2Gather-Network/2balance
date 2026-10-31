@@ -138,6 +138,7 @@ var FMK={howIEatAndDrink:["body","opts","Nourished"],howIMove:["body","opts","En
 function heldAns(key){var f=MINE.flow||{},out=[];Object.keys(f).forEach(function(j){var F=f[j],o=F.other||{},t=o["n:"+key]||o[key]||"";((F.opts||{})[key]||[]).concat((F.branch||{})[key]||[]).forEach(function(v){v=v==="+ Other"?t:v;if(v&&out.indexOf(v)<0)out.push(v);});});return out.join("|");}
 function subjAll(){var f=MINE.flow||{},out=[];Object.keys(f).forEach(function(j){(f[j].subjects||[]).forEach(function(v){if(out.indexOf(v)<0)out.push(v);});});return out.join("|");}
 function fillThree(d){function list(v){return String(v==null?"":v).split("|").map(function(x){return x.trim();}).filter(Boolean);}
+ ["howIMove","howIRest"].forEach(function(n){var m=FMK[n],G=flow(m[0]),h=list(heldAns(m[2]));list(d[n]).forEach(function(x){if(h.indexOf(x)<0)(G.opts[m[2]]=G.opts[m[2]]||[]).push(x);});});
  function settle(n,sv,now){var h=list(now());sent[n]=h.length===sv.length&&h.every(function(x){return sv.indexOf(x)>-1;})?h.join("|"):sv.join("|");}
  var sm=list(d.methods),F=flow("mind"),hm=list(heldAns("Natural"));sm.forEach(function(x){if(hm.indexOf(x)<0)(F.opts.Natural=F.opts.Natural||[]).push(x);});settle("methods",sm,function(){return heldAns("Natural");});
  var ss=list(d.subjects),hs=list(subjAll());ss.forEach(function(x){if(hs.indexOf(x)<0)(F.subjects=F.subjects||[]).push(x);});settle("subjects",ss,subjAll);
@@ -164,10 +165,12 @@ function vals(){var o={},st="";ROWS.forEach(function(r){var D=dv(r.k),n=MINE.rat
 function markDone(){try{if(!me())return;localStorage.setItem("cw-firstmin",JSON.stringify({who:String(CW.me().id||"").split(".").join("").toLowerCase(),yes:true}));}catch(e){}}
 function note(t){document.getElementById("sv").textContent=t;}
 function wait(on){var e=document.getElementById("cwl");if(on&&!e){e=document.createElement("div");e.id="cwl";e.className="cw-loading";e.textContent="Looking for your earlier answers…";var c=document.querySelector(".card");c.parentNode.insertBefore(e,c);}else if(!on&&e)e.remove();}
-function flush(){clearTimeout(timer);timer=null;var id=me();if(!id||looking)return;var all=vals(),out={},any=false;if(!readOk){delete all.howIMove;delete all.howIRest;delete all.methods;delete all.subjects;delete all.expression;}Object.keys(all).forEach(function(f){if(all[f]!==(sent[f]||"")){out[f]=all[f];any=true;}});if(!any)return;
+var NOT_KEPT="Not saved yet: we could not load your earlier answers, so some of your picks are only on this screen.",DROPPED=["howIMove","howIRest","methods","subjects","expression"],rereads=0,rereadAt=0;
+function holding(all){return !readOk&&DROPPED.some(function(f){return all[f]!=="";});}
+function flush(){clearTimeout(timer);timer=null;var id=me();if(!id||looking)return;var all=vals(),out={},any=false,hd=holding(all);if(hd&&!document.hidden&&rereads<3&&Date.now()-rereadAt>20000){rereads++;rereadAt=Date.now();lookUp();return;}if(!readOk)DROPPED.forEach(function(f){delete all[f];});Object.keys(all).forEach(function(f){if(all[f]!==(sent[f]||"")){out[f]=all[f];any=true;}});if(hd)note(NOT_KEPT);if(!any)return;
  fetch(GS+"?action=saveBalanceAnswers&appearId="+encodeURIComponent(id)+"&answers="+encodeURIComponent(JSON.stringify(out)),{keepalive:true}).then(function(r){return r.json();}).then(function(r){
   if(r&&r.tooLong&&r.tooLong.length){note("Not saved yet: this answer is too long to keep. Please shorten it.");}
-  else if(r&&r.status==="ok"&&!(r.missing&&r.missing.length)){Object.keys(out).forEach(function(f){sent[f]=out[f];});note("");try{localStorage.removeItem(HELD);}catch(e){}}
+  else if(r&&r.status==="ok"&&!(r.missing&&r.missing.length)){Object.keys(out).forEach(function(f){sent[f]=out[f];});note(hd?NOT_KEPT:"");try{localStorage.removeItem(HELD);}catch(e){}}
   else if(r&&r.status==="norow")note("Your answers could not be saved because your profile is not set up yet.");
   else if(r&&r.missing&&r.missing.length)note("Not saved yet: "+r.missing.length+" of these answers have no place on the sheet.");
   else note("Could not save. Try again.");
@@ -187,7 +190,7 @@ function fill(d){var cur0=vals();
 }
 function lookUp(){var id=me();if(!id)return;looking=true;wait(true);
  var ask=function(){return fetch(GS+"?action=getIntake&appearId="+encodeURIComponent(id)).then(function(r){return r.json();}).then(function(d){if(!d||d.status==="error")throw new Error("no");return d;});};
- ask().catch(function(){return new Promise(function(ok){setTimeout(ok,2000);}).then(ask);}).then(function(d){fill((d&&d.data)||{});readOk=!!(d&&d.data);if(ROWS.every(function(r){return MINE.when[r.k];}))markDone();looking=false;wait(false);if(cur){cur(curArg);drawCrumbs();}flush();}).catch(function(){looking=false;wait(false);note("Your earlier answers could not be loaded.");});}
+ ask().catch(function(){return new Promise(function(ok){setTimeout(ok,2000);}).then(ask);}).then(function(d){fill((d&&d.data)||{});readOk=!!(d&&d.data);if(ROWS.every(function(r){return MINE.when[r.k];}))markDone();looking=false;wait(false);if(cur){cur(curArg);drawCrumbs();}flush();}).catch(function(){looking=false;wait(false);note(holding(vals())?NOT_KEPT:"Your earlier answers could not be loaded.");});}
 document.addEventListener("visibilitychange",function(){if(document.hidden)flush();});
 window.addEventListener("pagehide",flush);
 function go(fn,arg){hist.push([cur,curArg]);cur=fn;curArg=arg;render();}
@@ -254,7 +257,7 @@ var HELD="bal-first-minute-held";
 function hold(){try{var c=JSON.parse(JSON.stringify(MINE)),f=c.flow||{};Object.keys(f).forEach(function(j){if(f[j].opts)delete f[j].opts.Natural;if(f[j].branch)delete f[j].branch.expression;if(f[j].other)delete f[j].other.expression;delete f[j].subjects;});c.at=Date.now();localStorage.setItem(HELD,JSON.stringify(c));}catch(e){}}
 function here(){return "/first-minute/";}
 function invite(){
- app.innerHTML='<div class="invite"><h2 class="ih">Sign up to save your answers</h2><p class="il">Your answers so far will be waiting for you, and you can carry on from here. Signing in lets this page remember how you respond.</p><div class="acts"><button class="btn" type="button" id="up">Sign up</button><button class="btn ghost" type="button" id="in">Sign in</button></div><div class="alts"><button class="lnk" type="button" id="no">Not at this time, thank you</button></div></div>';
+ app.innerHTML='<div class="invite"><h2 class="ih">Sign up to save your answers</h2><p class="il">Your answers so far will be waiting for you, and you can carry on from here. Signing in lets this page remember how you respond.</p>'+(heldAns("Natural")||subjAll()||heldAns("expression")?'<p class="il">What comes most naturally to you, your subjects and what expresses you most are not kept until you sign in, so you will choose those again.</p>':'')+'<div class="acts"><button class="btn" type="button" id="up">Sign up</button><button class="btn ghost" type="button" id="in">Sign in</button></div><div class="alts"><button class="lnk" type="button" id="no">Not at this time, thank you</button></div></div>';
  document.getElementById("up").addEventListener("click",function(){hold();location.href="/signup/?next="+encodeURIComponent(here());});
  document.getElementById("in").addEventListener("click",function(){hold();location.href="/signin/?next="+encodeURIComponent(here());});
  document.getElementById("no").addEventListener("click",function(){go(notNow);});
