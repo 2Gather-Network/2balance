@@ -142,7 +142,7 @@ function moreVals(o){Object.keys(FMK).forEach(function(n){o[n]=heldAns(FMK[n][2]
  o.exploreAreas=areaWords(ROWS.map(function(r){return r.k;}).filter(function(k){return (MINE.exp||{})[k]==="Yes";}));
  o.energyUnderwhelmed=dv("energy").a[1].join("|");
  var en=[],f=MINE.flow||{};Object.keys(f).forEach(function(j){var B=f[j].branch||{};Object.keys(B).forEach(function(b){if(b.indexOf("rec:")===0)B[b].forEach(function(v){if(v!=="+ Other"&&en.indexOf(v)<0)en.push(v);});});});o.energizesMeEnjoy=en.join("|");
- var N=flow("needs"),fin=N.final.filter(function(v){return v!=="+ Other";}).concat(N.finalOther?[N.finalOther]:[]);o.next5MinutesPick=fin.join("|");o.next5MinutesStart=MINE.startChoice||"";o.accountabilityBuddyIdeal=MINE.buddyIdeal||"";o.accountabilityBuddyWilling=MINE.buddyWilling||"";return o;}
+ var N=flow("needs"),fin=N.final.filter(function(v){return v!=="+ Other";}).concat(N.finalOther?[N.finalOther]:[]);o.next5MinutesPick=fin.join("|");o.next5MinutesStart=MINE.startChoice||"";if(BUDDY_MATCH){o.accountabilityBuddyIdeal=MINE.buddyIdeal||"";o.accountabilityBuddyWilling=MINE.buddyWilling||"";}return o;}
 function fillMore(take){function list(v){return v.split("|").map(function(x){return x.trim();}).filter(Boolean);}
  Object.keys(FMK).forEach(function(n){var v=take(n);if(!v)return;var m=FMK[n],F=flow(m[0]);F[m[1]]=F[m[1]]||{};F[m[1]][m[2]]=list(v);});
  var v;if((v=take("askedBefore")))MINE.asked=v;if((v=take("lookCloser")))MINE.look=v;
@@ -253,6 +253,7 @@ function invite(){
 }
 function notNow(){try{localStorage.removeItem(HELD);}catch(e){}app.innerHTML='<p class="stmt">If and when you\'re ready to begin, come back to explore how to tend to yourself. Start by exploring what you\'re good at, what lights you up, and where you get your energy.</p><div class="acts"><button class="btn" type="button" id="rem">Send me an email reminder</button></div>';
  document.getElementById("rem").addEventListener("click",function(){go(remind);});}
+var REMIND_SELF=false,BUDDY_MATCH=false;
 function remindMe(id){
  app.innerHTML='<div class="invite"><h2 class="ih" id="rh">Sending your reminder…</h2></div>';
  function say(t){var e=document.getElementById("rh");if(e)e.textContent=t;}
@@ -262,7 +263,7 @@ function remindMe(id){
   else say("We could not send it. Please try again.");
  }).catch(function(){say("We could not send it. Please try again.");});
 }
-function remind(){var id=me();if(id){remindMe(id);return;}
+function remind(){var id=me();if(id&&REMIND_SELF){remindMe(id);return;}
  app.innerHTML='<div class="invite"><h2 class="ih">Where should we send it?</h2><p class="il">We use your email once, to send this one reminder.</p><label class="elbl" for="em">Your email</label><div class="eform"><input id="em" type="email" autocomplete="email" inputmode="email"><button class="btn" type="button" id="sendrem">Send</button></div><p class="emsg" id="emsg" aria-live="polite"></p></div>';
  var em=document.getElementById("em"),msg=document.getElementById("emsg");
  function send(){var v=em.value.trim();if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)){msg.textContent="Please check the email address.";return;}
@@ -618,7 +619,7 @@ var NUDGES=[["An email reminder","Email"],["An accountability buddy","Buddy"],["
 function setNudge(w){MINE.startChoice="I need more of a nudge: "+w;save(MINE);}
 function startNudge(){
  app.innerHTML='<h1 class="q">What kind of nudge would help?</h1><div class="stack">'+NUDGES.map(function(n,i){return '<button class="btn ghost" type="button" data-i="'+i+'">'+esc(n[0])+'</button>';}).join("")+'</div>';
- app.querySelectorAll(".stack .btn").forEach(function(b){b.addEventListener("click",function(){var w=NUDGES[+b.getAttribute("data-i")][1];if(w==="Other"){go(nudgeOther);return;}setNudge(w);if(w==="Email"){finish();go(remind);}else if(w==="Buddy")go(nudgeBuddy);else if(w==="Smaller")go(nudgeSmaller);else go(nudgeKind);});});
+ app.querySelectorAll(".stack .btn").forEach(function(b){b.addEventListener("click",function(){var w=NUDGES[+b.getAttribute("data-i")][1];if(w==="Other"){go(nudgeOther);return;}setNudge(w);if(w==="Email"){finish();go(remind);}else if(w==="Buddy")go(BUDDY_MATCH?nudgeBuddy:buddyScript);else if(w==="Smaller")go(nudgeSmaller);else go(nudgeKind);});});
 }
 function nudgeBuddy(){
  app.innerHTML='<h1 class="q">Do you have someone in mind?</h1><div class="stack"><button class="btn" type="button" id="yes">Yes, I do</button><button class="btn ghost" type="button" id="match">No, I\'d like to be matched with someone</button></div>';
