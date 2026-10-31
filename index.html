@@ -225,7 +225,7 @@ var WELC="bal-welcomed";
 function welcomed(){try{return me()||localStorage.getItem(WELC)==="1";}catch(e){return false;}}
 function welcomePage(){
  var P=["Physical","Energy","Mind","Feelings","Imagination"];
- app.innerHTML='<div class="welc"><h1 class="q">You\'re invited to notice</h1><p class="stmt">how you relate to five parts of your life:</p><div class="wchips">'+P.map(function(p){return '<span>'+p+'</span>';}).join("")+'</div><div class="row"><button class="btn" type="button" id="come"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-5px;margin-right:8px"><path d="M5 10h11v5a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4z"/><path d="M16 11.5h1.5a2 2 0 0 1 0 4H16"/><path d="M8.5 3.5c-.9 1 .9 1.8 0 2.8M12 3.5c-.9 1 .9 1.8 0 2.8"/></svg>Welcome in</button></div></div>';
+ app.innerHTML='<div class="welc"><h1 class="q">You\'re invited to notice how you relate to the five parts of your life:</h1><div class="wchips">'+P.map(function(p){return '<span>'+p+'</span>';}).join("")+'</div><div class="row"><button class="btn" type="button" id="come"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-5px;margin-right:8px"><path d="M5 10h11v5a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4z"/><path d="M16 11.5h1.5a2 2 0 0 1 0 4H16"/><path d="M8.5 3.5c-.9 1 .9 1.8 0 2.8M12 3.5c-.9 1 .9 1.8 0 2.8"/></svg>Welcome in</button></div></div>';
  document.getElementById("come").addEventListener("click",function(){try{localStorage.setItem(WELC,"1");}catch(e){}hist=[];go(whenPage);});
 }
 function whenPage(){
