@@ -318,7 +318,7 @@ function remindMe(id){
  fetch(GS+"?action=sendMyBalanceReminder&appearId="+encodeURIComponent(id)).then(function(r){return r.json();}).then(function(r){
   if(r&&r.status==="ok"&&r.sent&&r.email)say("Your reminder was sent to "+r.email+".");
   else if(r&&r.status==="ok"&&r.email)say("We sent a reminder to "+r.email+" recently, so we did not send another.");
-  else say("We could not send it. Please try again.");
+  else say(({"Sign in again.":"Please sign in again, then ask for the reminder.","No address.":"We do not have an email address for you yet.","Try again later.":"Too many reminders were sent just now. Please try again later."})[r&&r.message]||"We could not send it. Please try again.");
  }).catch(function(){say("We could not send it. Please try again.");});
 }
 function remind(){var id=me();if(id&&REMIND_SELF){remindMe(id);return;}
