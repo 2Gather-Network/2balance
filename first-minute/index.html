@@ -91,8 +91,8 @@ var ROWS=[
  needs:["Connect","Rest","Create"]},
 {k:"energy",f:{when:"lastThoughtAboutEnergy",now:"energyFeelsNow",q:["energyNotServing"],need:"energyNext5Minutes"},n:"🔥 My energy",w:"my energy",v:"feels",
  q:[
-    {t:"Where is your energy going that isn't serving you right now?",cb:1,l:["Lack of direction","Constant overwhelm","Distraction overload","Unclear priorities","Life on autopilot","Waiting for one change to fix everything"]},
-    {t:"Are you feeling underwhelmed in any way? If so, where would you like more energy?",cb:1,l:["Feeling connected","Feeling creative","Feeling nourished","Feeling energized to move","Feeling playful","Feeling rested"],br:{"Feeling connected":"Connected","Feeling creative":"Natural","Feeling nourished":"Nourished","Feeling energized to move":"Energized to move","Feeling playful":"Playful","Feeling rested":"Rested"}}],
+    {t:"Where is your energy going that isn't serving you right now?",cb:1,l:["Lack of direction","Constant overwhelm","Distraction overload","Unclear priorities","Life on autopilot","Waiting for one change to fix a big part of what I'm experiencing"]},
+    {t:"Are you feeling underwhelmed in any way? If so, where would you like more energy?",skip:"Skip if not applicable.",cb:1,l:["Feeling connected","Feeling creative","Feeling nourished","Feeling energized to move","Feeling playful","Feeling rested"],br:{"Feeling connected":"Connected","Feeling creative":"Natural","Feeling nourished":"Nourished","Feeling energized to move":"Energized to move","Feeling playful":"Playful","Feeling rested":"Rested"}}],
  needs:["Move","Play","Create"]},
 {k:"mind",noq:1,f:{when:"lastThoughtAboutMind",now:"mindFeelsNow",q:["mindMoreOf","mindTrueForMe"],need:"mindNext5Minutes"},n:"🍃 My mind",w:"my mind",v:"feels",
  q:[{t:"What would you like to experience more?",l:["Clarity","Focus","Curiosity","Calm thoughts","New ideas","Learning"]},
@@ -204,8 +204,10 @@ function go(fn,arg){if(fwd.length&&same(fwd[0],[fn,arg]))fwd.shift();else fwd=[]
 function back(){var h=hist.pop();if(h){fwd.unshift([cur,curArg]);cur=h[0];curArg=h[1];render();}}
 function forward(j){j=j||0;var n=fwd[j];if(!n)return;hist.push([cur,curArg]);fwd.slice(0,j).forEach(function(x){hist.push(x);});fwd=fwd.slice(j+1);cur=n[0];curArg=n[1];render();}
 function addFwd(){}
-function ready(){return [].slice.call(app.querySelectorAll(".qb")).every(function(q){if(q.querySelector("input[type=checkbox]"))return !!q.querySelector("input:checked");var ons=[].slice.call(q.querySelectorAll(".opt.on"));if(ons.length)return ons.some(function(b){return b.textContent.indexOf("I don't know")<0;});var t=q.querySelector("input[type=text]");if(t)return t.value.trim().length>0;return !q.querySelector(".opt");});}
-function gateNext(){if(cur!==areaQsPage)return;var n=document.getElementById("next");if(n)n.style.display=ready()?"":"none";}
+function qbDone(q){if(q.getAttribute("data-skip"))return true;if(q.querySelector("input[type=checkbox]"))return !!q.querySelector("input:checked");var ons=[].slice.call(q.querySelectorAll(".opt.on"));if(ons.length)return ons.some(function(b){return b.textContent.indexOf("I don't know")<0;});var t=q.querySelector("input[type=text]");if(t)return t.value.trim().length>0;return !q.querySelector(".opt");}
+function ready(){return [].slice.call(app.querySelectorAll(".qb")).every(qbDone);}
+function oneAtATime(){var stop=false;[].slice.call(app.querySelectorAll(".qb")).forEach(function(q){q.style.display=stop?"none":"";if(!stop&&!qbDone(q))stop=true;});}
+function gateNext(){if(cur!==areaQsPage)return;if(curArg==="body")oneAtATime();var n=document.getElementById("next");if(n)n.style.display=ready()?"":"none";}
 function fitIcons(){app.querySelectorAll("svg.ico:not([data-fit])").forEach(function(sv){try{var b=sv.getBBox();if(!b.width)return;var x=Math.max(0,b.x-2),w=Math.min(48-x,b.width+4),h=+sv.getAttribute("height");sv.setAttribute("viewBox",x+" 0 "+w+" 48");sv.setAttribute("width",Math.round(h*w/48*10)/10);sv.setAttribute("data-fit","1");}catch(e){}});}
 new MutationObserver(function(){addBack();addFwd();gateNext();fitIcons();}).observe(app,{childList:true,subtree:true});
 app.addEventListener("input",gateNext);
@@ -365,7 +367,7 @@ function areaQsPage(k){
    if(r.noq)return;
    if(q.after!==undefined&&!D.a[q.after].length)return;
    var list=q.l.concat(D.own[qi]);
-   h+='<div class="qb"><h2>'+esc(q.tf?q.tf(D.a[q.after]):q.t)+'</h2>'+(q.t==="What have you been feeling lately?"?'<p class="sub" style="margin:0 0 6px">Select all that apply.</p>':'');
+   h+='<div class="qb"'+(q.skip?' data-skip="1"':'')+'><h2>'+esc(q.tf?q.tf(D.a[q.after]):q.t)+'</h2>'+(q.skip?'<p class="sub" style="margin:0 0 6px">'+esc(q.skip)+'</p>':'')+(q.t==="What have you been feeling lately?"?'<p class="sub" style="margin:0 0 6px">Select all that apply.</p>':'');
    if(q.cb){list.forEach(function(x,i){h+='<label class="chk"><input type="checkbox" data-q="'+qi+'" data-i="'+i+'"'+(D.a[qi].indexOf(x)>-1?" checked":"")+'><span>'+esc(x)+'</span></label>';});h+='<label class="chk"><input type="checkbox" class="oth" data-q="'+qi+'"><span>+ Other</span></label>';}
    else h+=q.grp?grpRow(k+":"+qi,q,list,D.a[qi],'data-q="'+qi+'"'):pillRow(list,D.a[qi],'data-q="'+qi+'"',true);
    h+=(q.dk&&D.a[qi].indexOf("I don't know")>-1?'<p class="stmt" style="margin:10px 0 0;color:#4B5A6D">'+esc(q.dk)+'</p>':'')+'<div class="ownhost" data-q="'+qi+'"></div></div>';
@@ -649,6 +651,7 @@ function optionsPage(k){
  host.querySelectorAll("input[data-o]").forEach(function(t){t.addEventListener("input",function(){oth[t.getAttribute("data-o")]=t.value.trim();save(MINE);});});
  host.querySelectorAll(".opt:not(.br)").forEach(function(b){b.addEventListener("click",function(){var x=F.explore[+b.getAttribute("data-x")],v=LISTS[x][+b.getAttribute("data-i")],c=F.opts[x],i=c.indexOf(v);if(i>-1)c.splice(i,1);else c.push(v);save(MINE);var yy=window.scrollY;optionsPage(k);window.scrollTo(0,yy);});});
  host.querySelectorAll("input[data-t]").forEach(function(t){t.addEventListener("input",function(){F.opts[F.explore[+t.getAttribute("data-t")]]=[t.value.trim()].filter(Boolean);save(MINE);});});
+ if(k==="body")oneAtATime();
 }
 function finalPage(){
  var F=flow("needs"),pool=[];
