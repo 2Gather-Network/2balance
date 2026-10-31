@@ -254,7 +254,16 @@ function invite(){
 }
 function notNow(){try{localStorage.removeItem(HELD);}catch(e){}app.innerHTML='<p class="stmt">If and when you\'re ready to begin, come back to explore how to tend to yourself. Start by exploring what you\'re good at, what lights you up, and where you get your energy.</p><div class="acts"><button class="btn" type="button" id="rem">Send me an email reminder</button></div>';
  document.getElementById("rem").addEventListener("click",function(){go(remind);});}
-function remind(){
+function remindMe(id){
+ app.innerHTML='<div class="invite"><h2 class="ih" id="rh">Sending your reminder…</h2></div>';
+ function say(t){var e=document.getElementById("rh");if(e)e.textContent=t;}
+ fetch(GS+"?action=sendMyBalanceReminder&appearId="+encodeURIComponent(id)).then(function(r){return r.json();}).then(function(r){
+  if(r&&r.status==="ok"&&r.sent&&r.email)say("Your reminder was sent to "+r.email+".");
+  else if(r&&r.status==="ok"&&r.email)say("We sent a reminder to "+r.email+" recently, so we did not send another.");
+  else say("We could not send it. Please try again.");
+ }).catch(function(){say("We could not send it. Please try again.");});
+}
+function remind(){var id=me();if(id){remindMe(id);return;}
  app.innerHTML='<div class="invite"><h2 class="ih">Where should we send it?</h2><p class="il">We use your email once, to send this one reminder.</p><label class="elbl" for="em">Your email</label><div class="eform"><input id="em" type="email" autocomplete="email" inputmode="email"><button class="btn" type="button" id="sendrem">Send</button></div><p class="emsg" id="emsg" aria-live="polite"></p></div>';
  var em=document.getElementById("em"),msg=document.getElementById("emsg");
  function send(){var v=em.value.trim();if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)){msg.textContent="Please check the email address.";return;}
