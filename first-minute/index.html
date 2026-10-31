@@ -262,12 +262,14 @@ function whenPage(){
  var R=load();
  var h='';
  ROWS.forEach(function(r){var yw=r.w.replace(/^my /,"your "),sel=R.rate[r.k]||0;h+='<div class="wrow"><p class="wlbl">'+ico(r.k,24)+' <span>When did you last think about your <span>'+esc(r.w.replace(/^my /,""))+'</span>?</span> <button type="button" class="ibtn" data-n="'+r.k+'" aria-label="What this means" aria-expanded="false">i</button></p><p class="stmt hnote" id="n-'+r.k+'" style="margin:0 0 10px" hidden>'+RINFO[r.k]+'</p>'+pillRow(WHEN,R.when[r.k]?[R.when[r.k]]:[],'data-r="'+r.k+'"',false)+(R.when[r.k]?'<p class="sub" style="margin:14px 0 8px;font-size:14px;line-height:1.45">Right now, I rate '+esc(r.w)+' as:</p><div class="rchk">'+LV.map(function(lb,i){return '<label class="chk"><input type="checkbox" data-rr="'+r.k+'" data-rv="'+(i+1)+'"'+(sel===i+1?" checked":"")+'><span>'+(i+1)+' '+esc(lb)+'</span></label>';}).join("")+'</div>':'')+'</div>';});
- if(ROWS.every(function(r){return R.when[r.k]&&R.rate[r.k];}))h+='<div class="row"><button class="btn" type="button" id="done">Continue</button></div>';
+ h+='<div class="row"><button class="btn" type="button" id="done">Continue</button></div><p class="emsg" id="miss" role="alert" style="margin:12px 0 0;font-size:15px;line-height:1.5;color:#1A2E42"></p>';
  app.innerHTML=h;
  app.querySelectorAll(".ibtn[data-n]").forEach(function(b){b.addEventListener("click",function(){var n=document.getElementById("n-"+b.getAttribute("data-n"));n.hidden=!n.hidden;b.setAttribute("aria-expanded",n.hidden?"false":"true");});});
  app.querySelectorAll(".opt[data-r]").forEach(function(b){b.addEventListener("click",function(){var k=b.getAttribute("data-r"),v=WHEN[+b.getAttribute("data-i")];var at=window.scrollY,picked=R.when[k]!==v;R.when[k]=picked?v:"";if(!picked)R.rate[k]=0;save(R);showHelp=false;whenPage();window.scrollTo(0,at);});});
  app.querySelectorAll("input[data-rr]").forEach(function(b){b.addEventListener("change",function(){var k=b.getAttribute("data-rr"),n=+b.getAttribute("data-rv");var at=window.scrollY;R.rate[k]=(R.rate[k]===n?0:n);save(R);whenPage();window.scrollTo(0,at);if(R.rate[k])downToNext(k,at);});});
- var d=document.getElementById("done");if(d)d.addEventListener("click",function(){go(askedPage);});
+ var d=document.getElementById("done");if(d)d.addEventListener("click",function(){var gaps=[],first=null;ROWS.forEach(function(r){var p=[];if(!R.when[r.k])p.push("when you last thought about it");if(!R.rate[r.k])p.push("your rating");if(p.length){gaps.push(r.w.replace(/^my /,"your ")+" ("+p.join(" and ")+")");if(!first)first=r.k;}});
+  if(gaps.length){var m=document.getElementById("miss");m.textContent="Still to answer: "+gaps.join("; ")+".";var rw=[].slice.call(app.querySelectorAll(".wrow"))[ROWS.map(function(r){return r.k;}).indexOf(first)];if(rw)rw.scrollIntoView({block:"start"});return;}
+  go(askedPage);});
 }
 function oldAreas(){var R=load();return ROWS.filter(function(r){return ["Last month","Last year","In my life"].indexOf(R.when[r.k])>-1;});}
 var ASKED=["Not before","Yes"];
