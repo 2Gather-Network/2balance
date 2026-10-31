@@ -81,10 +81,14 @@ var MINE={when:{},rate:{},dive:{}};
 var WHEN=["Today","Last week","Last month","Last year","In my life"];
 var LV=["Not where I want it","Getting there","Good","Great"];
 var ROWS=[
-{k:"body",noq:1,f:{when:"lastThoughtAboutBody",now:"bodyFeelsNow",q:["bodyMoreOf","bodyWhere"],need:"bodyNext5Minutes"},n:"🌍 My body and physical surroundings",w:"my body and physical surroundings",v:"feel",
- q:[{t:"What would you like to feel more of as a result of your surroundings?",l:["Safety","Grounding","Structure","Strength","Health","Comfort","Nurturing","Order","Attractiveness"]},
-    {t:"Where would you like to experience what you selected above?",after:0,l:["My body","My home","My workspace","My neighborhood","Nature near me","My things","My relationships","My wardrobe"]}],
- needs:["Move","Rest","Eat and drink"]},
+{k:"mind",noq:1,f:{when:"lastThoughtAboutMind",now:"mindFeelsNow",q:["mindMoreOf","mindTrueForMe"],need:"mindNext5Minutes"},n:"🍃 My mind",w:"my mind",v:"feels",
+ q:[{t:"What would you like more of?",l:["Clarity","Focus","Curiosity","Calm thoughts","New ideas","Learning"]},
+    {t:"Which of these are true for you?",cb:1,l:["I see the world clearly","I respond more than I react","I ask questions when I'm curious","I can weigh my options","I say what I mean"]}],
+ needs:["Rest","Create","Connect"]},
+{k:"imag",f:{when:"lastThoughtAboutImagination",now:"imaginationFeelsNow",q:["imaginationMoreOf","imaginationWhen"],need:"imaginationNext5Minutes"},n:"✨ My imagination",w:"my imagination",v:"feels",
+ q:[{t:"What would you like more of?",l:["Inspiration","Ahas","Possibility","Creativity","Wonder","Abundance"]},
+    {t:"Where are you, what are you doing, and/or when does it come to you?",after:0,tf:function(a){var n=a.map(function(x){return x.charAt(0).toLowerCase()+x.slice(1);}),j=n.length>1?n.slice(0,-1).join(", ")+" and "+n[n.length-1]:n[0];return "Where are you, what are you doing, and/or when "+(n.length>1?"do ":"does ")+j+" come to you?";},l:["Outdoors","In stillness","With others","Making things","During rest"]}],
+ needs:["Create","Play","Rest"]},
 {k:"feel",f:{when:"lastThoughtAboutFeelings",now:"feelingsFeelNow",q:["feelingsLately","feelingsMoreOf"],need:"feelingsNext5Minutes"},n:"🌊 My feelings",w:"my feelings",v:"feel",
  q:[{t:"What have you been feeling lately?",l:["Happy","Sad","Angry","Afraid","Calm","Tender","Numb","Grateful"]},
     {t:"Are there any feelings you would like to have more of?",l:["Empathy","Ease","Being heard","Caring","Tenderness","Well-being"]}],
@@ -94,14 +98,10 @@ var ROWS=[
     {t:"Where is your energy going that isn't serving you right now?",cb:1,l:["Lack of direction","Constant overwhelm","Distraction overload","Unclear priorities","Life on autopilot","Waiting for one change to fix everything"]},
     {t:"Are you feeling underwhelmed in any way? If so, where would you like more energy?",cb:1,l:["Feeling connected","Feeling creative","Feeling nourished","Feeling energized to move","Feeling playful","Feeling rested"],br:{"Feeling connected":"Connected","Feeling creative":"Natural","Feeling nourished":"Nourished","Feeling energized to move":"Energized to move","Feeling playful":"Playful","Feeling rested":"Rested"}}],
  needs:["Move","Play","Create"]},
-{k:"mind",noq:1,f:{when:"lastThoughtAboutMind",now:"mindFeelsNow",q:["mindMoreOf","mindTrueForMe"],need:"mindNext5Minutes"},n:"🍃 My mind",w:"my mind",v:"feels",
- q:[{t:"What would you like more of?",l:["Clarity","Focus","Curiosity","Calm thoughts","New ideas","Learning"]},
-    {t:"Which of these are true for you?",cb:1,l:["I see the world clearly","I respond more than I react","I ask questions when I'm curious","I can weigh my options","I say what I mean"]}],
- needs:["Rest","Create","Connect"]},
-{k:"imag",f:{when:"lastThoughtAboutImagination",now:"imaginationFeelsNow",q:["imaginationMoreOf","imaginationWhen"],need:"imaginationNext5Minutes"},n:"✨ My imagination",w:"my imagination",v:"feels",
- q:[{t:"What would you like more of?",l:["Inspiration","Ahas","Possibility","Creativity","Wonder","Abundance"]},
-    {t:"Where are you, what are you doing, and/or when does it come to you?",after:0,tf:function(a){var n=a.map(function(x){return x.charAt(0).toLowerCase()+x.slice(1);}),j=n.length>1?n.slice(0,-1).join(", ")+" and "+n[n.length-1]:n[0];return "Where are you, what are you doing, and/or when "+(n.length>1?"do ":"does ")+j+" come to you?";},l:["Outdoors","In stillness","With others","Making things","During rest"]}],
- needs:["Create","Play","Rest"]}];
+{k:"body",noq:1,f:{when:"lastThoughtAboutBody",now:"bodyFeelsNow",q:["bodyMoreOf","bodyWhere"],need:"bodyNext5Minutes"},n:"🌍 My body and physical surroundings",w:"my body and physical surroundings",v:"feel",
+ q:[{t:"What would you like to feel more of as a result of your surroundings?",l:["Safety","Grounding","Structure","Strength","Health","Comfort","Nurturing","Order","Attractiveness"]},
+    {t:"Where would you like to experience what you selected above?",after:0,l:["My body","My home","My workspace","My neighborhood","Nature near me","My things","My relationships","My wardrobe"]}],
+ needs:["Move","Rest","Eat and drink"]}];
 var FE={"Connect":"Connected","Create":"Expressed","Eat and drink":"Nourished","Move":"Energized to move","Play":"Playful","Rest":"Rested"};
 var LAB={mind:{"Connected":"How to connect through my mind","Expressed":"How to express my mind","Nourished":"How to nourish my mind","Energized to move":"How to energize my mind","Playful":"How to have fun with my mind","Rested":"How to rest my mind"}};
 function youize(t){return t.replace(/^How to /,"how to ").replace(/^How I /,"how you ").replace(/ my /g," your ");}
