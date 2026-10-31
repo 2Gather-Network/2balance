@@ -144,7 +144,7 @@ function moreVals(o){Object.keys(FMK).forEach(function(n){o[n]=heldAns(FMK[n][2]
  o.exploreAreas=areaWords(ROWS.map(function(r){return r.k;}).filter(function(k){return (MINE.exp||{})[k]==="Yes";}));
  o.energyUnderwhelmed=dv("energy").a[1].join("|");
  var en=[],f=MINE.flow||{};Object.keys(f).forEach(function(j){var B=f[j].branch||{};Object.keys(B).forEach(function(b){if(b.indexOf("rec:")===0)B[b].forEach(function(v){if(v!=="+ Other"&&en.indexOf(v)<0)en.push(v);});});});o.energizesMeEnjoy=en.join("|");
- var N=flow("needs"),fin=N.final.filter(function(v){return v!=="+ Other";}).concat(N.finalOther?[N.finalOther]:[]);o.next5MinutesPick=fin.join("|");o.next5MinutesStart=MINE.startChoice||"";return o;}
+ var N=flow("needs"),fin=N.final.filter(function(v){return v!=="+ Other";}).concat(N.finalOther?[N.finalOther]:[]);o.next5MinutesPick=fin.join("|");o.next5MinutesStart=MINE.startChoice||"";o.accountabilityBuddyIdeal=MINE.buddyIdeal||"";o.accountabilityBuddyWilling=MINE.buddyWilling||"";return o;}
 function fillMore(take){function list(v){return v.split("|").map(function(x){return x.trim();}).filter(Boolean);}
  Object.keys(FMK).forEach(function(n){var v=take(n);if(!v)return;var m=FMK[n],F=flow(m[0]);F[m[1]]=F[m[1]]||{};F[m[1]][m[2]]=list(v);});
  var v;if((v=take("askedBefore")))MINE.asked=v;if((v=take("lookCloser")))MINE.look=v;
@@ -154,7 +154,7 @@ function fillMore(take){function list(v){return v.split("|").map(function(x){ret
  if((v=take("energyUnderwhelmed"))){var D=dv("energy"),q=row("energy").q[1];D.a[1]=list(v);D.a[1].forEach(function(x){if(q.l.indexOf(x)<0&&D.own[1].indexOf(x)<0)D.own[1].push(x);});}
  if((v=take("energizesMeEnjoy"))){var E=flow("energy");E.branch=E.branch||{};list(v).forEach(function(x){var c=Object.keys(RECS).filter(function(k){return RECS[k].indexOf(x)>-1;})[0]||"Other",b="rec:"+c;E.branch[b]=E.branch[b]||[];E.branch[b].push(x);});}
  if((v=take("next5MinutesPick")))flow("needs").final=list(v);
- if((v=take("next5MinutesStart")))MINE.startChoice=v;}
+ if((v=take("next5MinutesStart")))MINE.startChoice=v;if((v=take("accountabilityBuddyIdeal")))MINE.buddyIdeal=v;if((v=take("accountabilityBuddyWilling")))MINE.buddyWilling=v;}
 function vals(){var o={},st="";ROWS.forEach(function(r){var D=dv(r.k),n=MINE.rate[r.k]||0;o[r.f.when]=MINE.when[r.k]||"";o[r.f.now]=n?LV[n-1]:"";r.f.q.forEach(function(fq,qi){o[fq]=D.a[qi].join("|");});if(r.f.vis)o[r.f.vis]=D.vis;o[r.f.need]=D.need;if(MINE.start===r.k)st=words(r);});o.startWithFirst=st;return SAVE_NEW?moreVals(o):o;}
 function markDone(){try{if(!me())return;localStorage.setItem("cw-firstmin",JSON.stringify({who:String(CW.me().id||"").split(".").join("").toLowerCase(),yes:true}));}catch(e){}}
 function note(t){document.getElementById("sv").textContent=t;}
@@ -189,7 +189,7 @@ function back(){var h=hist.pop();if(h){cur=h[0];curArg=h[1];render();}}
 new MutationObserver(addBack).observe(app,{childList:true});
 function render(){cur(curArg);addBack();drawCrumbs();drawRail();window.scrollTo(0,0);}
 function addBack(){if(!hist.length||document.getElementById("back"))return;var r=app.querySelector(".row");if(!r){r=document.createElement("div");r.className="row";app.appendChild(r);}var b=document.createElement("button");b.type="button";b.id="back";b.className="btn ghost";b.textContent="Back";b.addEventListener("click",back);r.insertBefore(b,r.firstChild);}
-function crumbName(fn,arg){if(fn===whenPage)return "Home";if(fn===startWith)return "Begin";if(fn===dive)return "Right now";if(fn===explorePickPage)return "Explore";if(fn===areaQsPage)return words(row(arg));if(fn===feelPage)return "How do you feel about…";if(fn===explorePage)return "Explore";if(fn===askedPage)return "A question";if(fn===feelWhatPage)return "What I would like to feel";if(fn===optionsPage)return words(row(arg));if(fn===finalPage)return "Next 5 minutes";if(fn===readyPage)return "Start now";if(fn===startYes)return "On it";if(fn===startLater)return "Later";if(fn===startNudge)return "A nudge";if(fn===nudgeBuddy)return "A buddy";if(fn===nudgeKind)return "Kind words";if(fn===nudgeSmaller)return "One minute";if(fn===nudgeOther)return "Other";if(fn===invite)return "Save my answers";if(fn===notNow)return "Not at this time";if(fn===remind)return "Email reminder";return "Thank you";}
+function crumbName(fn,arg){if(fn===whenPage)return "Home";if(fn===startWith)return "Begin";if(fn===dive)return "Right now";if(fn===explorePickPage)return "Explore";if(fn===areaQsPage)return words(row(arg));if(fn===feelPage)return "How do you feel about…";if(fn===explorePage)return "Explore";if(fn===askedPage)return "A question";if(fn===feelWhatPage)return "What I would like to feel";if(fn===optionsPage)return words(row(arg));if(fn===finalPage)return "Next 5 minutes";if(fn===readyPage)return "Start now";if(fn===startYes)return "On it";if(fn===startLater)return "Later";if(fn===startNudge)return "A nudge";if(fn===nudgeBuddy)return "A buddy";if(fn===buddyScript)return "Your message";if(fn===buddyIdeal)return "Ideal buddy";if(fn===buddyWilling)return "Being a buddy";if(fn===nudgeKind)return "Kind words";if(fn===nudgeSmaller)return "One minute";if(fn===nudgeOther)return "Other";if(fn===invite)return "Save my answers";if(fn===notNow)return "Not at this time";if(fn===remind)return "Email reminder";return "Thank you";}
 function drawRail(){var e=document.getElementById("rail"),R=load(),p=areasList().filter(function(a){return (R.exp||{})[a]==="Yes";}),k=cur===areaQsPage?curArg:"",i=p.indexOf(k);if(p.length<2||i<0){e.innerHTML="";return;}var did=R.areasDone||[];
  e.innerHTML='<div class="rdots">'+p.map(function(a,j){var d=did.indexOf(a)>-1,n=words(row(a));return '<button type="button" class="rdot'+(j===i?" now":"")+(d?" did":"")+'" data-a="'+a+'" aria-label="'+esc(n)+(d?", finished":"")+'"'+(j===i?' aria-current="step"':'')+'>'+ico(a,28)+(d?'<span class="rchk" aria-hidden="true">✓</span>':'')+'</button>';}).join("")+'</div><p class="rname">'+(i+1)+' of '+p.length+'</p>';
  e.querySelectorAll(".rdot").forEach(function(b){b.addEventListener("click",function(){var a=b.getAttribute("data-a");if(a===k)return;R.exp=R.exp||{};R.exp[a]="Yes";save(R);go(areaQsPage,a);});});}
@@ -247,10 +247,9 @@ var HELD="bal-first-minute-held";
 function hold(){try{var c=JSON.parse(JSON.stringify(MINE)),f=c.flow||{};Object.keys(f).forEach(function(j){if(f[j].opts)delete f[j].opts.Natural;if(f[j].branch)delete f[j].branch.expression;if(f[j].other)delete f[j].other.expression;delete f[j].subjects;});c.at=Date.now();localStorage.setItem(HELD,JSON.stringify(c));}catch(e){}}
 function here(){return "/";}
 function invite(){
- app.innerHTML='<div class="invite"><h2 class="ih">Sign up to save your answers</h2><p class="il">Your answers so far will be waiting for you, and you can carry on from here. Signing in lets this page remember how you respond. You can also keep exploring without an account.</p><div class="acts"><button class="btn" type="button" id="up">Sign up</button><button class="btn ghost" type="button" id="in">Sign in</button><button class="btn ghost" type="button" id="keep">Keep exploring</button></div><div class="alts"><button class="lnk" type="button" id="no">Not at this time, thank you</button></div></div>';
+ app.innerHTML='<div class="invite"><h2 class="ih">Sign up to save your answers</h2><p class="il">Your answers so far will be waiting for you, and you can carry on from here. Signing in lets this page remember how you respond.</p><div class="acts"><button class="btn" type="button" id="up">Sign up</button><button class="btn ghost" type="button" id="in">Sign in</button></div><div class="alts"><button class="lnk" type="button" id="no">Not at this time, thank you</button></div></div>';
  document.getElementById("up").addEventListener("click",function(){hold();location.href="/signup/?next="+encodeURIComponent(here());});
  document.getElementById("in").addEventListener("click",function(){hold();location.href="/signin/?next="+encodeURIComponent(here());});
- document.getElementById("keep").addEventListener("click",function(){var R=load();R.invited=true;if(oldAreas().length>1)go(startWith);else go(dive,R.start);});
  document.getElementById("no").addEventListener("click",function(){go(notNow);});
 }
 function notNow(){try{localStorage.removeItem(HELD);}catch(e){}app.innerHTML='<p class="stmt">If and when you\'re ready to begin, come back to explore how to tend to yourself. Start by exploring what you\'re good at, what lights you up, and where you get your energy.</p><div class="acts"><button class="btn" type="button" id="rem">Send me an email reminder</button></div>';
@@ -611,9 +610,24 @@ function startNudge(){
  app.innerHTML='<h1 class="q">What kind of nudge would help?</h1><div class="stack">'+NUDGES.map(function(n,i){return '<button class="btn ghost" type="button" data-i="'+i+'">'+esc(n[0])+'</button>';}).join("")+'</div>';
  app.querySelectorAll(".stack .btn").forEach(function(b){b.addEventListener("click",function(){var w=NUDGES[+b.getAttribute("data-i")][1];if(w==="Other"){go(nudgeOther);return;}setNudge(w);if(w==="Email"){finish();go(remind);}else if(w==="Buddy")go(nudgeBuddy);else if(w==="Smaller")go(nudgeSmaller);else go(nudgeKind);});});
 }
-function nudgeBuddy(){finish();var mine=nextPicks(),t="My next 5 minutes: "+(mine.join(" and ")||"something for me")+". Will you ask me if I did it?";
- app.innerHTML='<h1 class="q">Ask one person to check on you</h1><p class="stmt">Send this to someone you trust:</p><p class="stmt" id="bt"><strong>'+esc(t)+'</strong></p><div class="stack"><button class="btn" type="button" id="cp">Copy this</button></div>';
+function nudgeBuddy(){
+ app.innerHTML='<h1 class="q">Do you have someone in mind?</h1><div class="stack"><button class="btn" type="button" id="yes">Yes, I do</button><button class="btn ghost" type="button" id="match">No, I\'d like to be matched with someone</button></div>';
+ document.getElementById("yes").addEventListener("click",function(){go(buddyScript);});
+ document.getElementById("match").addEventListener("click",function(){go(buddyIdeal);});
+}
+function buddyScript(){finish();var mine=nextPicks(),t="My next 5 minutes: "+(mine.join(" and ")||"something for me")+". Will you ask me if I did it?";
+ app.innerHTML='<h1 class="q">Here is something you can send them</h1><p class="stmt">Copy this into a text to your friend or family member:</p><p class="stmt"><strong>'+esc(t)+'</strong></p><div class="stack"><button class="btn" type="button" id="cp">Copy this</button></div>';
  var c=document.getElementById("cp");c.addEventListener("click",function(){try{navigator.clipboard.writeText(t).then(function(){c.textContent="Copied";}).catch(function(){c.textContent="Please select the words above";});}catch(e){c.textContent="Please select the words above";}});
+}
+function buddyIdeal(){
+ app.innerHTML='<h1 class="q">Who would be your ideal buddy?</h1><p class="stmt" style="margin-bottom:12px">Ideas: where they are or virtual, someone you know within 2 degrees, open to anyone, gender.</p><textarea id="ideal" maxlength="500" rows="4" aria-label="Who would be your ideal buddy?" style="width:100%;box-sizing:border-box;font:inherit;padding:11px 14px;border:1.5px solid var(--brand);border-radius:12px">'+esc(MINE.buddyIdeal||"")+'</textarea><div class="stack"><button class="btn" type="button" id="ok">Continue</button></div>';
+ document.getElementById("ok").addEventListener("click",function(){var v=document.getElementById("ideal").value.trim();if(!v)return;MINE.buddyIdeal=v;save(MINE);go(buddyWilling);});
+}
+function buddyWilling(){
+ app.innerHTML='<h1 class="q">Would you be willing to be an accountability buddy for someone whose ideal person is you?</h1><div class="stack"><button class="btn" type="button" id="yes">Yes</button><button class="btn ghost" type="button" id="no">Not right now</button></div>';
+ function end(w){MINE.buddyWilling=w;save(MINE);finish();app.innerHTML='<h1 class="q">Thank you for telling us.</h1><p class="stmt">You asked for support, and that counts. Come back any day, one day at a time.</p>';}
+ document.getElementById("yes").addEventListener("click",function(){end("Yes");});
+ document.getElementById("no").addEventListener("click",function(){end("Not right now");});
 }
 function nudgeKind(){finish();app.innerHTML='<h1 class="q">You already took the first step.</h1><p class="stmt">You stopped to ask what you need. That counts. Five minutes is small enough to begin, and it is yours.</p>';}
 function nudgeSmaller(){finish();app.innerHTML='<h1 class="q">Try just one minute.</h1><p class="stmt">Set a timer and begin. One minute counts, and you can stop when it ends.</p>';}
