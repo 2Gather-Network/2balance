@@ -27,9 +27,11 @@
   .card{background:#fff;border-radius:16px;padding:30px;}
   h1{font-size:26px;font-weight:800;line-height:1.25;margin:0 0 22px;text-wrap:balance;}
   .when{font-size:14px;font-weight:800;color:var(--soft);margin:22px 0 8px;}
-  .pick{display:block;background:var(--panel);border:1.5px solid var(--panel-line);border-radius:12px;padding:14px 16px;margin-top:10px;color:inherit;text-decoration:none;}
-  .pick:hover{border-color:var(--brand);}
-  .pick:focus-visible{outline:3px solid var(--brand);outline-offset:2px;}
+  .pick{display:flex;gap:14px;align-items:center;justify-content:space-between;background:var(--panel);border:1.5px solid var(--panel-line);border-radius:12px;padding:14px 16px;margin-top:10px;color:inherit;text-decoration:none;}
+  .go{font:inherit;font-size:15px;font-weight:700;color:#fff;background:var(--brand);border:1.5px solid var(--brand);border-radius:20px;padding:9px 22px;min-height:44px;text-decoration:none;flex:none;}
+  .go:focus-visible{outline:3px solid var(--brand);outline-offset:2px;}
+  .soon{font-size:14px;font-weight:800;color:var(--soft);flex:none;}
+  .pick div{min-width:0;}
   .pick b{display:block;font-size:17px;font-weight:800;margin:0 0 2px;}
   .pick span{display:block;font-size:15px;line-height:1.45;color:var(--soft);}
   @media(max-width:700px){.card{padding:22px 18px;}h1{font-size:23px;}}
@@ -42,14 +44,14 @@
 <div class="wrap"><main class="card">
 <h1>How would you like to tend to yourself?</h1>
 <p class="when">Right now</p>
-<a class="pick" href="/check-in/?mockup=1"><b>Check-in</b><span>Name what you're feeling and pick one small thing to do in the next 5 minutes.</span></a>
+<div class="pick"><div><b>Check-in</b><span>Name what you're feeling and pick one small thing to do in the next 5 minutes.</span></div><span class="soon">Coming soon</span></div>
 <p class="when">Today</p>
-<a class="pick" href="/today/?mockup=1"><b>Design my day</b><span>Choose the one thing that matters most, how you'll move and rest, and who you'll connect with.</span></a>
+<div class="pick"><div><b>Design my day</b><span>Choose the one thing that matters most, how you'll move and rest, and who you'll connect with.</span></div><span class="soon">Coming soon</span></div>
 <p class="when">This season</p>
-<a class="pick" href="/check-up/?mockup=1"><b>Check-up</b><span>Take stock of your stress, sleep, energy, strength and purpose.</span></a>
+<div class="pick"><div><b>Check-up</b><span>Take stock of your stress, sleep, energy, strength and purpose.</span></div><span class="soon">Coming soon</span></div>
 <p class="when">Anytime</p>
-<a class="pick" href="/first-minute/"><b>A closer look</b><span>Return to the five parts of your life.</span></a>
-<a class="pick" href="https://2balance.network/ikigai/?balance=1"><b>My ikigai</b><span>Add to what gives you joy, what you're good at and what you care about.</span></a>
+<div class="pick"><div><b>A closer look</b><span>Return to the five parts of your life.</span></div><a class="go" href="/first-minute/">Go</a></div>
+<div class="pick"><div><b>My ikigai</b><span>Add to what gives you joy, what you're good at and what you care about.</span></div><a class="go" href="https://2balance.network/ikigai/?balance=1">Go</a></div>
 </main></div>
 </body>
 </html>
