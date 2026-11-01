@@ -280,7 +280,7 @@ function whenPage(){
  app.querySelectorAll("input[data-rr]").forEach(function(b){b.addEventListener("change",function(){var k=b.getAttribute("data-rr"),n=+b.getAttribute("data-rv");var at=window.scrollY;R.rate[k]=(R.rate[k]===n?0:n);save(R);whenPage();window.scrollTo(0,at);if(R.rate[k])downToNext(k,at);});});
  var d=document.getElementById("done");if(d)d.addEventListener("click",function(){var gaps=[],first=null;ROWS.forEach(function(r){if(!R.when[r.k]||!R.rate[r.k]){var nm_=esc(r.w.replace(/^my /,"").replace(/^./,function(c){return c.toUpperCase();}));gaps.push(R.when[r.k]?nm_+" / rating":nm_);if(!first)first=r.k;}});
   if(gaps.length){var m=document.getElementById("miss");m.innerHTML="<b>Still to answer</b>"+gaps.join("<br>");m.hidden=false;var rw=[].slice.call(app.querySelectorAll(".wrow"))[ROWS.map(function(r){return r.k;}).indexOf(first)];if(rw)rw.scrollIntoView({block:"start"});return;}
-  go(askedPage);});
+  if(me()){R.picks=null;save(R);go(explorePickPage);}else go(askedPage);});
 }
 function oldAreas(){var R=load();return ROWS.filter(function(r){return ["Last month","Last year","In my life"].indexOf(R.when[r.k])>-1;});}
 var ASKED=["Not before","Yes"];
