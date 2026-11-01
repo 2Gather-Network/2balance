@@ -81,7 +81,7 @@ var MINE={when:{},rate:{},dive:{}};
 var WHEN=["Today","Last week","Last month","Last year","In my life"];
 var LV=["Not where I want it","Getting there","Good","Great"];
 var ROWS=[
-{k:"body",noq:1,f:{when:"lastThoughtAboutBody",now:"bodyFeelsNow",q:["bodyMoreOf","bodyWhere"],need:"bodyNext5Minutes"},n:"🌍 My body and physical surroundings",w:"my body and physical surroundings",v:"feel",
+{k:"body",f:{when:"lastThoughtAboutBody",now:"bodyFeelsNow",q:["bodyMoreOf","bodyWhere"],need:"bodyNext5Minutes"},n:"🌍 My body and physical surroundings",w:"my body and physical surroundings",v:"feel",
  q:[{t:"How would you like to feel as a result of your surroundings?",l:["Safety","Grounding","Structure","Strength","Health","Comfort","Nurturing","Order","Attractiveness"]},
     {t:"Where would you like to experience what you selected above?",after:0,l:["My body","My home","My workspace","My neighborhood","Nature near me","My things","My relationships","My wardrobe"]}],
  needs:["Move","Rest","Eat and drink"]},
@@ -93,7 +93,7 @@ var ROWS=[
  q:[
     {t:"Where is your energy going that isn't serving you right now?",cb:1,l:["Lack of direction","Constant overwhelm","Distraction overload","Unclear priorities","Life on autopilot","Waiting for one change to fix a big part of what I'm experiencing"]}],
  needs:["Move","Play","Create"]},
-{k:"mind",noq:1,f:{when:"lastThoughtAboutMind",now:"mindFeelsNow",q:["mindMoreOf","mindTrueForMe"],need:"mindNext5Minutes"},n:"🍃 My mind",w:"my mind",v:"feels",
+{k:"mind",f:{when:"lastThoughtAboutMind",now:"mindFeelsNow",q:["mindMoreOf","mindTrueForMe"],need:"mindNext5Minutes"},n:"🍃 My mind",w:"my mind",v:"feels",
  q:[{t:"What would you like to experience more?",l:["Clarity","Focus","Curiosity","Calm thoughts","New ideas","Learning"]},
     {t:"Which of these are true for you?",cb:1,l:["I see the world clearly","I respond more than I react","I ask questions when I'm curious","I can weigh my options","I say what I mean"]}],
  needs:["Rest","Create","Connect"]},
@@ -151,7 +151,7 @@ function fillThree(d){function list(v){return String(v==null?"":v).split("|").ma
 function areaWords(L){return L.map(function(k){return words(row(k));}).join("|");}
 function moreVals(o){Object.keys(FMK).forEach(function(n){o[n]=heldAns(FMK[n][2]);});
  o.askedBefore=MINE.asked||"";o.lookCloser=MINE.look||"";if(MINE.picks)o.startWithAreas=areaWords(MINE.picks);
- o.exploreAreas=needsPicked().map(function(N){return N.n;}).join("|")||MINE.expOld||"";
+ o.exploreAreas=needsPicked().map(function(N){return N.n;}).concat(areasPicked().map(words)).join("|")||MINE.expOld||"";
  o.energyUnderwhelmed=dv("energy").a[1].join("|");
  var en=[],f=MINE.flow||{};Object.keys(f).forEach(function(j){var B=f[j].branch||{};Object.keys(B).forEach(function(b){if(b.indexOf("rec:")===0)B[b].forEach(function(v){if(v!=="+ Other"&&en.indexOf(v)<0)en.push(v);});});});o.energizesMeEnjoy=en.join("|");
  var N=flow("needs"),fin=N.final.filter(function(v){return v!=="+ Other";}).concat(N.finalOther?[N.finalOther]:[]);o.next5MinutesPick=fin.join("|");o.next5MinutesStart=MINE.startChoice||"";o.methods=heldAns("Natural");o.subjects=subjAll();o.expression=heldAns("expression");if(BUDDY_MATCH){o.accountabilityBuddyIdeal=MINE.buddyIdeal||"";o.accountabilityBuddyWilling=MINE.buddyWilling||"";}return o;}
@@ -160,7 +160,7 @@ function fillMore(take){function list(v){return v.split("|").map(function(x){ret
  var v;if((v=take("askedBefore")))MINE.asked=v;if((v=take("lookCloser")))MINE.look=v;
  function keys(s){var w=list(s);return ROWS.filter(function(r){return w.indexOf(words(r))>-1;}).map(function(r){return r.k;});}
  if((v=take("startWithAreas")))MINE.picks=keys(v);
- if((v=take("exploreAreas"))){MINE.exp=MINE.exp||{};var ew=list(v),em=NEEDS.filter(function(N){return ew.indexOf(N.n)>-1;});em.forEach(function(N){MINE.exp[N.k]="Yes";});if(!em.length)MINE.expOld=v;}
+ if((v=take("exploreAreas"))){MINE.exp=MINE.exp||{};var ew=list(v),em=NEEDS.filter(function(N){return ew.indexOf(N.n)>-1;}),ea=ROWS.filter(function(r){return ew.indexOf(words(r))>-1;});em.forEach(function(N){MINE.exp[N.k]="Yes";});ea.forEach(function(r){MINE.exp[r.k]="Yes";});if(!em.length&&!ea.length)MINE.expOld=v;}
  if((v=take("energyUnderwhelmed")))dv("energy").a[1]=list(v);
  if((v=take("energizesMeEnjoy"))){var E=flow("play");E.branch=E.branch||{};list(v).forEach(function(x){var c=Object.keys(RECS).filter(function(k){return RECS[k].indexOf(x)>-1;})[0]||"Other",b="rec:"+c;E.branch[b]=E.branch[b]||[];E.branch[b].push(x);});}
  if((v=take("next5MinutesPick")))flow("needs").final=list(v);
@@ -218,10 +218,10 @@ app.addEventListener("input",gateNext);
 app.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("button[data-m]");if(!b)return;var n=document.getElementById("m-"+b.getAttribute("data-m"));if(!n)return;n.hidden=!n.hidden;b.setAttribute("aria-expanded",n.hidden?"false":"true");});
 function render(){cur(curArg);addBack();addFwd();drawCrumbs();drawRail();window.scrollTo(0,0);}
 function addBack(){if(!hist.length||document.getElementById("back"))return;var r=app.querySelector(".row");if(!r){r=document.createElement("div");r.className="row";app.appendChild(r);}var b=document.createElement("button");b.type="button";b.id="back";b.className="btn ghost";b.textContent="Back";b.addEventListener("click",back);r.insertBefore(b,r.firstChild);}
-function crumbName(fn,arg){if(fn===whenPage)return "Home";if(fn===welcomePage)return "Welcome";if(fn===startWith)return "Begin";if(fn===dive)return "Right now";if(fn===explorePickPage)return "Explore";if(fn===needQsPage)return needTitle(need(arg));if(fn===feelPage)return "How do you feel about…";if(fn===explorePage)return "Explore";if(fn===askedPage)return "A closer look";if(fn===feelWhatPage)return "What I would like to feel";if(fn===optionsPage)return words(row(arg));if(fn===finalPage)return "Next 5 minutes";if(fn===readyPage)return "";if(fn===startYes)return "";if(fn===startLater)return "";if(fn===startNudge)return "";if(fn===nudgeBuddy)return "";if(fn===buddyScript)return "";if(fn===buddyIdeal)return "";if(fn===buddyWilling)return "";if(fn===nudgeKind)return "";if(fn===nudgeSmaller)return "";if(fn===nudgeOther)return "";if(fn===invite)return "";if(fn===notNow)return "";if(fn===remind)return "Email reminder";return "Thank you";}
-function drawRail(){var e=document.getElementById("rail"),R=load(),p=needsPicked().map(function(N){return N.k;}),k=cur===needQsPage?curArg:"",i=p.indexOf(k);if(p.length<2||i<0){e.innerHTML="";return;}var did=R.areasDone||[];
- e.innerHTML='<div class="rdots">'+p.map(function(a,j){var d=did.indexOf(a)>-1,n=needTitle(need(a));return '<button type="button" class="rdot'+(j===i?" now":"")+(d?" did":"")+'" data-a="'+a+'" aria-label="'+esc(n)+(d?", finished":"")+'"'+(j===i?' aria-current="step"':'')+'>'+NE[need(a).n]+(d?'<span class="rchk" aria-hidden="true">✓</span>':'')+'</button>';}).join("")+'</div><p class="rname">'+(i+1)+' of '+p.length+'</p>';
- e.querySelectorAll(".rdot").forEach(function(b){b.addEventListener("click",function(){var a=b.getAttribute("data-a");if(a===k)return;R.exp=R.exp||{};R.exp[a]="Yes";save(R);go(needQsPage,a);});});}
+function crumbName(fn,arg){if(fn===whenPage)return "Home";if(fn===welcomePage)return "Welcome";if(fn===startWith)return "Begin";if(fn===dive)return "Right now";if(fn===explorePickPage)return "Explore";if(fn===needQsPage)return needTitle(need(arg));if(fn===areaQsPage)return words(row(arg));if(fn===feelPage)return "How do you feel about…";if(fn===explorePage)return "Explore";if(fn===askedPage)return "A closer look";if(fn===feelWhatPage)return "What I would like to feel";if(fn===optionsPage)return words(row(arg));if(fn===finalPage)return "Next 5 minutes";if(fn===readyPage)return "";if(fn===startYes)return "";if(fn===startLater)return "";if(fn===startNudge)return "";if(fn===nudgeBuddy)return "";if(fn===buddyScript)return "";if(fn===buddyIdeal)return "";if(fn===buddyWilling)return "";if(fn===nudgeKind)return "";if(fn===nudgeSmaller)return "";if(fn===nudgeOther)return "";if(fn===invite)return "";if(fn===notNow)return "";if(fn===remind)return "Email reminder";return "Thank you";}
+function drawRail(){var e=document.getElementById("rail"),R=load(),p=sectionKeys(),k=cur===needQsPage||cur===areaQsPage?curArg:"",i=p.indexOf(k);if(p.length<2||i<0){e.innerHTML="";return;}var did=R.areasDone||[];
+ e.innerHTML='<div class="rdots">'+p.map(function(a,j){var d=did.indexOf(a)>-1,n=sectionTitle(a);return '<button type="button" class="rdot'+(j===i?" now":"")+(d?" did":"")+'" data-a="'+a+'" aria-label="'+esc(n)+(d?", finished":"")+'"'+(j===i?' aria-current="step"':'')+'>'+(need(a)?NE[need(a).n]:ico(a,18))+(d?'<span class="rchk" aria-hidden="true">✓</span>':'')+'</button>';}).join("")+'</div><p class="rname">'+(i+1)+' of '+p.length+'</p>';
+ e.querySelectorAll(".rdot").forEach(function(b){b.addEventListener("click",function(){var a=b.getAttribute("data-a");if(a===k)return;R.exp=R.exp||{};R.exp[a]="Yes";save(R);goSection(a);});});}
 function fwdShown(){if(cur===explorePickPage||cur===needQsPage)return [];for(var i=0;i<fwd.length;i++)if(fwd[i][0]===explorePickPage)return fwd.slice(0,i+1);return fwd;}
 function drawCrumbs(){var nav=document.getElementById("crumbs"),trail=hist.concat([[cur,curArg]]);if(trail.length<2&&!fwd.length){nav.innerHTML="";return;}if(trail.length<2){nav.innerHTML='<b aria-current="page">'+esc(crumbName(cur,curArg))+'</b>';nav.insertAdjacentHTML("beforeend",fwdShown().map(function(t,j){if(!crumbName(t[0],t[1]))return "";return '<span aria-hidden="true">/</span><button type="button" class="fw" data-f="'+j+'">'+esc(crumbName(t[0],t[1]))+'</button>';}).join(""));nav.querySelectorAll("button[data-f]").forEach(function(b){b.addEventListener("click",function(){forward(+b.getAttribute("data-f"));});});return;}
 
@@ -304,7 +304,7 @@ function startWith(){
  app.querySelectorAll(".opt").forEach(function(b){b.addEventListener("click",function(){var k=b.getAttribute("data-k"),i=R.picks.indexOf(k);if(i>-1)R.picks.splice(i,1);else R.picks.push(k);save(R);startWith();});});
  var n=document.getElementById("next");if(n)n.addEventListener("click",function(){if(me()||R.invited)go(dive,R.picks[0]);else go(invite);});
 }
-var HOME={body:["Nourished","Energized to move","Rested"],feel:[],energy:["Connected"],mind:["Natural"],imag:["Expression"]};
+var HOME={body:[],feel:[],energy:[],mind:[],imag:[]};
 function afterArea(k){var p=load().picks||[],i=p.indexOf(k);return i>-1&&i<p.length-1?p[i+1]:"";}
 function setExplore(k){var o=HOME[k].slice();row(k).q.forEach(function(q,qi){if(q.br)dv(k).a[qi].forEach(function(l){if(q.br[l]&&o.indexOf(q.br[l])<0)o.push(q.br[l]);});});flow(k).explore=o;}
 function needWords(k){var F=flow(k),o=[];F.explore.forEach(function(x){var n=x==="Natural"||x==="Expression"?"Create":NEEDOF[x],has=x==="Expression"?((F.branch||{}).expression||[]).length:(F.opts[x]||[]).length||(x==="Natural"&&(F.subjects||[]).length);if(has&&o.indexOf(n)<0)o.push(n);});return o.join("|");}
@@ -338,7 +338,11 @@ function remind(){var id=me();if(id&&REMIND_SELF){remindMe(id);return;}
  document.getElementById("sendrem").addEventListener("click",send);em.addEventListener("keydown",function(e){if(e.key==="Enter")send();});
 }
 function areasList(){var R=load();return R.picks&&R.picks.length?R.picks.slice():ROWS.map(function(r){return r.k;});}
-function nextExplore(k){var L=needsPicked().map(function(N){return N.k;}),i=L.indexOf(k);return L[i+1]||"";}
+function areasPicked(){var E=MINE.exp||{};return ROWS.filter(function(r){return E[r.k]==="Yes";});}
+function sectionKeys(){return needsPicked().map(function(N){return N.k;}).concat(areasPicked().map(function(r){return r.k;}));}
+function goSection(k){go(need(k)?needQsPage:areaQsPage,k);}
+function sectionTitle(k){return need(k)?needTitle(need(k)):words(row(k));}
+function nextExplore(k){var L=sectionKeys(),i=L.indexOf(k);return L[i+1]||"";}
 function dive(){
  var R=load(),L=areasList();R.exp=R.exp||{};
  function draw(){
@@ -357,17 +361,17 @@ function dive(){
 }
 function explorePickPage(){
  var R=load();R.exp=R.exp||{};
- function first(){var f=needsPicked()[0];if(f)go(needQsPage,f.k);else go(finalPage);}
- var any=needsPicked().length>0;
- app.innerHTML='<h1 class="q">Which would you like to explore a little more?</h1><div class="chks">'+NEEDS.map(function(N){return '<label class="chk"><input type="checkbox" data-a="'+N.k+'"'+(R.exp[N.k]==="Yes"?" checked":"")+'><span><span style="margin-right:6px">'+NE[N.n]+'</span>'+esc(needTitle(N))+'</span></label>';}).join("")+'</div><div class="row"><button class="btn" type="button" id="next"'+(any?'':' style="display:none"')+'>Continue</button></div>';
- app.querySelectorAll(".chk input").forEach(function(c){c.addEventListener("change",function(){R.exp[c.getAttribute("data-a")]=c.checked?"Yes":"No";save(R);document.getElementById("next").style.display=needsPicked().length?"":"none";});});
+ function first(){var f=sectionKeys()[0];if(f)goSection(f);else go(finalPage);}
+ var any=sectionKeys().length>0;
+ app.innerHTML='<h1 class="q">Which would you like to explore a little more?</h1><div class="qb"><h2>What I do</h2><div class="chks">'+NEEDS.map(function(N){return '<label class="chk"><input type="checkbox" data-a="'+N.k+'"'+(R.exp[N.k]==="Yes"?" checked":"")+'><span><span style="margin-right:6px">'+NE[N.n]+'</span>'+esc(needTitle(N))+'</span></label>';}).join("")+'</div></div><div class="qb"><h2>What I notice in myself</h2><div class="chks">'+ROWS.map(function(r){return '<label class="chk"><input type="checkbox" data-a="'+r.k+'"'+(R.exp[r.k]==="Yes"?" checked":"")+'><span>'+nm(r)+'</span></label>';}).join("")+'</div></div><div class="row"><button class="btn" type="button" id="next"'+(any?'':' style="display:none"')+'>Continue</button></div>';
+ app.querySelectorAll(".chk input").forEach(function(c){c.addEventListener("change",function(){R.exp[c.getAttribute("data-a")]=c.checked?"Yes":"No";save(R);document.getElementById("next").style.display=sectionKeys().length?"":"none";});});
  document.getElementById("next").addEventListener("click",first);
 }
 function needQsPage(k){
  var N=need(k),R=load();flow(k).explore=N.x.slice();
  app.innerHTML='<h1>'+NE[N.n]+' '+esc(needAsk(N))+'</h1><div id="optshost"></div><div class="row"><button class="btn" type="button" id="next">Continue</button></div>';
  optionsPage(k);
- document.getElementById("next").addEventListener("click",function(){R.areasDone=R.areasDone||[];if(R.areasDone.indexOf(k)<0)R.areasDone.push(k);save(R);var nx=nextExplore(k);if(nx)go(needQsPage,nx);else go(finalPage);});
+ document.getElementById("next").addEventListener("click",function(){R.areasDone=R.areasDone||[];if(R.areasDone.indexOf(k)<0)R.areasDone.push(k);save(R);var nx=nextExplore(k);if(nx)goSection(nx);else go(finalPage);});
 }
 function areaQsPage(k){
  var r=row(k),R=load(),D=dv(k);
@@ -394,7 +398,7 @@ function areaQsPage(k){
    var o=app.querySelector('[data-q="'+qi+'"][data-other], .chk .oth[data-q="'+qi+'"]');
    if(o)o.addEventListener(o.tagName==="INPUT"?"change":"click",function(){if(o.tagName==="INPUT")o.checked=false;ownBox(qi,function(v){if(D.own[qi].indexOf(v)<0&&q.l.indexOf(v)<0)D.own[qi].push(v);toggle(v,true);draw();});});
   });
-  document.getElementById("next").addEventListener("click",function(){R.areasDone=R.areasDone||[];if(R.areasDone.indexOf(k)<0)R.areasDone.push(k);D.need=needWords(k);save(R);var nx=nextExplore(k);if(nx)go(areaQsPage,nx);else go(finalPage);});
+  document.getElementById("next").addEventListener("click",function(){R.areasDone=R.areasDone||[];if(R.areasDone.indexOf(k)<0)R.areasDone.push(k);D.need=needWords(k);save(R);var nx=nextExplore(k);if(nx)goSection(nx);else go(finalPage);});
  }
  draw();
 }
