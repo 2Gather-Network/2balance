@@ -262,7 +262,7 @@ var WELC="bal-welcomed";
 function welcomed(){try{return me()||localStorage.getItem(WELC)==="1";}catch(e){return false;}}
 function welcomePage(){
  var P=["Physical","Energy","Mind","Feelings","Imagination"];
- app.innerHTML='<div class="welc"><h1 class="q">You\'re invited to notice how you relate to the five parts of your life:</h1><div class="wchips">'+P.map(function(p){return '<span>'+p+'</span>';}).join("")+'</div><div class="row"><button class="btn" type="button" id="come"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-5px;margin-right:8px"><path d="M5 10h11v5a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4z"/><path d="M16 11.5h1.5a2 2 0 0 1 0 4H16"/><path d="M8.5 3.5c-.9 1 .9 1.8 0 2.8M12 3.5c-.9 1 .9 1.8 0 2.8"/></svg>Welcome in</button></div></div>';
+ app.innerHTML='<div class="welc"><h1 class="q">You\'re invited to notice how you relate to these five parts of your life:</h1><div class="wchips">'+P.map(function(p){return '<span>'+p+'</span>';}).join("")+'</div><div class="row"><button class="btn" type="button" id="come"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-5px;margin-right:8px"><path d="M5 10h11v5a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4z"/><path d="M16 11.5h1.5a2 2 0 0 1 0 4H16"/><path d="M8.5 3.5c-.9 1 .9 1.8 0 2.8M12 3.5c-.9 1 .9 1.8 0 2.8"/></svg>Welcome in</button></div></div>';
  document.getElementById("come").addEventListener("click",function(){try{localStorage.setItem(WELC,"1");}catch(e){}hist=[];go(whenPage);});
 }
 var RINFO={body:'How you notice and care for your body, where you live, who you spend time with, and what you surround yourself with.',feel:'What you feel and how emotions move through you.',energy:'How you notice what gives you energy (what lights you up) and what drains it (when you need to recover).',mind:'How you pay attention to yourself and the world around you, and how you notice yourself making decisions.',imag:'How you look at what\'s possible.'};
@@ -285,12 +285,12 @@ var WELCOME={"Yes":"Then you know how it can feel to be asked. We're glad you're
 function askedPage(){
  var R=load(),a=R.asked||"",olds=oldAreas(),l=R.look||"",h='<h1 class="q">Has anybody besides you ever asked you these questions?</h1><div class="opts pills">'+ASKED.map(function(x,i){return '<button type="button" class="opt'+(a===x?" on":"")+'" data-a="'+i+'">'+esc(x)+'</button>';}).join("")+'</div>';
  if(a){h+='<p class="stmt" style="margin-top:18px">'+esc(WELCOME[a])+'</p>';
-  if(olds.length)h+='<h1 class="q" style="margin-top:18px">It\'s been a while since you last thought about you and '+esc(list_(olds))+'.</h1><p class="stmt" style="margin-bottom:12px">'+(olds.length===1?"Would you like to look at this more closely?":"Would you like to look at one of these more closely?")+'</p><div class="opts pills" style="margin-top:0">'+LOOK.map(function(x,i){return '<button type="button" class="opt'+(l===x?" on":"")+'" data-l="'+i+'">'+esc(x)+'</button>';}).join("")+'</div>';
-  if(!olds.length||l)h+='<div class="row"><button class="btn" type="button" id="next">Continue</button></div>';}
+  h+=(olds.length?'<h1 class="q" style="margin-top:18px">It\'s been a while since you last thought about you and '+esc(list_(olds))+'.</h1>':'')+'<p class="stmt" style="margin-bottom:12px'+(olds.length?'':';margin-top:18px')+'">'+(olds.length===1?"Would you like to look at this more closely?":olds.length?"Would you like to look at one of these more closely?":"Would you like to look at these more closely?")+'</p><div class="opts pills" style="margin-top:0">'+LOOK.map(function(x,i){return '<button type="button" class="opt'+(l===x?" on":"")+'" data-l="'+i+'">'+esc(x)+'</button>';}).join("")+'</div>';
+  if(l)h+='<div class="row"><button class="btn" type="button" id="next">Continue</button></div>';}
  app.innerHTML=h;
  app.querySelectorAll(".opt[data-a]").forEach(function(b){b.addEventListener("click",function(){R.asked=ASKED[+b.getAttribute("data-a")];save(R);askedPage();});});
  app.querySelectorAll(".opt[data-l]").forEach(function(b){b.addEventListener("click",function(){R.look=LOOK[+b.getAttribute("data-l")];save(R);askedPage();});});
- var n=document.getElementById("next");if(n)n.addEventListener("click",function(){if(!olds.length){R.picks=null;save(R);go(explorePickPage);return;}if(R.look===LOOK[1]){go(notNow);return;}R.picks=null;R.invitedFor="explore";save(R);if(me())go(explorePickPage);else go(invite);});
+ var n=document.getElementById("next");if(n)n.addEventListener("click",function(){if(R.look===LOOK[1]){go(notNow);return;}R.picks=null;R.invitedFor="explore";save(R);if(me())go(explorePickPage);else go(invite);});
 }
 var LOOK=["Yes","Not at this time, thank you"];
 function startWith(){
@@ -359,9 +359,8 @@ function explorePickPage(){
  var R=load();R.exp=R.exp||{};
  function first(){var f=needsPicked()[0];if(f)go(needQsPage,f.k);else go(finalPage);}
  var any=needsPicked().length>0;
- app.innerHTML='<h1 class="q">Which would you like to explore a little more?</h1><div class="chks">'+NEEDS.map(function(N){return '<label class="chk"><input type="checkbox" data-a="'+N.k+'"'+(R.exp[N.k]==="Yes"?" checked":"")+'><span><span style="margin-right:6px">'+NE[N.n]+'</span>'+esc(needTitle(N))+'</span></label>';}).join("")+'</div><div class="row"><button class="btn" type="button" id="next"'+(any?'':' style="display:none"')+'>Continue</button></div><div class="invite"><div class="alts"><button class="lnk" type="button" id="no">Not right now, thank you</button></div></div>';
+ app.innerHTML='<h1 class="q">Which would you like to explore a little more?</h1><div class="chks">'+NEEDS.map(function(N){return '<label class="chk"><input type="checkbox" data-a="'+N.k+'"'+(R.exp[N.k]==="Yes"?" checked":"")+'><span><span style="margin-right:6px">'+NE[N.n]+'</span>'+esc(needTitle(N))+'</span></label>';}).join("")+'</div><div class="row"><button class="btn" type="button" id="next"'+(any?'':' style="display:none"')+'>Continue</button></div>';
  app.querySelectorAll(".chk input").forEach(function(c){c.addEventListener("change",function(){R.exp[c.getAttribute("data-a")]=c.checked?"Yes":"No";save(R);document.getElementById("next").style.display=needsPicked().length?"":"none";});});
- document.getElementById("no").addEventListener("click",function(){NEEDS.forEach(function(N){R.exp[N.k]="No";});save(R);go(notNow);});
  document.getElementById("next").addEventListener("click",first);
 }
 function needQsPage(k){
