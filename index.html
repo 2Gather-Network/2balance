@@ -525,7 +525,7 @@ var _gpMethodPicked={};
             t.style.cssText = 'margin-left:auto;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;'
               + (on ? 'background:#1F699E;border:1.5px solid #1F699E;color:#fff;' : 'border:1.5px solid #DDE3EA;');
             top.appendChild(e); top.appendChild(w); top.appendChild(t);
-            var v = document.createElement('div'); v.textContent = s[3]; v.style.cssText = 'font-size:12.5px;color:#6B7A8D;';
+            var v = document.createElement('div'); v.textContent = s[3]; v.style.cssText = 'font-size:12.5px;color:#2F3D4F;';
             b.appendChild(top); b.appendChild(v);
             b.onclick = function(){ if (_gpMethodPicked[s[0]]) delete _gpMethodPicked[s[0]]; else _gpMethodPicked[s[0]] = true; paint(); try { if (window.gpMethodsChanged) window.gpMethodsChanged(); } catch (e2) {} };
             grid.appendChild(b);
@@ -613,7 +613,7 @@ var _gpMethodPicked={};
           t.style.cssText = 'margin-left:auto;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;'
             + (on ? 'background:#1F699E;border:1.5px solid #1F699E;color:#fff;' : 'border:1.5px solid #DDE3EA;');
           top.appendChild(e); top.appendChild(w); top.appendChild(t);
-          var v = document.createElement('div'); v.textContent = s[2]; v.style.cssText = 'font-size:12.5px;color:#6B7A8D;';
+          var v = document.createElement('div'); v.textContent = s[2]; v.style.cssText = 'font-size:12.5px;color:#2F3D4F;';
           b.appendChild(top); b.appendChild(v);
           b.onclick = function(){ if (_gpSubjPicked[s[0]]) { delete _gpSubjPicked[s[0]]; } else { _gpSubjPicked[s[0]] = true; } paint(); try { gpTouchSave(); } catch (e) {} };
           grid.appendChild(b);
