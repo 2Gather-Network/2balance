@@ -312,10 +312,11 @@ var RN={body:"body",surr:"surroundings",feel:"feelings",energy:"energy",mind:"mi
 var THUP='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 11v8a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1v-7a1 1 0 0 1 1 -1h3a4 4 0 0 0 4 -4v-1a2 2 0 0 1 4 0v5h3a2 2 0 0 1 2 2l-1 5a2 3 0 0 1 -2 2h-7a3 3 0 0 1 -3 -3"/></svg>';
 var THDN='<svg viewBox="0 0 24 24" aria-hidden="true" style="transform:scaleY(-1)"><path d="M7 11v8a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1v-7a1 1 0 0 1 1 -1h3a4 4 0 0 0 4 -4v-1a2 2 0 0 1 4 0v5h3a2 2 0 0 1 2 2l-1 5a2 3 0 0 1 -2 2h-7a3 3 0 0 1 -3 -3"/></svg>';
 function whenPage(){
+ function fin(j){var y=T[j];return !!(y&&y.v&&y.t&&(y.v==="up"||y.m));}
  var R=load(),T=R.rt||(R.rt={}),D=R.rdone||(R.rdone={}),i=R.ri||0,k=CONNP[i][0],x=T[k]||(T[k]={v:"",t:""}),last=i===CONNP.length-1;
  var ok=x.v&&x.t&&(x.v==="up"||x.m);
  app.classList.add("cen");
- app.innerHTML='<div class="rl">'+CONNP.map(function(p,j){return '<button type="button" class="'+(j===i?"now ":"")+(D[p[0]]?"did":"")+'" data-j="'+j+'" aria-label="'+esc(p[1])+(D[p[0]]?", finished":"")+'">'+ico(p[0],22)+'<span class="ck" aria-hidden="true">&#10003;</span></button>';}).join("")+'</div><p class="rcount">'+(i+1)+' of '+CONNP.length+'</p>'
+ app.innerHTML='<div class="rl">'+CONNP.map(function(p,j){return '<button type="button" class="'+(j===i?"now ":"")+(fin(p[0])?"did":"")+'" data-j="'+j+'" aria-label="'+esc(p[1])+(fin(p[0])?", finished":"")+'">'+ico(p[0],22)+'<span class="ck" aria-hidden="true">&#10003;</span></button>';}).join("")+'</div><p class="rcount">'+(i+1)+' of '+CONNP.length+'</p>'
  +'<h1 class="q" style="margin-bottom:22px">'+esc(RQ[k])+'</h1>'
  +'<div class="thumbs">'+(last?'<button type="button" class="thumb'+(x.v==="up"?" on":"")+'" data-v="up">'+THUP+'Where I want it</button><button type="button" class="thumb'+(x.v==="down"?" on":"")+'" data-v="down">'+THDN+'Not where I want it</button>':'<button type="button" class="thumb ic'+(x.v==="up"?" on":"")+'" data-v="up" aria-label="Where I want it">'+THUP+'</button><button type="button" class="thumb ic'+(x.v==="down"?" on":"")+'" data-v="down" aria-label="Not where I want it">'+THDN+'</button>')+'</div>'
  +(x.v==="down"?'<h1 class="q" style="margin:22px 0 22px">Are you spending too little or too much time on your '+RN[k]+'?</h1><div class="opts pills">'+["Too little","Too much"].map(function(m){return '<button type="button" class="opt'+(x.m===m?" on":"")+'" data-m2="'+m+'">'+m+'</button>';}).join("")+'</div>':'')
