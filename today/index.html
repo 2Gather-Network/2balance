@@ -291,7 +291,7 @@ var FSC=["Not at all","A little","Mostly","Fully"];
 function tday(){var d=new Date();return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();}
 function loadT(){var t=null;try{t=JSON.parse(localStorage.getItem(TKEY)||"null");}catch(e){}if(!t||t.date!==tday())t={date:tday(),important:"",move:[],rest:[],connect:"",enth:0,feel:{},own:{move:[],rest:[]}};if(!t.feel)t.feel={};return t;}
 function saveT(t){try{localStorage.setItem(TKEY,JSON.stringify(t));}catch(e){}}
-var TI_GS="https://cw-api-gate.jessieupp.workers.dev",TI_MAP={move:"howIMove",rest:"howIRest",play:"energizesMeEnjoy"},tiHave=null,tiAsked=false,tiBusy=false,tiWant=false,tiAt=0;
+var TI_GS="https://cw-api-gate.jessieupp.workers.dev",TI_MAP={move:"howIMove",rest:"howIRest",play:"1stEnergizesMeEnjoy"},tiHave=null,tiAsked=false,tiBusy=false,tiWant=false,tiAt=0;
 function tiMe(){try{var m=window.CW&&CW.me&&CW.me();if(!m||!m.id||m.viewing||!CW.passParam())return "";return m.id;}catch(e){return "";}}
 function tiRead(){var id=tiMe();if(!id||tiBusy)return;tiBusy=true;fetch(TI_GS+"?action=getIntake&appearId="+encodeURIComponent(id)).then(function(r){return r.json();}).then(function(d){tiBusy=false;if(d&&d.status!=="error"&&d.data){tiHave=d.data;tiAt=Date.now();if(tiWant){tiWant=false;tiPush();}}else tiWant=false;}).catch(function(){tiBusy=false;tiWant=false;});}
 function tiSend(){if(!tiMe())return;if(!tiHave||Date.now()-tiAt>600000){tiHave=null;tiWant=true;tiRead();return;}tiPush();}
