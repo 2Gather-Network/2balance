@@ -191,7 +191,7 @@ function welcomeFill(take){var v;
   if(x.v&&x.t&&(x.v==="up"||x.m))MINE.rdone[k]=true;});}
 function markDone(){try{if(!me())return;localStorage.setItem("cw-firstmin",JSON.stringify({who:String(CW.me().id||"").split(".").join("").toLowerCase(),yes:true}));}catch(e){}}
 function note(t){document.getElementById("sv").textContent=t;}
-function wait(on){var e=document.getElementById("cwl");if(on&&!e){e=document.createElement("div");e.id="cwl";e.className="cw-loading";e.textContent="Looking for your earlier answers…";var c=document.querySelector(".card");c.parentNode.insertBefore(e,c);}else if(!on&&e)e.remove();}
+function wait(on){var e=document.getElementById("cwl");if(on&&!e){e=document.createElement("div");e.id="cwl";e.className="cw-loading";e.textContent=(function(W){return W[Math.floor(Math.random()*W.length)]+"…";})(window.CW_WAITING_WORDS||["Settling in"]);var c=document.querySelector(".card");c.parentNode.insertBefore(e,c);}else if(!on&&e)e.remove();}
 var NOT_KEPT="Not saved yet: we could not load your earlier answers, so some of your picks are only on this screen.",DROPPED=["howIMove","howIRest","methods","subjects","expression"],rereads=0,rereadAt=0;
 function holding(all){return !readOk&&DROPPED.some(function(f){return all[f]!=="";});}
 function noEmoji(t){return t.replace(/[\u{1F000}-\u{1FAFF}\u{2190}-\u{27BF}\u{2B00}-\u{2BFF}\u{FE0F}\u{200D}]/gu,"").replace(/ {2,}/g," ").trim();}
