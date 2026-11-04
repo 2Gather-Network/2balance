@@ -292,8 +292,8 @@ var CONNP=[["body","Body"],["surr","Surroundings"],["feel","Feelings"],["energy"
 function welcomePage(){
  var P=CONNP,C=MINE.conn||(MINE.conn={});
  app.innerHTML='<div class="welc"><h1 class="q" style="font-size:22px">Right now, are you in connection with your:</h1><div class="wchips" style="margin:22px 0 18px">'+P.map(function(p){return '<button type="button" class="wchip'+(C[p[0]]?" on":"")+'" data-conn="'+p[0]+'" aria-pressed="'+(C[p[0]]?"true":"false")+'">'+icoP(p[0],20)+" "+p[1]+'</button>';}).join("")+'</div><p class="sub" style="margin:0 0 44px;color:#667689">Tap the ones that feel true right now. Skipping is fine.</p>'+'<div class="row"><button class="btn" type="button" id="come"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-5px;margin-right:8px"><path d="M5 10h11v5a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4z"/><path d="M16 11.5h1.5a2 2 0 0 1 0 4H16"/><path d="M8.5 3.5c-.9 1 .9 1.8 0 2.8M12 3.5c-.9 1 .9 1.8 0 2.8"/></svg>Welcome in</button></div>'+'</div>';
- app.querySelectorAll("button[data-conn]").forEach(function(b){b.addEventListener("click",function(){var k=b.getAttribute("data-conn");C[k]=!C[k];b.classList.toggle("on",!!C[k]);b.setAttribute("aria-pressed",C[k]?"true":"false");});});
- document.getElementById("come").addEventListener("click",function(){try{localStorage.setItem(WELC,"1");}catch(e){}MINE.connMore="";hist=[];go(connectPage);});
+ app.querySelectorAll("button[data-conn]").forEach(function(b){b.addEventListener("click",function(){var k=b.getAttribute("data-conn");C[k]=!C[k];b.classList.toggle("on",!!C[k]);b.setAttribute("aria-pressed",C[k]?"true":"false");save(MINE);});});
+ document.getElementById("come").addEventListener("click",function(){try{localStorage.setItem(WELC,"1");}catch(e){}hist=[];go(connectPage);});
 }
 var MORE=["Yes","Not right now"];
 function connectPage(){
@@ -302,7 +302,7 @@ function connectPage(){
  var h=un.length?'<h1 class="q" style="margin-bottom:22px">Would you like to be more connected with your '+esc(lst)+'?</h1><div class="opts pills">'+MORE.map(function(x,i){return '<button type="button" class="opt'+(a===x?" on":"")+'" data-m="'+i+'">'+esc(x)+'</button>';}).join("")+'</div>':'';
  if(!un.length||a)h+='<p class="stmt wfade" style="margin-top:18px">Welcome. We built this space for you to rest into...</p><p class="stmt wfade wfade2">At 2Balance, we help you connect with each part of yourself: the ones you know well and the ones you have not noticed in a while.</p><div class="row"><button class="btn" type="button" id="next">Continue</button></div>';
  app.classList.add("cen");app.innerHTML=h;
- app.querySelectorAll(".opt[data-m]").forEach(function(b){b.addEventListener("click",function(){var v=MORE[+b.getAttribute("data-m")];MINE.connMore=MINE.connMore===v?"":v;connectPage();});});
+ app.querySelectorAll(".opt[data-m]").forEach(function(b){b.addEventListener("click",function(){var v=MORE[+b.getAttribute("data-m")];MINE.connMore=MINE.connMore===v?"":v;save(MINE);connectPage();});});
  var n=document.getElementById("next");if(n)n.addEventListener("click",function(){go(whenPage);});
 }
 var RINFO={body:'How you notice and care for your body, where you live, who you spend time with, and what you surround yourself with.',feel:'What you feel and how emotions move through you.',energy:'How you notice what gives you energy (what lights you up) and what drains it (when you need to recover).',mind:'How you pay attention to yourself and the world around you, and how you notice yourself making decisions.',imag:'How you look at what\'s possible.'};
@@ -313,6 +313,7 @@ var THUP='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 11v8a1 1 0 0 1
 var THDN='<svg viewBox="0 0 24 24" aria-hidden="true" style="transform:scaleY(-1)"><path d="M7 11v8a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1v-7a1 1 0 0 1 1 -1h3a4 4 0 0 0 4 -4v-1a2 2 0 0 1 4 0v5h3a2 2 0 0 1 2 2l-1 5a2 3 0 0 1 -2 2h-7a3 3 0 0 1 -3 -3"/></svg>';
 function whenPage(){
  function fin(j){var y=T[j];return !!(y&&y.v&&y.t&&(y.v==="up"||y.m));}
+ function all6(){return CONNP.every(function(p){return fin(p[0]);});}
  var R=load(),T=R.rt||(R.rt={}),D=R.rdone||(R.rdone={}),i=R.ri||0,k=CONNP[i][0],x=T[k]||(T[k]={v:"",t:""}),last=i===CONNP.length-1;
  var ok=x.v&&x.t&&(x.v==="up"||x.m);
  app.classList.add("cen");
@@ -321,13 +322,13 @@ function whenPage(){
  +'<div class="thumbs">'+(last?'<button type="button" class="thumb'+(x.v==="up"?" on":"")+'" data-v="up">'+THUP+'Where I want it</button><button type="button" class="thumb'+(x.v==="down"?" on":"")+'" data-v="down">'+THDN+'Not where I want it</button>':'<button type="button" class="thumb ic'+(x.v==="up"?" on":"")+'" data-v="up" aria-label="Where I want it">'+THUP+'</button><button type="button" class="thumb ic'+(x.v==="down"?" on":"")+'" data-v="down" aria-label="Not where I want it">'+THDN+'</button>')+'</div>'
  +(x.v==="down"?'<h1 class="q" style="margin:22px 0 22px">Are you spending too little or too much time on your '+RN[k]+'?</h1><div class="opts pills">'+["Too little","Too much"].map(function(m){return '<button type="button" class="opt'+(x.m===m?" on":"")+'" data-m2="'+m+'">'+m+'</button>';}).join("")+'</div>':'')
  +(x.v?'<h1 class="q" style="margin:22px 0 10px">When did you last focus on your '+RN[k]+'?</h1><p class="infob">'+esc(RD[k])+'</p><div class="opts pills">'+WHEN.map(function(w){return '<button type="button" class="opt'+(x.t===w?" on":"")+'" data-w="'+esc(w)+'">'+esc(w)+'</button>';}).join("")+'</div>':'')
- +'<div class="row">'+(ok?'<button class="btn" type="button" id="rnext">'+(last?"Finish":"Next: "+esc(RN[CONNP[i+1][0]]))+'</button>':'')+'</div>';
- function sync(){var n=R.rate[k]||0;R.rate[k]=x.v==="up"?(n>=3?n:3):(x.v==="down"?(n===1||n===2?n:1):0);R.when[k]=x.t;}
+ +'<div class="row">'+(ok?'<button class="btn" type="button" id="rnext">'+(last||all6()?"Finish":"Next: "+esc(RN[CONNP[i+1][0]]))+'</button>':'')+'</div>';
+ function sync(){var n=R.rate[k]||0;R.rate[k]=x.v==="up"?(n>=3?n:3):(x.v==="down"?(n===1||n===2?n:1):0);R.when[k]=x.t;save(R);}
  app.querySelectorAll(".rl button").forEach(function(b){b.addEventListener("click",function(){R.ri=+b.getAttribute("data-j");whenPage();});});
  app.querySelectorAll(".thumb").forEach(function(b){b.addEventListener("click",function(){var v=b.getAttribute("data-v");x.v=x.v===v?"":v;if(x.v!=="down")x.m="";sync();whenPage();});});
  app.querySelectorAll(".opt[data-w]").forEach(function(b){b.addEventListener("click",function(){var w=b.getAttribute("data-w");x.t=x.t===w?"":w;sync();whenPage();});});
- app.querySelectorAll(".opt[data-m2]").forEach(function(b){b.addEventListener("click",function(){var m=b.getAttribute("data-m2");x.m=x.m===m?"":m;whenPage();});});
- var n=document.getElementById("rnext");if(n)n.addEventListener("click",function(){D[k]=true;sync();if(!last){R.ri=i+1;whenPage();return;}if(me()){R.picks=null;save(R);go(explorePickPage);}else go(askedPage);});
+ app.querySelectorAll(".opt[data-m2]").forEach(function(b){b.addEventListener("click",function(){var m=b.getAttribute("data-m2");x.m=x.m===m?"":m;save(R);whenPage();});});
+ var n=document.getElementById("rnext");if(n)n.addEventListener("click",function(){D[k]=true;sync();if(!last&&!all6()){R.ri=i+1;whenPage();return;}if(me()){R.picks=null;save(R);go(explorePickPage);}else go(askedPage);});
 }
 function oldAreas(){var R=load();return ROWS.filter(function(r){return ["Last month","Last year","In my life"].indexOf(R.when[r.k])>-1;});}
 var ASKED=["Not before","Yes"];
