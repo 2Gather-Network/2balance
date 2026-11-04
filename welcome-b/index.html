@@ -1,0 +1,760 @@
+<!doctype html>
+<!--
+  Copyright 2026 DayBalancer LLC. All rights reserved.
+
+  The code and the content here power Creating.Works, DayBalancer, Appear Network,
+  and 2Gather. They are published so they can be read, audited, and dated.
+
+  Running either as a separate offering requires a license, whether you brand it as
+  ours or as your own, and whether or not money changes hands.
+
+  hello@creating.works
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta property="og:site_name" content="2Balance">
+<meta property="og:title" content="Tend to yourself">
+<title>2Balance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700;6..12,800&family=DM+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--brand:#1F699E;--ink:#1A2E42;--soft:#2F3D4F;--line:#DDE3EA;--panel:#F7FBFF;--panel-line:#C9DFF3;}
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--brand);color:var(--ink);font-family:'Nunito Sans','DM Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;}
+  .wrap{max-width:760px;margin:0 auto;padding:24px 18px 60px;}
+  .card{background:#fff;border-radius:16px;padding:30px;min-height:360px;}
+  h1{font-size:26px;font-weight:800;line-height:1.25;margin:0 0 8px;text-wrap:balance;}
+  .sub{font-size:16px;line-height:1.55;color:var(--soft);margin:0 0 18px;}
+  .kicker{font-size:13px;font-weight:800;letter-spacing:.06em;color:var(--brand);margin:0 0 10px;text-transform:uppercase;}
+  .opts{display:flex;flex-direction:row;flex-wrap:wrap;gap:8px;margin:18px 0 0;}
+  .opts.pills{flex-direction:row;flex-wrap:wrap;}
+  .opt{font:inherit;font-size:16px;font-weight:500;color:#000;background:#fff;border:1.5px solid var(--panel-line);border-radius:20px;padding:12px 18px;text-align:left;cursor:pointer;}
+  .opt{padding:7px 14px;font-size:15px;line-height:1.3;}
+  .opt:hover{border-color:var(--brand);}
+  .opt.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:700;}.opt.on .ico,.btn:not(.ghost) .ico{color:#fff !important;}.opt.on .emj,.btn:not(.ghost) .emj{filter:brightness(0) invert(1);}
+  .opt.other{border:1.5px solid var(--brand);font-weight:700;}
+  .opt:focus-visible,.btn:focus-visible,input:focus-visible{outline:3px solid var(--brand);outline-offset:2px;}
+  .head{font-size:14px;font-weight:800;letter-spacing:.04em;color:var(--soft);margin:20px 0 0;text-transform:uppercase;}
+  .row{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap;align-items:center;}
+  .btn{font:inherit;font-weight:800;font-size:16px;color:#fff;background:var(--brand);border:0;border-radius:12px;padding:12px 22px;cursor:pointer;border:1.5px solid var(--brand);border-radius:20px;}
+  .btn.ghost{background:transparent;color:var(--brand);border:1px solid var(--brand);}
+  .link{font:inherit;font-size:14px;color:var(--soft);background:none;border:0;padding:6px 0;cursor:pointer;text-decoration:underline;}
+  .own{display:flex;gap:8px;margin-top:14px;}
+  .own input{flex:1;min-width:0;font:inherit;font-size:16px;padding:10px 12px;border:2px solid var(--brand);border-radius:10px;}
+  .note{background:var(--panel);border:1px solid var(--panel-line);border-radius:12px;padding:14px 16px;margin-top:18px;font-size:15px;line-height:1.6;color:var(--soft);}
+  .note b{color:var(--ink);}
+  .foot{display:flex;justify-content:space-between;align-items:center;margin-top:14px;}
+  #back{font-weight:700;color:var(--brand);background:#fff;border:1.5px solid var(--panel-line);border-radius:20px;padding:10px 20px;text-decoration:none;}
+  @media(max-width:700px){.card{padding:22px 18px;}h1{font-size:23px;}}
+.qb{margin-top:30px;}.qb:first-child{margin-top:0;}.qb h2{font-size:20px;line-height:1.3;margin:0 0 4px;color:var(--ink);}
+.fscale{display:grid;gap:14px;}.frow{display:grid;grid-template-columns:minmax(0,1fr) 220px;gap:10px;align-items:center;}.flbl{font-size:16px;font-weight:600;color:#000;}.fseg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}.fbtn{padding:8px 6px;font-size:16px;font-weight:700;text-align:center;}.ckey{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:14px;color:#000;margin:0 0 16px;}.ckey b{color:var(--brand);}@media(max-width:420px){.frow{grid-template-columns:1fr;gap:6px;}}
+.jc{font-size:15px;padding:11px 22px;}.inv{background:var(--panel);border:1px solid var(--panel-line);border-radius:12px;padding:16px 18px;margin-top:22px;}.inv p{margin:0 0 12px;font-size:16px;line-height:1.5;color:#000;}
+.chk{display:flex;gap:10px;align-items:flex-start;margin:12px 0 0;font-size:15px;line-height:1.4;cursor:pointer;color:#000;}.chk input{margin-top:3px;width:18px;height:18px;flex:none;accent-color:var(--brand);}
+.wrow{margin-top:22px;}.wrow:first-of-type{margin-top:18px;}.wlbl{font-size:17px;font-weight:700;color:#000;margin:0 0 2px;}.wrow .opts{margin-top:8px;}
+.own textarea{flex:1;min-width:0;font:inherit;font-size:16px;line-height:1.4;padding:10px 12px;border:2px solid var(--brand);border-radius:10px;resize:vertical;min-height:96px;}
+.btn{font-size:15px;font-weight:700;padding:11px 22px;border-radius:26px;min-height:44px;}.btn.ghost{border:1.5px solid var(--brand);}.row{gap:12px;justify-content:space-between;}.row .btn:not(.ghost){margin-left:auto;}@media(max-width:560px){.row .btn:not(:only-child){flex:1 1 0;margin-left:0;}}#app .qb+.qb,#optshost>.qb,#optshost>[data-gp-card],#optshost>.own+.qb{margin-top:32px;}.ico{vertical-align:-5px;flex:none}.ico *{fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}.ico .t{fill:none}.rdot .ico{vertical-align:middle}.rail{margin:0 0 20px;}.rail:empty{display:none;}.rdots{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 8px;}.rdot{position:relative;width:44px;height:44px;border-radius:50%;border:1.5px solid var(--panel-line);background:#fff;font-size:20px;line-height:1;cursor:pointer;padding:0;}.rdot.now{border:2px solid var(--brand);background:#EAF4FB;}.rdot.did{background:var(--panel);}.rdot .rchk{position:absolute;right:-3px;top:-3px;width:18px;height:18px;border-radius:50%;background:var(--brand);color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;}.rask{margin:12px 0 0;padding:12px;background:var(--panel);border:1.5px solid var(--panel-line);border-radius:14px;}.rask .row{margin-top:10px;}.said{margin:6px 0 0;font-size:15px;color:var(--soft);}.rname{font-size:14px;font-weight:700;color:var(--brand);margin:0;}.crumbs{display:flex;flex-wrap:wrap;gap:4px 6px;align-items:center;font-size:15px;margin:0 0 24px;}.crumbs:empty{display:none;}.crumbs button{font:inherit;font-size:15px;font-weight:500;color:#fff;background:none;border:0;padding:2px 0;cursor:pointer;text-decoration:underline;}.crumbs span{color:#fff;}.crumbs b{font-weight:800;color:#fff;}.inv{display:flex;flex-direction:column;}.inv .btn{align-self:flex-end;}
+.keybox{background:#DCE9F5;border-radius:12px;padding:12px 14px;font-size:14px;line-height:1.4;color:#1A2E42;margin:0 0 14px;display:flex;flex-wrap:wrap;gap:8px 18px;}.kit{display:inline-flex;align-items:center;gap:8px;}@media(max-width:560px){.keybox{flex-direction:column;flex-wrap:nowrap;gap:10px;}}.kc{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:#fff;color:#1F699E;font-weight:800;font-size:14px;flex:none;}
+.mchart{width:100%;max-width:420px;border-collapse:separate;border-spacing:0 3px;font-size:14px;color:#000;margin:0 0 18px;}.mchart th{text-align:left;font-weight:700;padding:4px 8px;}.mchart td{padding:4px 8px;}.mchart .mn{font-weight:800;}.mg{background:#0BB95B;}.my{background:#FFD84D;}.mr{background:#FF3B3B;}.mb{font-size:11px;font-weight:800;text-align:center;writing-mode:vertical-rl;padding:4px 2px;}
+.fseg.lvl{max-width:220px;}
+.card{display:flex;flex-direction:column;}#app{flex:1;display:flex;flex-direction:column;}#app>.row{margin-top:auto;padding-top:44px;}
+.stack{display:flex;flex-direction:column;gap:10px;margin-top:20px;}.stack .btn{width:100%;margin:0;}.cheer{font-size:56px;line-height:1;margin:0 0 14px;animation:cheer .6s ease-out;}@keyframes cheer{0%{transform:scale(.3);opacity:0;}70%{transform:scale(1.2);opacity:1;}100%{transform:scale(1);}}@media(prefers-reduced-motion:reduce){.cheer{animation:none;}}
+.welc{text-align:center;}.wconn{display:inline-block;text-align:left;margin:4px 0 0;}.wlbl{display:flex;align-items:flex-start;gap:8px;}.wlbl .ico{margin-top:1px;}.wlbl .ibtn{margin-top:1px;}.ibtn{font:inherit;font-size:13px;font-weight:700;font-style:normal;width:22px;height:22px;line-height:18px;padding:0;margin-left:auto;flex:none;border-radius:50%;border:1.5px solid #1A2E42;background:#fff;color:#1A2E42;cursor:pointer;}.hnote{color:#2F3D4F;margin:0 0 18px;}.cwerr{border-radius:10px;padding:11px 14px;font-size:14px;line-height:1.5;background:#FBE9E7;border:1px solid #E8B0A5;color:#7A2410;margin:12px 0 0;}.cwerr b{font-weight:700;display:block;}.wrow[data-k="body"] .chk input{accent-color:#7A4A21;}.wrow[data-k="feel"] .chk input{accent-color:#1F5FA8;}.wrow[data-k="energy"] .chk input{accent-color:#C62828;}.wrow[data-k="mind"] .chk input{accent-color:#2E7D32;}.wrow[data-k="imag"] .chk input{accent-color:#7A2E8E;}.wrow[data-k="body"] .opt{border-color:#B8BEC6;}.wrow[data-k="body"] .opt.on{background:#7A4A21;border-color:#7A4A21;color:#fff;}.wrow[data-k="feel"] .opt{border-color:#B8BEC6;}.wrow[data-k="feel"] .opt.on{background:#1F5FA8;border-color:#1F5FA8;color:#fff;}.wrow[data-k="energy"] .opt{border-color:#B8BEC6;}.wrow[data-k="energy"] .opt.on{background:#C62828;border-color:#C62828;color:#fff;}.wrow[data-k="mind"] .opt{border-color:#B8BEC6;}.wrow[data-k="mind"] .opt.on{background:#2E7D32;border-color:#2E7D32;color:#fff;}.wrow[data-k="imag"] .opt{border-color:#B8BEC6;}.wrow[data-k="imag"] .opt.on{background:#7A2E8E;border-color:#7A2E8E;color:#fff;}.wrow{border:1.5px solid #C9DFF3;border-radius:16px;padding:14px 16px 16px;margin:0 0 14px;}.gbox{border:1.5px solid #C9DFF3;border-radius:16px;padding:6px 16px 16px;margin-top:10px;background:#F7FBFF;}.gsep{margin-top:18px;padding-top:16px;border-top:1px solid #DDE3EA;}.gdone{display:flex;justify-content:flex-end;margin-top:14px;}.glbl{font-size:13px;font-weight:700;color:#2F3D4F;margin:14px 0 6px;}.wchips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:22px 0 56px;}.wchips span{background:#E3EFF9;color:#1A2E42;border-radius:999px;padding:6px 14px;font-size:15px;}.welc .row{justify-content:center;}.welc .row .btn{margin:0;width:auto;min-width:200px;}.stmt{font:inherit;font-size:16px;font-weight:400;line-height:1.55;color:#1A2E42;margin:0 0 20px;}
+.sv{margin:14px 0 0;padding:11px 14px;border-radius:10px;background:#FBE9E7;border:1px solid #E8B0A5;color:#7A2410;font-size:14px;}.sv:empty{display:none;}.cw-loading{display:inline-flex;align-items:center;gap:8px;background:#1F699E;color:#fff;font-size:13px;font-weight:700;padding:8px 16px;border-radius:20px;white-space:nowrap;margin:0 0 14px;animation:cw-breathe 1.6s ease-in-out infinite;}@keyframes cw-breathe{0%,100%{opacity:1}50%{opacity:.62}}@media(prefers-reduced-motion:reduce){.cw-loading{animation:none;}}
+h1.q,.qb h2{font-size:17px;font-weight:800;line-height:1.35;color:#1A2E42;letter-spacing:0;}h1.q{font-size:20px;line-height:1.3;margin:0 0 12px;}h1.q+.opts{margin-top:0;}.invite .ih{font-size:20px;font-weight:800;line-height:1.3;color:#1A2E42;margin:0 0 6px;}.invite .il{font-size:15px;font-weight:400;line-height:1.5;color:#1A2E42;margin:0 0 20px;}.invite .acts{display:flex;gap:12px;flex-wrap:wrap;}.invite .acts .btn{margin-left:0;padding:11px 18px;}@media(max-width:600px){.invite .acts{flex-direction:column;}.invite .acts .btn{width:100%;text-align:center;white-space:nowrap;}}.invite .elbl{display:block;font-size:15px;font-weight:700;color:#1A2E42;margin:0 0 6px;}.invite .eform{display:flex;gap:12px;flex-wrap:wrap;}.invite .eform input{flex:1 1 220px;min-width:0;min-height:44px;font:inherit;font-size:15px;padding:0 16px;border:1.5px solid #C9DFF3;border-radius:26px;}.invite .eform .btn{margin-left:0;}.invite .emsg{font-size:15px;line-height:1.5;color:#1A2E42;margin:12px 0 0;}.stmt+.acts{margin-top:0;}.invite .alts{margin-top:8px;display:flex;flex-direction:column;}.invite .alts .lnk{background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;text-align:left;font-family:inherit;display:flex;align-items:center;min-height:44px;margin:0;font-size:15px;font-weight:400;color:#1F699E;}
+.inv .lnk{display:block;margin-top:12px;font:inherit;font-size:15px;color:var(--brand);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;text-align:left;}
+</style>
+<link rel="icon" href="/logo.png">
+</head>
+<body>
+<div class="wrap">
+  <nav class="crumbs" id="crumbs" aria-label="Where I am"></nav>
+  <div class="card"><div class="rail" id="rail"></div><div id="app" aria-live="polite"></div><p class="sv" id="sv" aria-live="polite"></p></div>
+</div>
+<script>window.CW_SIGNIN="/signin/?next="+encodeURIComponent(location.pathname+location.search);window.CW_SIGNUP="/signup/?next="+encodeURIComponent(location.pathname+location.search);</script>
+<script src="https://2gather.network/nav/identity.js?v=56"></script>
+<script src="https://2gather.network/nav/topbar.js?v=6.95" defer></script>
+<script src="https://2gather.network/nav/waiting-words.js?v=11"></script>
+<script>
+(function(){
+var app=document.getElementById("app");
+var hist=[];var cur,curArg;var showHelp=false;
+var MINE={when:{},rate:{},dive:{}};
+var WHEN=["Today","Last week","Last month","Last year","In my life"];
+var LV=["Not where I want it","Getting there","Good","Great"];
+var ROWS=[
+{k:"body",f:{when:"lastThoughtAboutBody",now:"bodyFeelsNow",q:["bodyMoreOf","bodyWhere"],need:"bodyNext5Minutes"},n:"🌍 My body and physical surroundings",w:"my body and physical surroundings",v:"feel",
+ q:[{t:"How would you like to feel as a result of your surroundings?",l:["Safety","Grounding","Structure","Strength","Health","Comfort","Nurturing","Order","Attractiveness"]},
+    {t:"Where would you like to experience what you selected above?",after:0,l:["My body","My home","My workspace","My neighborhood","Nature near me","My things","My relationships","My wardrobe"]}],
+ needs:["Move","Rest","Eat and drink"]},
+{k:"feel",f:{when:"lastThoughtAboutFeelings",now:"feelingsFeelNow",q:["feelingsLately","feelingsMoreOf"],need:"feelingsNext5Minutes"},n:"🌊 My feelings",w:"my feelings",v:"feel",
+ q:[{t:"What have you been feeling lately?",l:["Happy","Sad","Angry","Afraid","Calm","Tender","Numb","Grateful"]},
+    {t:"Which feelings would you like to experience more?",l:["Empathy","Ease","Being heard","Caring","Tenderness","Well-being"]}],
+ needs:["Connect","Rest","Create"]},
+{k:"energy",f:{when:"lastThoughtAboutEnergy",now:"energyFeelsNow",q:["energyNotServing"],need:"energyNext5Minutes"},n:"🔥 My energy",w:"my energy",v:"feels",
+ q:[
+    {t:"Where is your energy going that isn't serving you right now?",cb:1,l:["Lack of direction","Constant overwhelm","Distraction overload","Unclear priorities","Life on autopilot","Waiting for one change to fix a big part of what I'm experiencing"]}],
+ needs:["Move","Play","Create"]},
+{k:"mind",f:{when:"lastThoughtAboutMind",now:"mindFeelsNow",q:["mindMoreOf","mindTrueForMe"],need:"mindNext5Minutes"},n:"🍃 My mind",w:"my mind",v:"feels",
+ q:[{t:"What would you like to experience more?",l:["Clarity","Focus","Curiosity","Calm thoughts","New ideas","Learning"]},
+    {t:"Which of these are true for you?",cb:1,l:["I see the world clearly","I respond more than I react","I ask questions when I'm curious","I can weigh my options","I say what I mean"]}],
+ needs:["Rest","Create","Connect"]},
+{k:"imag",f:{when:"lastThoughtAboutImagination",now:"imaginationFeelsNow",q:["imaginationMoreOf","imaginationWhen"],need:"imaginationNext5Minutes"},n:"✨ My imagination",w:"my imagination",v:"feels",
+ q:[{t:"What would you like to experience more?",one:1,l:["Inspiration","Ah-ha!'s","Possibility","Creativity","Wonder","Abundance"]},
+    {t:"Where are you, what are you doing, and/or when does it come to you?",after:0,tf:function(a){var n=a.map(function(x){return x.charAt(0).toLowerCase()+x.slice(1);}),j=n.length>1?n.slice(0,-1).join(", ")+" and "+n[n.length-1]:n[0];return "Where are you, what are you doing, and/or when "+(n.length>1?"do ":"does ")+j+" come to you?";},dk:"Not sure yet? People often find it in stillness, with others, or looking at something that exists. Tap any that sound close.",grp:[["With people",3],["Alone",3],["Getting inspired by others",3],["Doing",2]],l:["With others in a room","At a talk","In conversation","On my own","In stillness","During rest","Looking at something that exists","Social media","Podcasts","Creating things","Outdoors","I don't know"]}],
+ needs:["Create","Play","Rest"]}];
+var FE={"Connect":"Connected","Create":"Expressed","Eat and drink":"Nourished","Move":"Energized to move","Play":"Playful","Rest":"Rested"};
+var LAB={mind:{"Connected":"How to connect through my mind","Expressed":"How to express my mind","Nourished":"How to nourish my mind","Energized to move":"How to energize my mind","Playful":"How to have fun with my mind","Rested":"How to rest my mind"}};
+function youize(t){return t.replace(/^How to /,"how to ").replace(/^How I /,"how you ").replace(/ my /g," your ");}
+var EXP={"Connected":"connect","Expressed":"create","Nourished":"eat and drink","Energized to move":"move","Playful":"play","Rested":"rest"};
+var LISTS={"Energized to move":["Workout","Walk","Stretch","Garden","Cycle","Swim","Run","Dance","Sport"],"Rested":["Soak","Float","Nap time","Breathing","Body scan","Massage","Foam roll","Ball roll","Visualization","Journaling","Sound","Music","Meditation","Sun","Light therapy","Slow movement","Relaxing walk","Time outdoors"],"Expressed":["🎨 Making and designing", "🗂 Organizing and planning", "🔍 Finding problems to fix", "🧭 Consulting and advising", "🔧 Repairing and fixing", "📚 Demonstrating what I know", "🌀 Facilitating and coaching", "🩺 Diagnosing and treating", "🌿 Caring and healing"],"Playful":["Games & Strategy", "Collecting", "Movement & Performance", "Music", "Outdoor & Nature", "Sports"],"Connected":["With myself","With others","With a place","With nature","With animals","With something I believe in"],"Nourished":["Cook meals","Eat with others","Plant-based meals","Try new foods","+ Other"]};
+var DOVERBS=["Eat and drink","Move","Play","Create","Rest"];
+var GOPLACES=["🌲 Outdoors","✈️ Travel","🎉 Community & Culture","🎭 Arts & Expression","🥘 Food & Drink","💼 Professional","🏡 Home Life","💛 Rest & Recovery"];
+var BRANCH=[{k:"self",on:"With myself",q:"What do you like to do solo?",l:DOVERBS},{k:"others",on:"With others",q:"What do you like to do with others?",l:DOVERBS},{k:"place",on:"With a place",q:"Where do you feel most connected?",l:GOPLACES}];
+var RECS={"Games & Strategy": ["Chess", "Card Games", "Strategy Board Games", "Fantasy Sports", "eSports", "Tabletop RPG", "Trivia", "Puzzles", "Video Games"], "Collecting": ["Coins", "Stamps", "Trading Cards", "Vinyl Records", "Antiques", "Model Building"], "Making & Collecting": ["Photography", "Crafting", "Painting", "Drawing", "Illustration", "Printmaking", "Calligraphy", "Sculpture", "Ceramics", "Pottery", "Knitting", "Crochet", "Sewing", "Quilting", "Weaving", "Embroidery", "Macramé", "Woodworking", "Carpentry", "Furniture Making", "Whittling", "Metalworking", "Jewelry Making", "Scrapbooking", "Origami", "Bookbinding", "Card Making", "Zine Making", "Videography", "Digital Art", "Graphic Design", "Animation", "Podcasting", "Gunpla", "Craft Drinks"], "Movement & Performance": ["Rock Climbing", "Bouldering", "Indoor Climbing", "Sport Climbing", "Trad Climbing", "Ice Climbing", "Via Ferrata", "Ballet", "Hip Hop", "Salsa", "Ballroom", "Contemporary", "Swing", "Folk", "Breaking", "Tap", "Line", "Belly", "Horseback Riding", "Polo", "Rodeo", "Dressage", "Show Jumping", "Trail Riding", "Yoga", "Skateboarding", "Rollerblading"], "Music": ["Band", "Guitar", "Piano", "Drums", "Violin", "Ukulele"], "Outdoor & Nature": ["Hiking", "Fishing", "Camping", "Bird Watching", "Picnicking", "Foraging", "Grow food", "Stargazing", "Dog walking", "Walking in the rain"], "Sports": ["Tennis", "Pickleball", "Ping Pong", "Squash", "Badminton", "Racquetball", "Padel", "Rowing", "Paddling", "Kayaking", "Surfing", "Diving", "Water Polo", "Stand Up Paddleboarding", "Wakeboarding", "Water Skiing", "Open Water Swimming", "Freediving", "Skiing", "Snowboarding", "Ice Skating", "Hockey", "Curling", "Cross Country Skiing", "Snowshoeing", "Biathlon", "Bobsled", "Soccer", "Baseball", "Football", "Track and Field", "Lacrosse", "Rugby", "Cricket", "Ultimate Frisbee", "Flag Football", "Softball", "Field Hockey", "Basketball", "Volleyball", "Handball", "Netball", "Beach Volleyball", "Futsal", "Weightlifting", "Wrestling", "Gymnastics", "Powerlifting", "CrossFit", "Bodybuilding", "Olympic Lifting", "Strongman", "Martial Arts", "Boxing", "Fencing", "Judo", "Karate", "Taekwondo", "Brazilian Jiu Jitsu", "Muay Thai", "MMA", "Kickboxing", "Paragliding", "Skydiving", "Hang Gliding", "Drone Racing", "Hot Air Ballooning", "Wingsuit Flying", "Auto Racing", "Motorcycle Racing", "ATV Racing", "Motorboat Racing", "Go Kart Racing", "Motocross", "Rally Racing", "Marathon", "Triathlon", "Cross Country", "Ultra Running", "Obstacle Course Racing", "Duathlon", "Archery", "Golf", "Bowling", "Darts", "Shooting Sports", "Disc Golf", "Cornhole", "Bocce Ball", "Croquet", "Boating"]};
+var EXTRA=[{need:"Expression",k:"expression",q:"What thing in your life expresses you the most?",l:["My kitchen","My car","My bike","My garden","My wardrobe","My friends","+ Other"],nopool:1},{need:"Nourished",k:"mealsNow",chart:1,q:"Based on the chart above, where do your meals typically land?",l:["1","2","3","4","5","6","7","8","9","10"],one:1,nopool:1},{need:"Nourished",k:"mealsWant",after:"mealsNow",q:"Where do you want your meals to land?",l:["1","2","3","4","5","6","7","8","9","10"],one:1,nopool:1}];
+function mealChart(){var h='<table class="mchart"><thead><tr><th></th><th>Whole foods</th><th>Ultra-processed</th><th></th></tr></thead><tbody>';for(var n=10;n>=1;n--){var c=n>=7?"mg":n===6?"my":"mr",l=n===10?'<td class="mb mg" rowspan="4">WHOLE FOODS</td>':n===6?'<td class="mb my">GLAD</td>':n===5?'<td class="mb mr" rowspan="5">SAD</td>':'';h+='<tr class="'+c+'"><td class="mn">'+n+'</td><td>'+(n===1?"&lt; 10%":n*10+"%")+'</td><td>'+(n===1?"90% &gt;":(100-n*10)+"%")+'</td>'+l+'</tr>';}return h+'</tbody></table>';}
+function activeBr(F){var a=[],cp=F.opts.Connected||[],pl=F.opts.Playful||[];BRANCH.forEach(function(B){if(F.explore.indexOf("Connected")>-1&&cp.indexOf(B.on)>-1)a.push({need:"Connected",k:B.k,q:B.q,l:B.l});});EXTRA.forEach(function(B){if(F.explore.indexOf(B.need)>-1)a.push(B);});if(F.explore.indexOf("Playful")>-1)pl.forEach(function(t){if(RECS[t])a.push({need:"Playful",k:"rec:"+t,q:t+": which do you enjoy?",l:RECS[t].concat("+ Other")});});var ro=(F.branch||{})["rec:Other"]||[];F.recOwn=F.recOwn||[];ro.forEach(function(v){if(F.recOwn.indexOf(v)<0)F.recOwn.push(v);});if(F.explore.indexOf("Playful")>-1&&F.recOwn.length)a.push({need:"Playful",k:"rec:Other",q:"What else you enjoy:",l:F.recOwn.slice(),nopool:1});return a;}
+Object.keys(LISTS).forEach(function(x){if(LISTS[x].indexOf("+ Other")<0)LISTS[x].push("+ Other");});
+BRANCH.concat(EXTRA).forEach(function(B){if(!B.one&&B.l.indexOf("+ Other")<0)B.l=B.l.concat("+ Other");});
+var TXT={"Connected":"Which connection(s) would you like to make?","Nourished":"What would you like to eat or drink?"};
+var ALLN=["Connect","Create","Eat and drink","Move","Play","Rest"];
+var NEEDOF={};ALLN.forEach(function(n){NEEDOF[FE[n]]=n;});
+var NEEDS=[{k:"connect",n:"Connect",x:["Connected"]},{k:"create",n:"Create",x:["Natural","Expression"]},{k:"eat",n:"Eat and drink",x:["Nourished"]},{k:"move",n:"Move",x:["Energized to move"]},{k:"play",n:"Play",x:["Playful"]},{k:"rest",n:"Rest",x:["Rested"]}];
+function need(k){for(var i=0;i<NEEDS.length;i++)if(NEEDS[i].k===k)return NEEDS[i];return null;}
+function needTitle(N){return "How I like to "+N.n.toLowerCase();}
+function needAsk(N){return "How do you like to "+N.n.toLowerCase()+"?";}
+function needsPicked(){var E=MINE.exp||{};return NEEDS.filter(function(N){return E[N.k]==="Yes";});}
+var NE={"Rest":"💙","Eat and drink":"🥘","Move":"🌀","Play":"🏓","Connect":"🌐","Create":"🎨"};
+var STMT="At 2Balance, you are invited to explore how you relate to the who, what, where, when, how, and why of your life as a daily practice. As you do, we support you to reawaken to balance, joy, connection, and fulfillment in how you experience and engage with yourself and all outside of yourself.";
+function keyHTML(){return '<div class="keybox">'+LV.map(function(lb,i){return '<span class="kit"><span class="kc">'+(i+1)+'</span>'+esc(lb)+'</span>';}).join("")+'</div>';}
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");}
+var GS="https://cw-api-gate.jessieupp.workers.dev",sent={},timer=null,looking=false,readOk=false;
+function load(){return MINE;}
+function save(t){MINE=t;clearTimeout(timer);timer=setTimeout(flush,1500);}
+function me(){try{var m=window.CW&&CW.me&&CW.me();if(!m||!m.id||m.viewing||!CW.passParam())return "";return m.id;}catch(e){return "";}}
+var ICONS={"body": "<circle cx=\"24\" cy=\"24\" r=\"18\"/><path class=\"t\" d=\"M24 6 C14 6 14 24 24 24 C34 24 34 42 24 42 A18 18 0 0 0 24 6 Z\"/>", "feel": "<path d=\"M24 24 C24 20 30 20 30 25 C30 32 20 33 17 26 C13 17 22 10 31 13 C41 17 42 30 34 37 C28 42 18 42 12 36\"/>", "energy": "<path class=\"t\" d=\"M27 3 C27 11 36 16 37 27 C38 36 32 44 24 44 C15 44 10 37 11 29 C12 24 15 21 17 16 C19 19 21 20 22 22 C23 16 25 10 27 3 Z\"/><path d=\"M24 41 C19 41 17 37 19 33 C21 35 23 33 24 29 C28 32 30 36 28 39 C27 40 26 41 24 41 Z\"/>", "mind": "<path d=\"M4 14 q5 -5 10 0 t10 0 t10 0 t10 0\"/><path d=\"M4 24 q5 -5 10 0 t10 0 t10 0 t10 0\"/><path d=\"M4 34 q5 -5 10 0 t10 0 t10 0 t10 0\"/>", "imag": "<path class=\"t\" d=\"M22 6 C23 17 29 23 40 24 C29 25 23 31 22 42 C21 31 15 25 4 24 C15 23 21 17 22 6 Z\"/><path d=\"M38 5 C38 8 40 10 43 10 C40 10 38 12 38 15 C38 12 36 10 33 10 C36 10 38 8 38 5 Z\"/><path d=\"M38 33 C38 35 39 36 41 36 C39 36 38 37 38 39 C38 37 37 36 35 36 C37 36 38 35 38 33 Z\"/>"};
+var ICOL={body:"#7A4A21",feel:"#1F5FA8",energy:"#C62828",mind:"#2E7D32",imag:"#7A2E8E"};
+function ico(k,s){return '<svg class="ico" viewBox="0 0 48 48" width="'+s+'" height="'+s+'" style="color:'+ICOL[k]+'" aria-hidden="true">'+ICONS[k]+'</svg>';}
+function nm(r){return ico(r.k,24)+' '+esc(words(r));}
+function words(r){return r.n.replace(/^\S+\s+/,"");}
+function dv(k){var D=MINE.dive[k]=MINE.dive[k]||{a:[[],[]],own:[[],[]],need:"",feels:[]};while(D.a.length<3)D.a.push([]);while(D.own.length<3)D.own.push([]);return D;}
+var SAVE_NEW=true;
+var FMK={howIEatAndDrink:["eat","opts","Nourished"],howIMove:["move","opts","Energized to move"],howIRest:["rest","opts","Rested"],howIConnect:["connect","opts","Connected"],energizesMeKinds:["play","opts","Playful"],mealsLandNow:["eat","branch","mealsNow"],mealsLandWant:["eat","branch","mealsWant"],connectSolo:["connect","branch","self"],connectWithOthers:["connect","branch","others"],connectPlaces:["connect","branch","place"]};
+function heldAns(key){var f=MINE.flow||{},out=[];Object.keys(f).forEach(function(j){var F=f[j],o=F.other||{},t=o["n:"+key]||o[key]||"";((F.opts||{})[key]||[]).concat((F.branch||{})[key]||[]).forEach(function(v){v=v==="+ Other"?t:v;if(v&&out.indexOf(v)<0)out.push(v);});});return out.join("|");}
+function subjAll(){var f=MINE.flow||{},out=[];Object.keys(f).forEach(function(j){(f[j].subjects||[]).forEach(function(v){if(out.indexOf(v)<0)out.push(v);});});return out.join("|");}
+function fillThree(d){function list(v){return String(v==null?"":v).split("|").map(function(x){return x.trim();}).filter(Boolean);}
+ ["howIMove","howIRest"].forEach(function(n){var m=FMK[n],G=flow(m[0]),h=list(heldAns(m[2]));list(d[n]).forEach(function(x){if(h.indexOf(x)<0)(G.opts[m[2]]=G.opts[m[2]]||[]).push(x);});});
+ function settle(n,sv,now){var h=list(now());sent[n]=h.length===sv.length&&h.every(function(x){return sv.indexOf(x)>-1;})?h.join("|"):sv.join("|");}
+ var sm=list(d.methods),F=flow("create"),hm=list(heldAns("Natural"));sm.forEach(function(x){if(hm.indexOf(x)<0)(F.opts.Natural=F.opts.Natural||[]).push(x);});settle("methods",sm,function(){return heldAns("Natural");});
+ var ss=list(d.subjects),hs=list(subjAll());ss.forEach(function(x){if(hs.indexOf(x)<0)(F.subjects=F.subjects||[]).push(x);});settle("subjects",ss,subjAll);
+ var se=list(d.expression),I=flow("create"),he=list(heldAns("expression")),L=(EXTRA.filter(function(x){return x.k==="expression";})[0]||{l:[]}).l,odd=se.filter(function(x){return he.indexOf(x)<0&&L.indexOf(x)<0;});I.branch=I.branch||{};I.branch.expression=I.branch.expression||[];I.other=I.other||{};
+ se.forEach(function(x){if(he.indexOf(x)>-1)return;if(odd.length===1&&x===odd[0]&&!I.other.expression&&I.branch.expression.indexOf("+ Other")<0){I.branch.expression.push("+ Other");I.other.expression=x;}else I.branch.expression.push(x);});settle("expression",se,function(){return heldAns("expression");});}
+function areaWords(L){return L.map(function(k){return words(row(k));}).join("|");}
+function moreVals(o){Object.keys(FMK).forEach(function(n){o[n]=heldAns(FMK[n][2]);});
+ o.askedBefore=MINE.asked||"";o.lookCloser=MINE.look||"";if(MINE.picks)o.startWithAreas=areaWords(MINE.picks);
+ o.exploreAreas=needsPicked().map(function(N){return N.n;}).concat(areasPicked().map(words)).join("|")||MINE.expOld||"";
+ o.energyUnderwhelmed=dv("energy").a[1].join("|");
+ var en=[],f=MINE.flow||{};Object.keys(f).forEach(function(j){var B=f[j].branch||{};Object.keys(B).forEach(function(b){if(b.indexOf("rec:")===0)B[b].forEach(function(v){if(v!=="+ Other"&&en.indexOf(v)<0)en.push(v);});});});o.energizesMeEnjoy=en.join("|");
+ var N=flow("needs"),fin=N.final.filter(function(v){return v!=="+ Other";}).concat(N.finalOther?[N.finalOther]:[]);o.next5MinutesPick=fin.join("|");o.next5MinutesStart=MINE.startChoice||"";o.methods=heldAns("Natural");o.subjects=subjAll();o.expression=heldAns("expression");if(BUDDY_MATCH){o.accountabilityBuddyIdeal=MINE.buddyIdeal||"";o.accountabilityBuddyWilling=MINE.buddyWilling||"";}return o;}
+function fillMore(take){function list(v){return v.split("|").map(function(x){return x.trim();}).filter(Boolean);}
+ Object.keys(FMK).forEach(function(n){var v=take(n);if(!v)return;v=v.split("|").map(function(x){return x.trim()==="Cook myself"?"Cook meals":x;}).join("|");var m=FMK[n],F=flow(m[0]);F[m[1]]=F[m[1]]||{};F[m[1]][m[2]]=list(v);});
+ var v;if((v=take("askedBefore")))MINE.asked=v;if((v=take("lookCloser")))MINE.look=v;
+ function keys(s){var w=list(s);return ROWS.filter(function(r){return w.indexOf(words(r))>-1;}).map(function(r){return r.k;});}
+ if((v=take("startWithAreas")))MINE.picks=keys(v);
+ if((v=take("exploreAreas"))){MINE.exp=MINE.exp||{};var ew=list(v),em=NEEDS.filter(function(N){return ew.indexOf(N.n)>-1;}),ea=ROWS.filter(function(r){return ew.indexOf(words(r))>-1;});em.forEach(function(N){MINE.exp[N.k]="Yes";});ea.forEach(function(r){MINE.exp[r.k]="Yes";});if(!em.length&&!ea.length)MINE.expOld=v;}
+ if((v=take("energyUnderwhelmed")))dv("energy").a[1]=list(v);
+ if((v=take("energizesMeEnjoy"))){var E=flow("play");E.branch=E.branch||{};list(v).forEach(function(x){var c=Object.keys(RECS).filter(function(k){return RECS[k].indexOf(x)>-1;})[0]||"Other",b="rec:"+c;E.branch[b]=E.branch[b]||[];E.branch[b].push(x);});}
+ if((v=take("next5MinutesPick")))flow("needs").final=list(v);
+ if((v=take("next5MinutesStart")))MINE.startChoice=v;if((v=take("accountabilityBuddyIdeal")))MINE.buddyIdeal=v;if((v=take("accountabilityBuddyWilling")))MINE.buddyWilling=v;}
+function vals(){var o={},st="";ROWS.forEach(function(r){var D=dv(r.k),n=MINE.rate[r.k]||0;o[r.f.when]=MINE.when[r.k]||"";o[r.f.now]=n?LV[n-1]:"";r.f.q.forEach(function(fq,qi){o[fq]=D.a[qi].join("|");});if(r.f.vis)o[r.f.vis]=D.vis;o[r.f.need]=D.need;if(MINE.start===r.k)st=words(r);});o.startWithFirst=st;return SAVE_NEW?moreVals(o):o;}
+function markDone(){try{if(!me())return;localStorage.setItem("cw-firstmin",JSON.stringify({who:String(CW.me().id||"").split(".").join("").toLowerCase(),yes:true}));}catch(e){}}
+function note(t){document.getElementById("sv").textContent=t;}
+function wait(on){var e=document.getElementById("cwl");if(on&&!e){e=document.createElement("div");e.id="cwl";e.className="cw-loading";e.textContent="Looking for your earlier answers…";var c=document.querySelector(".card");c.parentNode.insertBefore(e,c);}else if(!on&&e)e.remove();}
+var NOT_KEPT="Not saved yet: we could not load your earlier answers, so some of your picks are only on this screen.",DROPPED=["howIMove","howIRest","methods","subjects","expression"],rereads=0,rereadAt=0;
+function holding(all){return !readOk&&DROPPED.some(function(f){return all[f]!=="";});}
+function noEmoji(t){return t.replace(/[\u{1F000}-\u{1FAFF}\u{2190}-\u{27BF}\u{2B00}-\u{2BFF}\u{FE0F}\u{200D}]/gu,"").replace(/ {2,}/g," ").trim();}
+function flush(){clearTimeout(timer);timer=null;var id=me();if(!id||looking)return;var all=vals(),out={},any=false,hd=holding(all);Object.keys(all).forEach(function(f){if(typeof all[f]==="string")all[f]=noEmoji(all[f]);});if(hd&&!document.hidden&&rereads<3&&Date.now()-rereadAt>20000){rereads++;rereadAt=Date.now();lookUp();return;}if(!readOk)DROPPED.forEach(function(f){delete all[f];});Object.keys(all).forEach(function(f){if(all[f]!==(sent[f]||"")){out[f]=all[f];any=true;}});if(hd)note(NOT_KEPT);if(!any)return;
+ var base=GS+"?action=saveBalanceAnswers&appearId="+encodeURIComponent(id)+"&answers=",TOO="Not saved yet: this answer is too long to keep. Please shorten it.",big=false,bad=false,good=0,parts=[],c={};
+ function over(o){return (base+encodeURIComponent(JSON.stringify(o))).length>5500;}
+ Object.keys(out).forEach(function(f){var one={};one[f]=out[f];if(over(one)){big=true;return;}var t=JSON.parse(JSON.stringify(c));t[f]=out[f];if(over(t)){parts.push(c);c=one;}else c=t;});if(Object.keys(c).length)parts.push(c);
+ if(big)note(TOO);
+ parts.forEach(function(o){fetch(base+encodeURIComponent(JSON.stringify(o)),{keepalive:true}).then(function(r){return r.json();}).then(function(r){
+  if(r&&r.tooLong&&r.tooLong.length){bad=true;note(TOO);}
+  else if(r&&r.status==="ok"&&!(r.missing&&r.missing.length)){Object.keys(o).forEach(function(f){sent[f]=o[f];});if(!bad)note(big?TOO:(hd?NOT_KEPT:""));good++;if(good===parts.length&&!big){try{localStorage.removeItem(HELD);}catch(e){}}}
+  else if(r&&r.status==="norow"){bad=true;note("Your answers could not be saved because your profile is not set up yet.");}
+  else if(r&&r.missing&&r.missing.length){bad=true;note("Not saved yet: "+r.missing.length+" of these answers have no place on the sheet.");}
+  else{bad=true;note("Could not save. Try again.");}
+ }).catch(function(){bad=true;note("Could not save. Try again.");});});}
+function fill(d){var cur0=vals();
+ function take(f){var v=String(d[f]==null?"":d[f]).trim();sent[f]=v;return cur0[f]===""?v:"";}
+ ROWS.forEach(function(r){var D=dv(r.k),v;
+  if((v=take(r.f.when))&&WHEN.indexOf(v)>-1)MINE.when[r.k]=v;
+  if((v=take(r.f.now))&&LV.indexOf(v)>-1)MINE.rate[r.k]=LV.indexOf(v)+1;
+  r.f.q.forEach(function(fq,qi){var v=take(fq);if(!v)return;D.a[qi]=v.split("|").map(function(x){return x.trim();}).filter(Boolean);D.a[qi].forEach(function(x){if(r.q[qi].l.indexOf(x)<0&&D.own[qi].indexOf(x)<0)D.own[qi].push(x);});});
+  if(r.f.vis&&(v=take(r.f.vis)))D.vis=v;
+  if((v=take(r.f.need))){D.feels=v.split("|").map(function(x){return FE[x.trim()];}).filter(Boolean);D.need=D.feels.map(function(x){return NEEDOF[x];}).join("|");}
+  if(take("startWithFirst")===words(r))MINE.start=r.k;
+ });
+ sent.startWithFirst=String(d.startWithFirst==null?"":d.startWithFirst).trim();
+ if(SAVE_NEW){fillMore(take);fillThree(d);}
+}
+var FIRSTQ={"Connect":["howIConnect"],"Create":["methods","subjects","expression"],"Eat and drink":["howIEatAndDrink"],"Move":["howIMove"],"Play":["energizesMeKinds"],"Rest":["howIRest"],"My body and physical surroundings":["bodyMoreOf"],"My feelings":["feelingsLately"],"My energy":["energyNotServing"],"My mind":["mindMoreOf"],"My imagination":["imaginationMoreOf"]};
+function finished(r){var p=String(r.exploreAreas||"").split("|").map(function(x){return x.trim();}).filter(function(x){return FIRSTQ[x];});return p.length>0&&p.every(function(n){return FIRSTQ[n].some(function(k){return String(r[k]==null?"":r[k]).trim()!=="";});});}
+function lookUp(){var id=me();if(!id)return;looking=true;wait(true);
+ var ask=function(){return fetch(GS+"?action=getIntake&appearId="+encodeURIComponent(id)).then(function(r){return r.json();}).then(function(d){if(!d||d.status==="error")throw new Error("no");return d;});};
+ ask().catch(function(){return new Promise(function(ok){setTimeout(ok,2000);}).then(ask);}).then(function(d){if(finished((d&&d.data)||{})&&!hist.length){location.replace("/start/");return;}fill((d&&d.data)||{});readOk=!!(d&&d.data);if(ROWS.every(function(r){return MINE.when[r.k];}))markDone();looking=false;wait(false);if(cur){cur(curArg);drawCrumbs();}flush();}).catch(function(){looking=false;wait(false);note(holding(vals())?NOT_KEPT:"Your earlier answers could not be loaded.");});}
+document.addEventListener("visibilitychange",function(){if(document.hidden)flush();});
+window.addEventListener("pagehide",flush);
+var fwd=[];
+function same(a,b){return a&&b&&a[0]===b[0]&&JSON.stringify(a[1])===JSON.stringify(b[1]);}
+function go(fn,arg){if(fwd.length&&same(fwd[0],[fn,arg]))fwd.shift();else fwd=[];hist.push([cur,curArg]);cur=fn;curArg=arg;render();}
+function back(){var h=hist.pop();if(h){fwd.unshift([cur,curArg]);cur=h[0];curArg=h[1];render();}}
+function forward(j){j=j||0;var n=fwd[j];if(!n)return;hist.push([cur,curArg]);fwd.slice(0,j).forEach(function(x){hist.push(x);});fwd=fwd.slice(j+1);cur=n[0];curArg=n[1];render();}
+function addFwd(){}
+function qbDone(q,strict){if(!strict&&q.getAttribute("data-skip"))return true;if(q.querySelector("input[type=checkbox]"))return !!q.querySelector("input:checked");var ons=[].slice.call(q.querySelectorAll(".opt.on"));if(ons.length)return ons.some(function(b){return b.textContent.indexOf("I don't know")<0;});var t=q.querySelector("input[type=text]");if(t)return t.value.trim().length>0;return !q.querySelector(".opt");}
+function ready(){return [].slice.call(app.querySelectorAll(".qb")).every(qbDone);}
+function oneAtATime(){var stop=false;[].slice.call(app.querySelectorAll(".qb")).forEach(function(q){q.style.display=stop?"none":"";if(!stop&&!qbDone(q))stop=true;});}
+function gateNext(){if(cur!==needQsPage)return;if(curArg==="eat")oneAtATime();var n=document.getElementById("next"),h=document.getElementById("optshost"),qs=h?[].slice.call(h.querySelectorAll(".qb")).filter(function(b){return !b.querySelector("[data-chg]");}):[];if(n)n.style.display=qs.every(function(b){return qbDone(b,true);})?"":"none";}
+function fitIcons(){app.querySelectorAll("svg.ico:not([data-fit])").forEach(function(sv){try{var b=sv.getBBox();if(!b.width)return;var x=Math.max(0,b.x-2),w=Math.min(48-x,b.width+4),h=+sv.getAttribute("height");sv.setAttribute("viewBox",x+" 0 "+w+" 48");sv.setAttribute("width",Math.round(h*w/48*10)/10);sv.setAttribute("data-fit","1");}catch(e){}});}
+new MutationObserver(function(){addBack();addFwd();gateNext();fitIcons();}).observe(app,{childList:true,subtree:true});
+app.addEventListener("input",gateNext);
+app.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("button[data-m]");if(!b)return;var n=document.getElementById("m-"+b.getAttribute("data-m"));if(!n)return;n.hidden=!n.hidden;b.setAttribute("aria-expanded",n.hidden?"false":"true");});
+function render(){cur(curArg);addBack();addFwd();drawCrumbs();drawRail();window.scrollTo(0,0);}
+function addBack(){if(!hist.length||document.getElementById("back"))return;var r=app.querySelector(".row");if(!r){r=document.createElement("div");r.className="row";app.appendChild(r);}var b=document.createElement("button");b.type="button";b.id="back";b.className="btn ghost";b.textContent="Back";b.addEventListener("click",back);r.insertBefore(b,r.firstChild);}
+function crumbName(fn,arg){if(fn===whenPage)return "Home";if(fn===welcomePage)return "Welcome";if(fn===startWith)return "Begin";if(fn===dive)return "Right now";if(fn===explorePickPage)return "Explore";if(fn===needQsPage)return needTitle(need(arg));if(fn===areaQsPage)return words(row(arg));if(fn===feelPage)return "How do you feel about…";if(fn===explorePage)return "Explore";if(fn===askedPage)return "A closer look";if(fn===feelWhatPage)return "What I would like to feel";if(fn===optionsPage)return words(row(arg));if(fn===finalPage)return "Next 5 minutes";if(fn===readyPage)return "";if(fn===startYes)return "";if(fn===startLater)return "";if(fn===startNudge)return "";if(fn===nudgeBuddy)return "";if(fn===buddyScript)return "";if(fn===buddyIdeal)return "";if(fn===buddyWilling)return "";if(fn===nudgeKind)return "";if(fn===nudgeSmaller)return "";if(fn===nudgeOther)return "";if(fn===invite)return "";if(fn===notNow)return "";if(fn===remind)return "Email reminder";return "Thank you";}
+function drawRail(){var e=document.getElementById("rail"),R=load(),p=sectionKeys(),k=cur===needQsPage||cur===areaQsPage?curArg:"",i=p.indexOf(k);if(p.length<2||i<0){e.innerHTML="";return;}var did=R.areasDone||[];
+ e.innerHTML='<div class="rdots">'+p.map(function(a,j){var d=did.indexOf(a)>-1,n=sectionTitle(a);return '<button type="button" class="rdot'+(j===i?" now":"")+(d?" did":"")+'" data-a="'+a+'" aria-label="'+esc(n)+(d?", finished":"")+'"'+(j===i?' aria-current="step"':'')+'>'+(need(a)?NE[need(a).n]:ico(a,18))+(d?'<span class="rchk" aria-hidden="true">✓</span>':'')+'</button>';}).join("")+'</div><p class="rname">'+(i+1)+' of '+p.length+'</p>';
+ e.querySelectorAll(".rdot").forEach(function(b){b.addEventListener("click",function(){var a=b.getAttribute("data-a");if(a===k)return;R.exp=R.exp||{};R.exp[a]="Yes";save(R);goSection(a);});});}
+function fwdShown(){if(cur===explorePickPage||cur===needQsPage)return [];for(var i=0;i<fwd.length;i++)if(fwd[i][0]===explorePickPage)return fwd.slice(0,i+1);return fwd;}
+function drawCrumbs(){var nav=document.getElementById("crumbs"),trail=hist.concat([[cur,curArg]]);if(cur===welcomePage){nav.innerHTML="";return;}if(trail.length<2&&!fwd.length){nav.innerHTML="";return;}if(trail.length<2){nav.innerHTML='<b aria-current="page">'+esc(crumbName(cur,curArg))+'</b>';nav.insertAdjacentHTML("beforeend",fwdShown().map(function(t,j){if(!crumbName(t[0],t[1]))return "";return '<span aria-hidden="true">/</span><button type="button" class="fw" data-f="'+j+'">'+esc(crumbName(t[0],t[1]))+'</button>';}).join(""));nav.querySelectorAll("button[data-f]").forEach(function(b){b.addEventListener("click",function(){forward(+b.getAttribute("data-f"));});});return;}
+
+ function kk(t){return typeof t[1]==="string"?t[1]:(t[1]&&t[1].k);}
+ var keep=trail.map(function(t,i){return i;}).filter(function(i){var t=trail[i],nx=trail[i+1];return !(nx&&t[0]===dive&&nx[0]===dive&&kk(t)===kk(nx));});
+ var bi=-1;trail.forEach(function(t,i){if(bi<0&&t[0]===startWith)bi=i;});var signed=!!me();if(bi>-1||(signed&&(cur===dive||cur===optionsPage)))keep=keep.filter(function(i){return i===0||i===bi||i===trail.length-1||(!signed&&i<bi);});
+ keep=keep.filter(function(i){if(trail[i][0]===askedPage&&signed&&i!==trail.length-1)return false;return trail[i][0]!==needQsPage||i===trail.length-1;});
+ var lastK=-1;trail.forEach(function(t,i){if(keep.indexOf(i)>-1&&crumbName(t[0],t[1])!=="")lastK=i;});
+ nav.innerHTML=trail.map(function(t,i){return [t,i];}).filter(function(x){return keep.indexOf(x[1])>-1&&crumbName(x[0][0],x[0][1])!=="";}).map(function(x){var t=x[0],i=x[1];var n=esc(crumbName(t[0],t[1]));return i===lastK?'<b aria-current="page">'+n+'</b>':'<button type="button" data-c="'+i+'">'+n+'</button><span aria-hidden="true">/</span>';}).join("");
+ nav.querySelectorAll("button[data-c]").forEach(function(b){b.addEventListener("click",function(){var i=+b.getAttribute("data-c"),t=hist[i];fwd=hist.slice(i+1).concat([[cur,curArg]]).concat(fwd);hist=hist.slice(0,i);cur=t[0];curArg=t[1];render();});});
+ if(fwd.length){nav.insertAdjacentHTML("beforeend",fwdShown().map(function(t,j){if(!crumbName(t[0],t[1]))return "";return '<span aria-hidden="true">/</span><button type="button" class="fw" data-f="'+j+'">'+esc(crumbName(t[0],t[1]))+'</button>';}).join(""));nav.querySelectorAll("button[data-f]").forEach(function(b){b.addEventListener("click",function(){forward(+b.getAttribute("data-f"));});});}}
+function row(k){for(var i=0;i<ROWS.length;i++)if(ROWS[i].k===k)return ROWS[i];}
+var EMO2={"Inspiration":"\u{1F4AB}","Ah-ha!'s":"\u{1F4A1}","Possibility":"\u{1FA9F}","Creativity":"\u{1F3A8}","Wonder":"\u{1F31F}","Abundance":"\u{1F33E}","With others in a room":"\u{1F465}","At a talk":"\u{1F3A4}","In conversation":"\u{1F4AC}","On my own":"\u{1F464}","In stillness":"\u{1F56F}\u{FE0F}","During rest":"\u{1FAB7}","Looking at something that exists":"\u{1F440}","Social media":"\u{1F4F1}","Podcasts":"\u{1F3A7}","Creating things":"\u{1F6E0}\u{FE0F}","Outdoors":"\u{1F332}","I don't know":"\u2753"};
+function emo2(x){return EMO2[x]?'<span class="emj">'+EMO2[x]+"</span> ":"";}
+var MORE={};
+function grpRow(key,q,list,sel,attr){var n=0,hid=[],h="";q.grp.forEach(function(g){var idx=[];for(var i=0;i<g[1];i++)idx.push(n++);g.idx=idx;});
+ for(var z=6;z<n;z++)hid.push(z);
+ var picked=function(i){return sel.indexOf(list[i])>-1;};
+ var open=MORE[key]===undefined?hid.concat([n]).some(picked):MORE[key];
+ function btn(i){return '<button type="button" class="opt'+(picked(i)?" on":"")+'" '+attr+' data-i="'+i+'">'+emo2(list[i])+esc(list[i])+'</button>';}
+ var oth='<button type="button" class="opt other" '+attr+' data-other="1">+ Other</button>',tail=[];
+ if(open){
+  h+='<div class="gbox">';
+  q.grp.forEach(function(g){h+='<p class="glbl">'+esc(g[0])+'</p><div class="opts pills">'+g.idx.map(btn).join("")+'</div>';});
+  for(var i=n;i<list.length;i++)tail.push(i);
+  h+='<div class="opts pills gsep">'+tail.map(btn).join("")+oth+'</div><div class="gdone"><button type="button" class="opt other" data-more="'+key+'">Done</button></div></div>';
+ }else{
+  var show=[0,1,2,3,4,5].concat(hid.filter(picked)),i2;if(picked(n))show.push(n);
+  for(i2=n+1;i2<list.length;i2++)show.push(i2);
+  h+='<div class="opts pills">'+show.map(btn).join("")+'</div><div class="opts pills" style="margin-top:12px"><button type="button" class="opt other" data-more="'+key+'">Show more</button>'+oth+'</div>';
+ }
+ return h;}
+function pillRow(list,sel,attr,other){return '<div class="opts pills">'+list.map(function(x,i){return '<button type="button" class="opt'+(sel.indexOf(x)>-1?" on":"")+'" '+attr+' data-i="'+i+'">'+emo2(x)+esc(x)+'</button>';}).join("")+(other?'<button type="button" class="opt other" '+attr+' data-other="1">+ Other</button>':'')+'</div>';}
+
+function list_(a){var n=a.map(function(r){return "your "+r.w.replace(/^my /,"");});return n.length<3?n.join(" and "):n.slice(0,-1).join(", ")+", and "+n[n.length-1];}
+function downToNext(k,at){var rows=app.querySelectorAll(".wrow"),i=ROWS.map(function(r){return r.k;}).indexOf(k),n=rows[i+1]||document.getElementById("done");if(!n)return;var b=n.getBoundingClientRect();if(b.bottom>window.innerHeight)window.scrollTo(0,Math.max(at,at+b.bottom-window.innerHeight+16));}
+var WELC="bal-welcomed";
+function welcomed(){try{return me()||localStorage.getItem(WELC)==="1";}catch(e){return false;}}
+function welcomePage(){
+ var P=[["body","Body"],["feel","Feelings"],["energy","Energy"],["mind","Mind"],["imag","Imagination"]],C=MINE.conn||(MINE.conn={});
+ app.innerHTML='<div class="welc"><h1 class="q">Are you in connection with your:</h1><div class="wconn">'+P.map(function(p){return '<label class="chk"><input type="checkbox" data-conn="'+p[0]+'"'+(C[p[0]]?" checked":"")+'><span>'+p[1]+'</span></label>';}).join("")+'</div><p class="sub" style="margin:18px 0 22px">Right now? (check all that apply)</p>'+'<div class="row"><button class="btn" type="button" id="come"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-5px;margin-right:8px"><path d="M5 10h11v5a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4z"/><path d="M16 11.5h1.5a2 2 0 0 1 0 4H16"/><path d="M8.5 3.5c-.9 1 .9 1.8 0 2.8M12 3.5c-.9 1 .9 1.8 0 2.8"/></svg>Welcome in</button></div>'+'</div>';
+ app.querySelectorAll("input[data-conn]").forEach(function(b){b.addEventListener("change",function(){C[b.getAttribute("data-conn")]=b.checked;});});
+ document.getElementById("come").addEventListener("click",function(){try{localStorage.setItem(WELC,"1");}catch(e){}hist=[];go(whenPage);});
+}
+var RINFO={body:'How you notice and care for your body, where you live, who you spend time with, and what you surround yourself with.',feel:'What you feel and how emotions move through you.',energy:'How you notice what gives you energy (what lights you up) and what drains it (when you need to recover).',mind:'How you pay attention to yourself and the world around you, and how you notice yourself making decisions.',imag:'How you look at what\'s possible.'};
+function whenPage(){
+ var R=load();
+ var h='';
+ ROWS.forEach(function(r){var yw=r.w.replace(/^my /,"your "),sel=R.rate[r.k]||0;h+='<div class="wrow" data-k="'+r.k+'"><p class="wlbl">'+ico(r.k,24)+' <span>When did you last think about your <span>'+esc(r.w.replace(/^my /,""))+'</span>?</span> <button type="button" class="ibtn" data-n="'+r.k+'" aria-label="What this means" aria-expanded="false">i</button></p><p class="stmt hnote" id="n-'+r.k+'" style="margin:0 0 10px" hidden>'+RINFO[r.k]+'</p>'+pillRow(WHEN,R.when[r.k]?[R.when[r.k]]:[],'data-r="'+r.k+'"',false)+(R.when[r.k]?'<p class="sub" style="margin:14px 0 8px;font-size:15px;line-height:1.45;color:#000">Right now, I rate '+esc(r.w)+' as:</p><div class="rchk">'+LV.map(function(lb,i){return '<label class="chk"><input type="checkbox" data-rr="'+r.k+'" data-rv="'+(i+1)+'"'+(sel===i+1?" checked":"")+'><span>'+(i+1)+' '+esc(lb)+'</span></label>';}).join("")+'</div>':'')+'</div>';});
+ h+='<div class="row"><button class="btn" type="button" id="done">Continue</button></div><div class="cwerr" id="miss" role="alert" hidden></div>';
+ app.innerHTML=h;
+ app.querySelectorAll(".ibtn[data-n]").forEach(function(b){b.addEventListener("click",function(){var n=document.getElementById("n-"+b.getAttribute("data-n"));n.hidden=!n.hidden;b.setAttribute("aria-expanded",n.hidden?"false":"true");});});
+ app.querySelectorAll(".opt[data-r]").forEach(function(b){b.addEventListener("click",function(){var k=b.getAttribute("data-r"),v=WHEN[+b.getAttribute("data-i")];var at=window.scrollY,picked=R.when[k]!==v;R.when[k]=picked?v:"";if(!picked)R.rate[k]=0;save(R);showHelp=false;whenPage();window.scrollTo(0,at);});});
+ app.querySelectorAll("input[data-rr]").forEach(function(b){b.addEventListener("change",function(){var k=b.getAttribute("data-rr"),n=+b.getAttribute("data-rv");var at=window.scrollY;R.rate[k]=(R.rate[k]===n?0:n);save(R);whenPage();window.scrollTo(0,at);if(R.rate[k])downToNext(k,at);});});
+ var d=document.getElementById("done");if(d)d.addEventListener("click",function(){var gaps=[],first=null;ROWS.forEach(function(r){if(!R.when[r.k]||!R.rate[r.k]){var nm_=esc(r.w.replace(/^my /,"").replace(/^./,function(c){return c.toUpperCase();}));gaps.push(R.when[r.k]?nm_+" / rating":nm_);if(!first)first=r.k;}});
+  if(gaps.length){var m=document.getElementById("miss");m.innerHTML="<b>Still to answer</b>"+gaps.join("<br>");m.hidden=false;var rw=[].slice.call(app.querySelectorAll(".wrow"))[ROWS.map(function(r){return r.k;}).indexOf(first)];if(rw)rw.scrollIntoView({block:"start"});return;}
+  if(me()){R.picks=null;save(R);go(explorePickPage);}else go(askedPage);});
+}
+function oldAreas(){var R=load();return ROWS.filter(function(r){return ["Last month","Last year","In my life"].indexOf(R.when[r.k])>-1;});}
+var ASKED=["Not before","Yes"];
+var WELCOME={"Yes":"Then you know how it can feel to be asked. We're glad you're here.","Not before":"Then this may be new for you. We're glad you're here."};
+function askedPage(){
+ var R=load(),a=R.asked||"",olds=oldAreas(),l=R.look||"",h='<h1 class="q">Has anybody besides you ever asked you these questions?</h1><div class="opts pills">'+ASKED.map(function(x,i){return '<button type="button" class="opt'+(a===x?" on":"")+'" data-a="'+i+'">'+esc(x)+'</button>';}).join("")+'</div>';
+ if(a){h+='<p class="stmt" style="margin-top:18px">'+esc(WELCOME[a])+'</p>';
+  h+=(olds.length?'<h1 class="q" style="margin-top:18px">It\'s been a while since you last thought about you and '+esc(list_(olds))+'.</h1>':'')+(olds.length?'<p class="stmt" style="margin-bottom:12px">'+(olds.length===1?"Would you like to look at this more closely?":"Would you like to look at one of these more closely?")+'</p>':'<h1 class="q" style="margin-top:18px">Would you like to look at these more closely?</h1>')+'<div class="opts pills" style="margin-top:0">'+LOOK.map(function(x,i){return '<button type="button" class="opt'+(l===x?" on":"")+'" data-l="'+i+'">'+esc(x)+'</button>';}).join("")+'</div>';
+  if(l)h+='<div class="row"><button class="btn" type="button" id="next">Continue</button></div>';}
+ app.innerHTML=h;
+ app.querySelectorAll(".opt[data-a]").forEach(function(b){b.addEventListener("click",function(){R.asked=ASKED[+b.getAttribute("data-a")];save(R);askedPage();});});
+ app.querySelectorAll(".opt[data-l]").forEach(function(b){b.addEventListener("click",function(){R.look=LOOK[+b.getAttribute("data-l")];save(R);askedPage();});});
+ var n=document.getElementById("next");if(n)n.addEventListener("click",function(){if(R.look===LOOK[1]){go(notNow);return;}R.picks=null;R.invitedFor="explore";save(R);if(me())go(explorePickPage);else go(invite);});
+}
+var LOOK=["Yes","Not at this time, thank you"];
+function startWith(){
+ var R=load();
+ var list=ROWS.filter(function(r){return R.when[r.k]==="Last year"||R.when[r.k]==="In my life";}),calm=!oldAreas().length;
+ if(!list.length)list=ROWS;
+ if(!R.picks){var inl=oldAreas().filter(function(r){return list.indexOf(r)>-1;});R.picks=!calm&&inl.length?[inl[0].k]:[];}
+ R.picks=ROWS.filter(function(r){return R.picks.indexOf(r.k)>-1&&list.indexOf(r)>-1;}).map(function(r){return r.k;});
+ R.start=R.picks[0]||"";
+ app.innerHTML='<p class="stmt">'+esc(STMT)+'</p><h1 class="q">'+(calm?"Would you like to look at one or more of these more closely?":"Would you like to start with one or more of these?")+'</h1><div class="opts pills">'+list.map(function(r){return '<button type="button" class="opt'+(R.picks.indexOf(r.k)>-1?" on":"")+'" data-k="'+r.k+'">'+nm(r)+'</button>';}).join("")+'</div>'+(R.picks.length?'<div class="row"><button class="btn" type="button" id="next">Continue</button></div>':'');
+ app.querySelectorAll(".opt").forEach(function(b){b.addEventListener("click",function(){var k=b.getAttribute("data-k"),i=R.picks.indexOf(k);if(i>-1)R.picks.splice(i,1);else R.picks.push(k);save(R);startWith();});});
+ var n=document.getElementById("next");if(n)n.addEventListener("click",function(){if(me()||R.invited)go(dive,R.picks[0]);else go(invite);});
+}
+var HOME={body:[],feel:[],energy:[],mind:[],imag:[]};
+function afterArea(k){var p=load().picks||[],i=p.indexOf(k);return i>-1&&i<p.length-1?p[i+1]:"";}
+function setExplore(k){var o=HOME[k].slice();row(k).q.forEach(function(q,qi){if(q.br)dv(k).a[qi].forEach(function(l){if(q.br[l]&&o.indexOf(q.br[l])<0)o.push(q.br[l]);});});flow(k).explore=o;}
+function needWords(k){var F=flow(k),o=[];F.explore.forEach(function(x){var n=x==="Natural"||x==="Expression"?"Create":NEEDOF[x],has=x==="Expression"?((F.branch||{}).expression||[]).length:(F.opts[x]||[]).length||(x==="Natural"&&(F.subjects||[]).length);if(has&&o.indexOf(n)<0)o.push(n);});return o.join("|");}
+var HELD="bal-first-minute-held";
+function hold(){try{var c=JSON.parse(JSON.stringify(MINE)),f=c.flow||{};Object.keys(f).forEach(function(j){if(f[j].opts)delete f[j].opts.Natural;if(f[j].branch)delete f[j].branch.expression;if(f[j].other)delete f[j].other.expression;delete f[j].subjects;});c.at=Date.now();localStorage.setItem(HELD,JSON.stringify(c));}catch(e){}}
+function here(){return "/";}
+function invite(){
+ app.innerHTML='<div class="invite"><h2 class="ih">Would you like us to save your answers?</h2><p class="il">Your answers so far will be waiting for you. You can carry on from here after signing in.</p>'+(heldAns("Natural")||subjAll()||heldAns("expression")?'<p class="il">What comes most naturally to you, your subjects and what expresses you most are not kept until you sign in, so you will choose those again.</p>':'')+'<div class="acts"><button class="btn" type="button" id="up">Sign up</button><button class="btn ghost" type="button" id="no">No, thank you</button></div><div class="alts"><button class="lnk" type="button" id="in">I already have an account</button></div></div>';
+ document.getElementById("up").addEventListener("click",function(){hold();location.href="/signup/?next="+encodeURIComponent(here());});
+ document.getElementById("in").addEventListener("click",function(){hold();location.href="/signin/?next="+encodeURIComponent(here());});
+ document.getElementById("no").addEventListener("click",function(){go(notNow);});
+}
+function notNow(){try{localStorage.removeItem(HELD);}catch(e){}app.innerHTML='<p class="stmt">If and when you\'re ready to begin, come back to explore how to tend to yourself. Start by exploring what you\'re good at, what lights you up, and where you get your energy.</p><div class="acts"><button class="btn" type="button" id="rem">Send me an email reminder</button></div>';
+ document.getElementById("rem").addEventListener("click",function(){go(remind);});}
+var REMIND_SELF=true,BUDDY_MATCH=false;
+function remindMe(id){
+ app.innerHTML='<div class="invite"><h2 class="ih" id="rh">Sending your reminder…</h2></div>';
+ function say(t){var e=document.getElementById("rh");if(e)e.textContent=t;}
+ fetch(GS+"?action=sendMyBalanceReminder&appearId="+encodeURIComponent(id)).then(function(r){return r.json();}).then(function(r){
+  if(r&&r.status==="ok"&&r.sent&&r.email)say("Your reminder was sent to "+r.email+".");
+  else if(r&&r.status==="ok"&&r.email)say("We sent a reminder to "+r.email+" recently, so we did not send another.");
+  else say(({"Sign in again.":"Please sign in again, then ask for the reminder.","No address.":"We do not have an email address for you yet.","Try again later.":"Too many reminders were sent just now. Please try again later."})[r&&r.message]||"We could not send it. Please try again.");
+ }).catch(function(){say("We could not send it. Please try again.");});
+}
+function remind(){var id=me();if(id&&REMIND_SELF){remindMe(id);return;}
+ app.innerHTML='<div class="invite"><h2 class="ih">Where should we send it?</h2><p class="il">We use your email once, to send this one reminder.</p><label class="elbl" for="em">Your email</label><div class="eform"><input id="em" type="email" autocomplete="email" inputmode="email"><button class="btn" type="button" id="sendrem">Send</button></div><p class="emsg" id="emsg" aria-live="polite"></p></div>';
+ var em=document.getElementById("em"),msg=document.getElementById("emsg");
+ function send(){var v=em.value.trim();if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)){msg.textContent="Please check the email address.";return;}
+  msg.textContent="Sending…";
+  fetch(GS+"?action=requestBalanceReminder&email="+encodeURIComponent(v)).then(function(r){return r.json();}).then(function(r){msg.textContent=r&&r.status==="ok"?"One reminder is on its way.":"We could not send it. Please try again.";}).catch(function(){msg.textContent="We could not send it. Please try again.";});}
+ document.getElementById("sendrem").addEventListener("click",send);em.addEventListener("keydown",function(e){if(e.key==="Enter")send();});
+}
+function areasList(){var R=load();return R.picks&&R.picks.length?R.picks.slice():ROWS.map(function(r){return r.k;});}
+function areasPicked(){var E=MINE.exp||{};return ROWS.filter(function(r){return E[r.k]==="Yes";});}
+function sectionKeys(){return needsPicked().map(function(N){return N.k;}).concat(areasPicked().map(function(r){return r.k;}));}
+function goSection(k){go(need(k)?needQsPage:areaQsPage,k);}
+function sectionTitle(k){return need(k)?needTitle(need(k)):words(row(k));}
+function nextExplore(k){var L=sectionKeys(),i=L.indexOf(k);return L[i+1]||"";}
+function dive(){
+ var R=load(),L=areasList();R.exp=R.exp||{};
+ function draw(){
+  var y=window.scrollY,all=L.every(function(k){return R.rate[k];});
+  var h=L.map(function(k){var r=row(k),sel=R.rate[k]||0;return '<div class="qb"><h2 style="display:flex;align-items:flex-start;gap:8px">'+nm(r)+' <button type="button" class="ibtn" data-m="'+k+'" aria-label="What this means" aria-expanded="false">i</button></h2><p class="stmt hnote" id="m-'+k+'" style="margin:0 0 8px" hidden>'+RINFO[k]+'</p><p class="sub" style="margin:0 0 8px;font-size:15px;line-height:1.45;color:#000">Right now, I rate '+esc(r.w)+' as:</p><div class="opts pills">'+LV.map(function(lb,i){return '<button type="button" class="opt'+(sel===i+1?" on":"")+'" data-r="'+k+'" data-v="'+(i+1)+'">'+(i+1)+' '+esc(lb)+'</button>';}).join("")+'</div>'+'</div>';}).join("");
+  var one=L.length===1?L[0]:"";
+  if(all&&one)h+='<h1 class="q" style="margin-top:30px">Would you like to explore '+esc(row(one).w.replace(/^my /,"your "))+' a little more?</h1><div class="row" style="margin-top:0;padding-top:24px"><button class="btn" type="button" id="yes">Let\'s go!</button></div><div class="invite"><div class="alts"><button class="lnk" type="button" id="no">Not right now, thank you</button></div></div>';
+  else if(all)h+='<div class="row"><button class="btn" type="button" id="next">Continue</button></div>';
+  app.innerHTML=h;window.scrollTo(0,y);
+  app.querySelectorAll(".opt[data-r]").forEach(function(b){b.addEventListener("click",function(){var k=b.getAttribute("data-r"),v=+b.getAttribute("data-v");R.rate[k]=(R.rate[k]===v?0:v);save(R);draw();});});
+  var nb=document.getElementById("next");if(nb)nb.addEventListener("click",function(){go(explorePickPage);});
+  var yb=document.getElementById("yes");if(yb)yb.addEventListener("click",function(){R.exp[one]="Yes";save(R);go(areaQsPage,one);});
+  var nob=document.getElementById("no");if(nob)nob.addEventListener("click",function(){R.exp[one]="No";save(R);go(notNow);});
+ }
+ draw();
+}
+function explorePickPage(){
+ var R=load();R.exp=R.exp||{};
+ function first(){var f=sectionKeys()[0];if(f)goSection(f);else go(finalPage);}
+ var any=sectionKeys().length>0;
+ app.innerHTML='<h1 class="q">Which would you like to explore a little more?</h1><div class="qb"><h2>What I do</h2><div class="chks">'+NEEDS.map(function(N){return '<label class="chk"><input type="checkbox" data-a="'+N.k+'"'+(R.exp[N.k]==="Yes"?" checked":"")+'><span><span style="margin-right:6px">'+NE[N.n]+'</span>'+esc(needTitle(N))+'</span></label>';}).join("")+'</div></div><div class="qb"><h2>What I notice in myself</h2><div class="chks">'+ROWS.map(function(r){return '<label class="chk"><input type="checkbox" data-a="'+r.k+'"'+(R.exp[r.k]==="Yes"?" checked":"")+'><span>'+nm(r)+'</span></label>';}).join("")+'</div></div><div class="row"><button class="btn" type="button" id="next"'+(any?'':' style="display:none"')+'>Continue</button></div>';
+ app.querySelectorAll(".chk input").forEach(function(c){c.addEventListener("change",function(){R.exp[c.getAttribute("data-a")]=c.checked?"Yes":"No";save(R);document.getElementById("next").style.display=sectionKeys().length?"":"none";});});
+ document.getElementById("next").addEventListener("click",first);
+}
+function needQsPage(k){
+ var N=need(k),R=load();flow(k).explore=N.x.slice();
+ app.innerHTML='<h1>'+NE[N.n]+' '+esc(needAsk(N))+'</h1><div id="optshost"></div><div class="row"><button class="btn" type="button" id="next">Continue</button></div>';
+ optionsPage(k);
+ document.getElementById("next").addEventListener("click",function(){R.areasDone=R.areasDone||[];if(R.areasDone.indexOf(k)<0)R.areasDone.push(k);save(R);var nx=nextExplore(k);if(nx)goSection(nx);else go(finalPage);});
+}
+function areaQsPage(k){
+ var r=row(k),R=load(),D=dv(k);
+ function draw(){
+  setExplore(k);var y=window.scrollY;
+  var h='<h1>'+nm(r)+'</h1>';
+  r.q.forEach(function(q,qi){
+   if(r.noq)return;
+   if(q.after!==undefined&&!D.a[q.after].length)return;
+   var list=q.l.concat(D.own[qi]);
+   h+='<div class="qb"'+(q.skip?' data-skip="1"':'')+'><h2>'+esc(q.tf?q.tf(D.a[q.after]):q.t)+'</h2>'+(q.skip?'<p class="sub" style="margin:0 0 6px">'+esc(q.skip)+'</p>':'')+(q.t==="What have you been feeling lately?"?'<p class="sub" style="margin:0 0 6px">Select all that apply.</p>':'');
+   if(q.cb){list.forEach(function(x,i){h+='<label class="chk"><input type="checkbox" data-q="'+qi+'" data-i="'+i+'"'+(D.a[qi].indexOf(x)>-1?" checked":"")+'><span>'+esc(x)+'</span></label>';});h+='<label class="chk"><input type="checkbox" class="oth" data-q="'+qi+'"><span>+ Other</span></label>';}
+   else h+=q.grp?grpRow(k+":"+qi,q,list,D.a[qi],'data-q="'+qi+'"'):pillRow(list,D.a[qi],'data-q="'+qi+'"',true);
+   h+=(q.dk&&D.a[qi].indexOf("I don't know")>-1?'<p class="stmt" style="margin:10px 0 0;color:#2F3D4F">'+esc(q.dk)+'</p>':'')+'<div class="ownhost" data-q="'+qi+'"></div></div>';
+  });
+  h+='<div id="optshost"></div><div class="row"><button class="btn" type="button" id="next">Continue</button></div>';
+  app.innerHTML=h;optionsPage(k);window.scrollTo(0,y);
+  r.q.forEach(function(q,qi){
+   var list=q.l.concat(D.own[qi]);
+   app.querySelectorAll('.opt[data-more="'+k+":"+qi+'"]').forEach(function(b){b.addEventListener("click",function(){var kk=b.getAttribute("data-more");MORE[kk]=b.textContent.trim()!=="Done";draw();});});
+   function toggle(v,on){var i=D.a[qi].indexOf(v);if(on&&i<0){if(q.one)D.a[qi].length=0;D.a[qi].push(v);}if(!on&&i>-1)D.a[qi].splice(i,1);save(R);}
+   app.querySelectorAll('.opt[data-q="'+qi+'"][data-i]').forEach(function(b){b.addEventListener("click",function(){var v=list[+b.getAttribute("data-i")];toggle(v,D.a[qi].indexOf(v)<0);draw();});});
+   app.querySelectorAll('.chk input[data-q="'+qi+'"][data-i]').forEach(function(c){c.addEventListener("change",function(){toggle(list[+c.getAttribute("data-i")],c.checked);if(q.br){setExplore(k);save(MINE);var yy=window.scrollY;optionsPage(k);window.scrollTo(0,yy);}});});
+   var o=app.querySelector('[data-q="'+qi+'"][data-other], .chk .oth[data-q="'+qi+'"]');
+   if(o)o.addEventListener(o.tagName==="INPUT"?"change":"click",function(){if(o.tagName==="INPUT")o.checked=false;ownBox(qi,function(v){if(D.own[qi].indexOf(v)<0&&q.l.indexOf(v)<0)D.own[qi].push(v);toggle(v,true);draw();});});
+  });
+  document.getElementById("next").addEventListener("click",function(){R.areasDone=R.areasDone||[];if(R.areasDone.indexOf(k)<0)R.areasDone.push(k);D.need=needWords(k);save(R);var nx=nextExplore(k);if(nx)goSection(nx);else go(finalPage);});
+ }
+ draw();
+}
+function ownBox(qi,fn){var host=app.querySelector('.ownhost[data-q="'+qi+'"]');if(!host||host.firstChild)return;host.innerHTML='<div class="own"><input type="text" maxlength="60" placeholder="Ex: something of my own" aria-label="Add my own"><button class="btn ghost" type="button">Add</button></div>';var i=host.querySelector("input");function add(){var v=i.value.trim();if(v)fn(v);}host.querySelector("button").addEventListener("click",add);i.addEventListener("keydown",function(e){if(e.key==="Enter")add();});i.focus();}
+
+function feelWhatPage(k){
+ var r=row(k),R=load(),D=dv(k);
+ app.innerHTML='<h1 class="q">What would you like to feel?</h1><div class="opts pills">'+ALLN.map(function(n,i){var x=FE[n];return '<button type="button" class="opt'+(D.feels.indexOf(x)>-1?" on":"")+'" data-i="'+i+'">'+NE[n]+' '+esc(x)+'</button>';}).join("")+'</div><div class="row"><button class="btn" type="button" id="next">Continue</button></div>';
+ app.querySelectorAll(".opt").forEach(function(b){b.addEventListener("click",function(){var v=FE[ALLN[+b.getAttribute("data-i")]],i=D.feels.indexOf(v);if(i>-1)D.feels.splice(i,1);else D.feels.push(v);D.need=D.feels.map(function(x){return NEEDOF[x];}).join("|");save(R);feelWhatPage(k);});});
+ document.getElementById("next").addEventListener("click",function(){flow(k).explore=[];go(D.feels.length?explorePage:finalPage,k);});
+}
+function orList(a){return a.length<3?a.join(" or "):a.slice(0,-1).join(", ")+", or "+a[a.length-1];}
+function askedBefore(k,key){var f=MINE.flow||{};return Object.keys(f).some(function(j){if(j===k)return false;var F=f[j];return ((F.opts&&F.opts[key])||[]).length||((F.branch&&F.branch[key])||[]).length;});}
+function flow(k){var f=MINE.flow=MINE.flow||{};return f[k]=f[k]||{explore:[],opts:{},final:[]};}
+function explorePage(k){
+ var D=dv(k),F=flow(k),one=D.feels.length===1;
+ function lab(x){return (LAB[k]&&LAB[k][x])||("How I like to "+EXP[x]);}
+ var h=one?'<h1 class="q">Would you like to explore '+esc(youize(lab(D.feels[0])).replace(/^how you like to/,"how you like to"))+'?</h1>':'<h1 class="q">Would you like to explore these?</h1><div class="chks">'+D.feels.map(function(x,i){return '<label class="chk"><input type="checkbox" data-i="'+i+'"'+(F.explore.indexOf(x)>-1?" checked":"")+'><span>'+NE[NEEDOF[x]]+' '+esc(lab(x))+'</span></label>';}).join("")+'</div>';
+ app.innerHTML=h+'<div class="row"><button class="btn" type="button" id="next">Continue</button></div>';
+ app.querySelectorAll('.chk input').forEach(function(c){c.addEventListener("change",function(){var v=D.feels[+c.getAttribute("data-i")],i=F.explore.indexOf(v);if(c.checked&&i<0)F.explore.push(v);if(!c.checked&&i>-1)F.explore.splice(i,1);});});
+ document.getElementById("next").addEventListener("click",function(){if(one)F.explore=[D.feels[0]];go(F.explore.length?optionsPage:finalPage,k);});
+}
+var _gpMethodPicked={};
+  function gpBlock(title, hint, body){
+    var w = document.createElement('div');
+    w.style.cssText = 'padding:16px 18px;margin:0 0 14px;border:1.5px solid #C9DFF3;border-radius:14px;background:#fff;';
+    w.setAttribute('data-gp-card','1');
+    var t = document.createElement('div'); t.className = 'gp-qtitle';
+    t.style.cssText = 'font-size:17px;font-weight:800;color:#1A2E42;margin-bottom:2px;';
+    t.textContent = title;
+    var h = document.createElement('div');
+    h.style.cssText = 'font-size:13.5px;color:#2F3D4F;margin-bottom:12px;';
+    h.textContent = hint;
+    w.appendChild(t); w.appendChild(h); w.appendChild(body);
+    return w;
+  }
+  var GP_STAGE_LIST = [
+    ['Analyzing', '\u{1F4CA}', 'p', 'researching, investigating, interviewing, comparing'],
+    ['Designing', '\u{1F3A8}', 'p', 'imagining, sketching, outlining, setting goals'],
+    ['Modeling', '\u{1F9E9}', 'p', 'prototyping, mocking up, simulating, diagramming'],
+    ['Planning', '\u{1F5C2}', 'p', 'organizing, scheduling, budgeting, prioritizing'],
+    ['Funding', '\u{1F4B0}', 'p', 'fundraising, investing, pitching, lending'],
+    ['Sourcing', '\u{1F50D}', 'p', 'gathering materials, finding suppliers, finding people, finding spaces'],
+    ['Making', '\u{1F6E0}\uFE0F', 'p', 'building, crafting, constructing, creating'],
+    ['Manufacturing', '\u{1F3ED}', 'p', 'producing, assembling, fabricating, processing'],
+    ['Testing', '\u{1F9EA}', 'p', 'checking quality, piloting, reviewing drafts, experimenting'],
+    ['Delivering', '\u{1F69A}', 'p', 'packaging, shipping, installing, launching'],
+    ['Demonstrating', '\u{1F4DA}', 'p', 'teaching, training, showing, explaining'],
+    ['Promoting', '\u{1F4E3}', 'p', 'storytelling, writing, photographing, marketing'],
+    ['Supporting', '\u{1F6DF}', 'p', 'helping, guiding, answering questions, troubleshooting'],
+    ['Repairing', '\u{1F527}', 'p', 'fixing, maintaining, restoring, mending'],
+    ['Evaluating', '\u2705', 'p', 'measuring results, assessing, surveying, reflecting'],
+    ['Improving', '\u{1F4C8}', 'p', 'listening, refining, iterating, updating'],
+    ['Repurposing', '\u267B\uFE0F', 'p', 'recycling, reselling, reusing, passing on'],
+    ['Advising', '\u{1F9ED}', 'a', 'consulting, advising, mentoring, recommending'],
+    ['Facilitating', '\u{1F300}', 'a', 'coaching, connecting, mediating, convening'],
+    ['Caring', '\u{1F33F}', 'a', 'healing, comforting, nurturing, tending']
+  ];
+  var _gpStageOpen = false;
+  var GP_METHOD_OLD = { 'organizing and planning': ['Planning'], 'repairing and fixing': ['Repairing'], 'demonstrating what i know': ['Demonstrating'], 'consulting and advising': ['Advising'], 'facilitating and coaching': ['Facilitating'], 'making and designing': ['Making', 'Designing'], 'caring and healing': ['Caring'], 'finding problems to fix': ['Analyzing'], 'diagnosing and treating': ['Caring'] };
+  function gpMethodsNorm(){
+    var names = {}; GP_STAGE_LIST.forEach(function(s){ names[s[0].toLowerCase()] = s[0]; });
+    Object.keys(_gpMethodPicked).forEach(function(k){
+      if (!_gpMethodPicked[k]) { delete _gpMethodPicked[k]; return; }
+      var bare = String(k).replace(/^[^A-Za-z]+/, '').trim().toLowerCase();
+      if (names[bare]) { if (names[bare] !== k) { delete _gpMethodPicked[k]; _gpMethodPicked[names[bare]] = true; } return; }
+      var to = GP_METHOD_OLD[bare];
+      if (to) { delete _gpMethodPicked[k]; to.forEach(function(n){ _gpMethodPicked[n] = true; }); }
+    });
+  }
+  function gpStagesBody(){
+    var body = document.createElement('div');
+    var paint = function(){
+      gpMethodsNorm();
+      body.innerHTML = '';
+      var names = GP_STAGE_LIST.filter(function(s){ return _gpMethodPicked[s[0]]; }).map(function(s){ return s[0]; });
+      var head = document.createElement('div');
+      head.style.cssText = 'display:flex;flex-direction:column;align-items:flex-start;gap:10px;';
+      var left = document.createElement('div');
+      left.style.cssText = 'display:flex;flex-wrap:wrap;gap:7px;min-width:0;';
+      if (names.length) {
+        names.forEach(function(n){
+          var c = document.createElement('span');
+          c.textContent = n;
+          c.style.cssText = 'font-size:13.5px;font-weight:700;padding:7px 14px;border-radius:20px;background:#1F699E;border:1px solid #1F699E;color:#fff;';
+          left.appendChild(c);
+        });
+      } else {
+        var none = document.createElement('span');
+        none.textContent = 'Nothing chosen yet.';
+        none.style.cssText = 'font-size:13.5px;color:#2F3D4F;';
+        left.appendChild(none);
+      }
+      var tg = document.createElement('button');
+      tg.type = 'button';
+      tg.setAttribute('aria-expanded', _gpStageOpen ? 'true' : 'false');
+      tg.textContent = _gpStageOpen ? 'Hide choices' : 'Show choices';
+      tg.style.cssText = 'font:inherit;font-size:13.5px;font-weight:700;padding:7px 14px;border-radius:20px;border:1.5px solid #1F699E;background:#fff;color:#1F699E;cursor:pointer;flex-shrink:0;';
+      tg.onclick = function(){ _gpStageOpen = !_gpStageOpen; paint(); };
+      head.appendChild(tg); head.appendChild(left);
+      body.appendChild(head);
+      if (_gpStageOpen) {
+        var mk = function(group){
+          var grid = document.createElement('div');
+          grid.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr));gap:12px;margin-top:12px;';
+          GP_STAGE_LIST.filter(function(s){ return s[2] === group; }).forEach(function(s){
+            var on = !!_gpMethodPicked[s[0]];
+            var b = document.createElement('button');
+            b.type = 'button';
+            b.setAttribute('aria-pressed', on ? 'true' : 'false');
+            b.style.cssText = 'font:inherit;text-align:left;cursor:pointer;color:#1A2E42;border-radius:14px;padding:10px 12px;display:flex;flex-direction:column;align-items:flex-start;gap:2px;'
+              + (on ? 'background:#EAF4FB;border:1.5px solid #1F699E;box-shadow:inset 0 0 0 1px #1F699E;' : 'background:#fff;border:1.5px solid #DDE3EA;');
+            var top = document.createElement('div');
+            top.style.cssText = 'display:flex;gap:8px;align-items:center;width:100%;';
+            var e = document.createElement('span'); e.textContent = s[1]; e.style.cssText = 'font-size:20px;line-height:1;';
+            var w = document.createElement('span'); w.textContent = s[0]; w.style.cssText = 'font-weight:800;font-size:16px;';
+            var t = document.createElement('span'); t.textContent = '✓';
+            t.style.cssText = 'margin-left:auto;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;'
+              + (on ? 'background:#1F699E;border:1.5px solid #1F699E;color:#fff;' : 'border:1.5px solid #DDE3EA;');
+            top.appendChild(e); top.appendChild(w); top.appendChild(t);
+            var v = document.createElement('div'); v.textContent = s[3]; v.style.cssText = 'font-size:12.5px;color:#2F3D4F;';
+            b.appendChild(top); b.appendChild(v);
+            b.onclick = function(){ if (_gpMethodPicked[s[0]]) delete _gpMethodPicked[s[0]]; else _gpMethodPicked[s[0]] = true; paint(); try { if (window.gpMethodsChanged) window.gpMethodsChanged(); } catch (e2) {} };
+            grid.appendChild(b);
+          });
+          return grid;
+        };
+        body.appendChild(mk('p'));
+        var rule = document.createElement('div');
+        rule.style.cssText = 'height:0;margin:10px 0 0;';
+        body.appendChild(rule);
+        body.appendChild(mk('a'));
+      }
+    };
+    window._gpPaintMethods = paint;
+    paint();
+    return body;
+  }
+  var GP_SUBJ_LIST = [
+    ['Art', '\u{1F3A8}', 'drawing, painting, sculpture, design'],
+    ['Biology', '\u{1F9EC}', 'living things, the body, plants, ecology'],
+    ['Chemistry', '⚗️', 'substances, reactions, mixing, lab work'],
+    ['Computers and coding', '\u{1F4BB}', 'programming, apps, data, troubleshooting'],
+    ['Drama and theater', '\u{1F3AD}', 'acting, staging, improv, directing'],
+    ['Economics', '\u{1F4C8}', 'money, markets, trade, budgets'],
+    ['Education and teaching', '\u{1F393}', 'teaching, tutoring, how people learn, schools'],
+    ['Engineering and building', '\u{1F3D7}️', 'designing, building, fixing, machines'],
+    ['English and writing', '✍️', 'grammar, essays, storytelling, editing'],
+    ['Foreign languages', '\u{1F5E3}️', 'speaking, translating, grammar, cultures'],
+    ['Geography', '\u{1F5FA}️', 'maps, places, landforms, cultures'],
+    ['Health', '\u{1FA7A}', 'nutrition, first aid, wellness, the body'],
+    ['History', '\u{1F3DB}️', 'past events, research, timelines, people’s stories'],
+    ['Math', '\u{1F522}', 'numbers, algebra, geometry, statistics'],
+    ['Music', '\u{1F3B5}', 'singing, instruments, rhythm, composing'],
+    ['Philosophy', '\u{1F914}', 'big questions, ethics, logic, debate'],
+    ['Physical education and sports', '⚽', 'fitness, teamwork, games, coaching'],
+    ['Physics', '\u{1F9F2}', 'motion, energy, forces, electricity'],
+    ['Professional', '\u{1F4BC}', 'selling, managing, starting, planning'],
+    ['Psychology', '\u{1F9E0}', 'behavior, emotions, why people do things'],
+    ['Public speaking', '\u{1F3A4}', 'presenting, debating, persuading, storytelling'],
+    ['Reading and literature', '\u{1F4D6}', 'novels, poetry, analysis, book clubs'],
+    ['Science', '\u{1F52C}', 'experiments, observing, lab work, the natural world'],
+    ['Social studies', '\u{1F465}', 'government, communities, civics, society']
+  ];
+  var _gpSubjPicked = {}, _gpSubjOpen = false;
+  function gpSubjectsBody(){
+    var body = document.createElement('div');
+    var paint = function(){
+      body.innerHTML = '';
+      var names = GP_SUBJ_LIST.filter(function(s){ return _gpSubjPicked[s[0]]; }).map(function(s){ return s[0]; });
+      var head = document.createElement('div');
+      head.style.cssText = 'display:flex;flex-direction:column;align-items:flex-start;gap:10px;';
+      var left = document.createElement('div');
+      left.style.cssText = 'display:flex;flex-wrap:wrap;gap:7px;min-width:0;';
+      if (names.length) {
+        names.forEach(function(n){
+          var c = document.createElement('span');
+          c.textContent = n;
+          c.style.cssText = 'font-size:13.5px;font-weight:700;padding:7px 14px;border-radius:20px;background:#1F699E;border:1px solid #1F699E;color:#fff;';
+          left.appendChild(c);
+        });
+      }
+      var tg = document.createElement('button');
+      tg.type = 'button';
+      tg.setAttribute('aria-expanded', _gpSubjOpen ? 'true' : 'false');
+      tg.textContent = _gpSubjOpen ? 'Hide subjects' : 'Show subjects';
+      tg.style.cssText = 'font:inherit;font-size:13.5px;font-weight:700;padding:7px 14px;border-radius:20px;border:1.5px solid #1F699E;background:#fff;color:#1F699E;cursor:pointer;';
+      tg.onclick = function(){ _gpSubjOpen = !_gpSubjOpen; paint(); };
+      head.appendChild(tg); if (names.length) { head.appendChild(left); }
+      body.appendChild(head);
+      if (_gpSubjOpen) {
+        var grid = document.createElement('div');
+        grid.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr));gap:12px;margin-top:12px;';
+        GP_SUBJ_LIST.forEach(function(s){
+          var on = !!_gpSubjPicked[s[0]];
+          var b = document.createElement('button');
+          b.type = 'button';
+          b.setAttribute('aria-pressed', on ? 'true' : 'false');
+          b.style.cssText = 'font:inherit;text-align:left;cursor:pointer;color:#1A2E42;border-radius:14px;padding:10px 12px;display:flex;flex-direction:column;align-items:flex-start;gap:2px;'
+            + (on ? 'background:#EAF4FB;border:1.5px solid #1F699E;box-shadow:inset 0 0 0 1px #1F699E;' : 'background:#fff;border:1.5px solid #DDE3EA;');
+          var top = document.createElement('div');
+          top.style.cssText = 'display:flex;gap:8px;align-items:center;width:100%;';
+          var e = document.createElement('span'); e.textContent = s[1]; e.style.cssText = 'font-size:20px;line-height:1;';
+          var w = document.createElement('span'); w.textContent = s[0]; w.style.cssText = 'font-weight:800;font-size:16px;';
+          var t = document.createElement('span'); t.textContent = '✓';
+          t.style.cssText = 'margin-left:auto;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;'
+            + (on ? 'background:#1F699E;border:1.5px solid #1F699E;color:#fff;' : 'border:1.5px solid #DDE3EA;');
+          top.appendChild(e); top.appendChild(w); top.appendChild(t);
+          var v = document.createElement('div'); v.textContent = s[2]; v.style.cssText = 'font-size:12.5px;color:#2F3D4F;';
+          b.appendChild(top); b.appendChild(v);
+          b.onclick = function(){ if (_gpSubjPicked[s[0]]) { delete _gpSubjPicked[s[0]]; } else { _gpSubjPicked[s[0]] = true; } paint(); try { gpTouchSave(); } catch (e) {} };
+          grid.appendChild(b);
+        });
+        body.appendChild(grid);
+      }
+    };
+    window._gpPaintSubj = paint;
+    paint();
+    return body;
+  }
+  function gpSubjWrap(first){
+    var w = document.createElement('div');
+    w.appendChild(first);
+    var h = document.createElement('div');
+    h.textContent = 'Subjects';
+    h.style.cssText = 'font-size:15px;font-weight:800;color:#1A2E42;margin:22px 0 4px;';
+    var sub = document.createElement('div');
+    sub.textContent = 'What you learn easily or have always been good at.';
+    sub.style.cssText = 'font-size:13.5px;color:#2F3D4F;margin:0 0 10px;';
+    w.appendChild(h); w.appendChild(sub); w.appendChild(gpSubjectsBody());
+    return w;
+  }
+var _gpLoaded=false;
+function gpLoad(k){var F=flow(k);_gpMethodPicked={};(F.opts.Natural||[]).forEach(function(n){_gpMethodPicked[n]=true;});_gpSubjPicked={};(F.subjects||[]).forEach(function(n){_gpSubjPicked[n]=true;});gpMethodsNorm();}
+function gpSaveNow(k){var F=flow(k);gpMethodsNorm();F.opts.Natural=Object.keys(_gpMethodPicked);F.subjects=Object.keys(_gpSubjPicked);save(MINE);}
+function gpNaturalBlock(k){gpLoad(k);window.gpMethodsChanged=function(){gpSaveNow(k);};window.gpTouchSave=function(){gpSaveNow(k);};return gpBlock('What comes most naturally to you?','How you like to help, rather than what you know.',gpSubjWrap(gpStagesBody()));}
+
+function ownerOf(k,key){var f=MINE.flow||{},r=Object.keys(f).filter(function(j){if(j===k)return false;var F=f[j];return ((F.opts&&F.opts[key])||[]).length||((F.branch&&F.branch[key])||[]).length;});return r[0]||"";}
+function ansText(j,key){var F=flow(j),v=(((F.opts||{})[key]||[]).length?F.opts[key]:((F.branch||{})[key]||[])).slice(),o=F.other||{},t=o["n:"+key]||o[key]||"";v=v.map(function(x){return x==="+ Other"&&t?t:x;}).filter(function(x){return x!=="+ Other";});if(key==="Natural")v=v.concat(F.subjects||[]);return v.join(", ");}
+function moveAns(j,k,key){var A=flow(j),B=flow(k);["opts","branch"].forEach(function(p){if(A[p]&&A[p][key]){B[p]=B[p]||{};B[p][key]=A[p][key];delete A[p][key];}});var ao=A.other||{},bo=B.other=B.other||{};["n:"+key,key].forEach(function(z){if(ao[z]){bo[z]=ao[z];delete ao[z];}});if(key==="Natural"&&A.subjects){B.subjects=A.subjects;A.subjects=[];}save(MINE);}
+function sumHTML(title,j,key){return '<div class="qb"><h2>'+esc(title)+'</h2><p class="said">You told us: '+esc(ansText(j,key))+' <button type="button" class="lnk" data-chg="'+esc(key)+'" data-from="'+j+'">Change</button></p></div>';}
+var EMO={"Rest":"💙","Eat and drink":"🥘","Move":"🌀","Play":"🏓","Connect":"🌐","Create":"🎨","Connected":"🌐","Expressed":"🎨","Nourished":"🥘","Energized":"🌀","Playful":"🏓","Rested":"💙","Walking":"👣","Running":"⏱️","Cycling":"🚲","Swimming":"🌊","Dancing":"🎶","Yoga":"🪷","Climbing":"⛰️","Weightlifting":"🔩","Gardening":"🌱","Playing sports":"⚽"};
+EMO["Workout"]="🔩";EMO["Stretch"]="🪷";EMO["Dance"]="🥁";EMO["Dancing"]="🥁";
+for(var ek in {"Soak": "🛁", "Nap time": "💤", "Breathing": "🌬️", "Visualization": "🌅", "Journaling": "📓", "Music": "🎵", "Sun": "☀️", "Relaxing walk": "👣", "Time outdoors": "🌲"})EMO[ek]={"Soak": "🛁", "Nap time": "💤", "Breathing": "🌬️", "Visualization": "🌅", "Journaling": "📓", "Music": "🎵", "Sun": "☀️", "Relaxing walk": "👣", "Time outdoors": "🌲"}[ek];
+EMO["Float"]="🌊";EMO["Body scan"]="🔦";EMO["Ball roll"]="🎾";EMO["Meditation"]="☮️";EMO["Light therapy"]="🔆";EMO["Slow movement"]="🍃";
+EMO["Massage"]="🛋️";EMO["Foam roll"]="🥖";EMO["Sound"]="🎼";
+for(var ek2 in {"Connect with self/others/place/nature": "🌱", "Create to express (explore/design/build/share)": "🎨", "Eat and drink to nourish (design/prepare/gather)": "🥘", "Move freely to energize (flexibility/agility/strength/endurance)": "🌀", "Play games/music": "🏓", "Time inwards to rest (breathe/notice/nap/sleep)": "💙", "Feedback": "💡", "Knowledge": "📚", "Access": "🔑", "Accountability": "🎯", "Collaboration": "⏰", "Funding": "💰", "A workspace": "🪑", "A resource": "🔧"})EMO[ek2]={"Connect with self/others/place/nature": "🌱", "Create to express (explore/design/build/share)": "🎨", "Eat and drink to nourish (design/prepare/gather)": "🥘", "Move freely to energize (flexibility/agility/strength/endurance)": "🌀", "Play games/music": "🏓", "Time inwards to rest (breathe/notice/nap/sleep)": "💙", "Feedback": "💡", "Knowledge": "📚", "Access": "🔑", "Accountability": "🎯", "Collaboration": "⏰", "Funding": "💰", "A workspace": "🪑", "A resource": "🔧"}[ek2];
+EMO["Games & Strategy"]="🎲";EMO["Collecting"]="🪙";EMO["Making & Collecting"]="🧶";EMO["Movement & Performance"]="🎭";EMO["Outdoor & Nature"]="🌲";EMO["Sports"]="⚽";
+EMO["Walk"]=EMO["Walking"];EMO["Run"]=EMO["Running"];EMO["Cycle"]=EMO["Cycling"];EMO["Swim"]=EMO["Swimming"];EMO["Garden"]=EMO["Gardening"];EMO["Sport"]=EMO["Playing sports"];
+function emo(x){return EMO[x]?'<span class="emj">'+EMO[x]+"</span> ":"";}
+function optionsPage(k){
+ var host=document.getElementById("optshost");
+ var F=flow(k),h="";
+ var br=F.branch=F.branch||{},oth=F.other=F.other||{},act=activeBr(F);
+ function drawB(B){if(B.k==="expression"&&row(k)){var rw=row(k),dd=dv(k).a;if(!rw.noq&&[0,1].slice(0,rw.q.length).some(function(i){return !(dd[i]||[]).filter(function(x){return x!=="I don't know";}).length;}))return;}if(k==="body"&&(B.k==="mealsNow"||B.k==="mealsWant")&&dv(k).a[1].indexOf("My body")<0)return;var ow=ownerOf(k,B.k);if(ow){h+=sumHTML(B.q,ow,B.k);return;}if(B.after&&!(br[B.after]||[]).length)return;var c=br[B.k]=br[B.k]||[];h+='<div class="qb"'+(B.k.indexOf("rec:")===0?' data-skip="1"':'')+'>'+(B.chart?mealChart():'')+'<h2>'+esc(B.q)+'</h2><div class="opts pills">'+B.l.map(function(l,i){return '<button type="button" class="opt br'+(c.indexOf(l)>-1?" on":"")+(l==="+ Other"?" other":"")+'" data-b="'+esc(B.k)+'" data-i="'+i+'">'+emo(l)+esc(l)+'</button>';}).join("")+'</div>'+(c.indexOf("+ Other")>-1?'<div class="own"><input type="text" maxlength="80" data-o="'+esc(B.k)+'" value="'+esc(oth[B.k]||"")+'" aria-label="Other"></div>':'')+'</div>';}
+ F.explore.forEach(function(x,xi){var q=(k==="energy"||k==="needs")&&x==="Playful"?"What energizes you?":"How do you like to "+EXP[x]+"?";
+  var ow=ownerOf(k,x);
+  if(ow){h+=sumHTML(x==="Natural"?"What comes most naturally to you?":q,ow,x);}else if(x==="Natural"){h+='<div data-gp="1"></div>';}else if(x==="Expression"){}else if(LISTS[x]){var cur=F.opts[x]=F.opts[x]||[];h+='<div class="qb">'+(need(k)?'':'<h2>'+esc(q)+'</h2>')+'<div class="opts pills">'+LISTS[x].map(function(l,i){return '<button type="button" class="opt'+(cur.indexOf(l)>-1?" on":"")+(l==="+ Other"?" other":"")+'" data-x="'+xi+'" data-i="'+i+'">'+emo(l)+esc(l)+'</button>';}).join("")+'</div></div>';}
+  else{h+='<div class="qb"><h2>'+esc(TXT[x])+'</h2><div class="own"><input type="text" maxlength="80" data-t="'+xi+'" value="'+esc((F.opts[x]||[""])[0]||"")+'" aria-label="'+esc(TXT[x])+'"></div></div>';}if((F.opts[x]||[]).indexOf("+ Other")>-1)h+='<div class="own"><input type="text" maxlength="80" data-o="n:'+esc(x)+'" value="'+esc(oth["n:"+x]||"")+'" aria-label="Other"></div>';act.filter(function(B){return B.need===x;}).forEach(drawB);});
+ host.innerHTML=h;
+ host.querySelectorAll("[data-chg]").forEach(function(b){b.addEventListener("click",function(){moveAns(b.getAttribute("data-from"),k,b.getAttribute("data-chg"));save(MINE);var yy=window.scrollY;optionsPage(k);window.scrollTo(0,yy);});});
+ var gph=host.querySelector('[data-gp]');if(gph)gph.replaceWith(gpNaturalBlock(k));
+ var y=window.scrollY;
+ host.querySelectorAll(".opt.br").forEach(function(b){b.addEventListener("click",function(){var B=act.filter(function(x){return x.k===b.getAttribute("data-b");})[0],v=B.l[+b.getAttribute("data-i")],c=br[B.k],i=c.indexOf(v);if(i>-1)c.splice(i,1);else{if(B.one)c.length=0;c.push(v);}save(MINE);var yy=window.scrollY;optionsPage(k);window.scrollTo(0,yy);});});
+ host.querySelectorAll("input[data-o]").forEach(function(t){t.addEventListener("input",function(){oth[t.getAttribute("data-o")]=t.value.trim();save(MINE);});});
+ host.querySelectorAll(".opt:not(.br)").forEach(function(b){b.addEventListener("click",function(){var x=F.explore[+b.getAttribute("data-x")],v=LISTS[x][+b.getAttribute("data-i")],c=F.opts[x],i=c.indexOf(v);if(i>-1)c.splice(i,1);else c.push(v);save(MINE);var yy=window.scrollY;optionsPage(k);window.scrollTo(0,yy);});});
+ host.querySelectorAll("input[data-t]").forEach(function(t){t.addEventListener("input",function(){F.opts[F.explore[+t.getAttribute("data-t")]]=[t.value.trim()].filter(Boolean);save(MINE);});});
+ if(k==="eat")oneAtATime();
+}
+var SPEND={"Workout":"working out","Walk":"walking","Stretch":"stretching","Garden":"gardening","Cycle":"cycling","Swim":"swimming","Run":"running","Dance":"dancing","Sport":"playing a sport","Soak":"soaking","Float":"floating","Nap time":"napping","Body scan":"doing a body scan","Massage":"getting a massage","Foam roll":"foam rolling","Ball roll":"ball rolling","Visualization":"visualizing","Sound":"listening to sound","Music":"with music","Meditation":"meditating","Sun":"in the sun","Light therapy":"doing light therapy","Slow movement":"moving slowly","Relaxing walk":"on a relaxing walk","Time outdoors":"outdoors","Cook myself":"cooking","Cook meals":"cooking","Eat with others":"eating with others","Plant-based meals":"making plant-based meals","Try new foods":"trying new foods","Grow food":"growing food","Eat and drink":"eating and drinking","Move":"moving","Play":"playing","Create":"creating","Rest":"resting","Be in nature":"in nature","Games & Strategy":"on games & strategy","Making & Collecting":"making & collecting","Movement & Performance":"on movement & performance","Outdoor & Nature":"outdoors","Sports":"playing sports"};
+var SPENDX={"Dog walking":"walking the dog","Trading Cards":"collecting trading cards","Ping Pong":"playing ping pong","Breaking":"break dancing","Tabletop RPG":"playing tabletop RPGs","Olympic Lifting":"Olympic lifting","Band":"playing in a band","Puzzles":"doing puzzles","Ballet":"dancing ballet","Hip Hop":"dancing hip hop","Salsa":"dancing salsa","Ballroom":"ballroom dancing","Contemporary":"contemporary dancing","Swing":"swing dancing","Folk":"folk dancing","Tap":"tap dancing","Line":"line dancing","Belly":"belly dancing","Yoga":"doing yoga","Polo":"playing polo","Rodeo":"riding in rodeos","Dressage":"doing dressage","Gymnastics":"doing gymnastics","CrossFit":"doing CrossFit","Strongman":"doing strongman","Martial Arts":"practicing martial arts","Judo":"practicing judo","Karate":"practicing karate","Taekwondo":"practicing taekwondo","Brazilian Jiu Jitsu":"practicing Brazilian jiu jitsu","Muay Thai":"practicing Muay Thai","MMA":"training MMA","Archery":"practicing archery","Track and Field":"doing track and field","Biathlon":"doing biathlon","Bobsled":"riding a bobsled","Shooting Sports":"doing shooting sports","Marathon":"running a marathon","Triathlon":"doing a triathlon","Duathlon":"doing a duathlon","Cross Country":"running cross country","Motocross":"riding motocross","Trivia":"playing trivia"},SPENDV={"Games & Strategy":"playing","Music":"playing","Collecting":"collecting","Sports":"playing","Movement & Performance":"doing","Outdoor & Nature":"enjoying"},CATOF={};
+Object.keys(RECS).forEach(function(c){RECS[c].forEach(function(x){if(!CATOF[x])CATOF[x]=c;});});
+function spendLow(v){return v.replace(/\b([A-Z][a-z]+)\b/g,function(w){return /^(Brazilian|Thai|Jiu|Jitsu)$/.test(w)?w:w.toLowerCase();});}
+function spend(v){if(v==="+ Other"||/^spend time/i.test(v))return v;var t=SPEND[v]||SPENDX[v];if(!t){if(/ing\b/i.test(v))t=spendLow(v);else if(CATOF[v]&&SPENDV[CATOF[v]])t=SPENDV[CATOF[v]]+" "+spendLow(v);else t="on "+v.charAt(0).toLowerCase()+v.slice(1);}var s="Spend time "+t;if(EMO[v]&&!EMO[s])EMO[s]=EMO[v];return s;}
+function finalPage(){
+ var F=flow("needs"),pool=[];
+ var DOIT={"With nature":"Be in nature","With animals":"Spend time with an animal","With something I believe in":"Spend time with something I believe in"};
+ needsPicked().forEach(function(N){var A=flow(N.k);N.x.forEach(function(x){(A.opts[x]||[]).forEach(function(v){if(x==="Playful"&&((A.branch||{})["rec:"+v]||[]).length)return;if(x==="Connected"){if(!DOIT[v])return;v=DOIT[v];}if(pool.indexOf(v)<0)pool.push(v);});});var ot=A.other||{};Object.keys(ot).forEach(function(kk){if(ot[kk]&&kk!=="expression"&&pool.indexOf(ot[kk])<0)pool.push(ot[kk]);});});
+ needsPicked().forEach(function(N){var B=flow(N.k).branch||{};Object.keys(B).forEach(function(bk){if(bk==="place"||bk==="expression"||bk==="mealsNow"||bk==="mealsWant")return;(B[bk]||[]).forEach(function(v){if(pool.indexOf(v)<0)pool.push(v);});});});
+ pool=pool.filter(function(v){return v!=="+ Other";});
+ if(!pool.length)DOVERBS.forEach(function(v){if(pool.indexOf(v)<0)pool.push(v);});
+ var seenS=[];pool=pool.filter(function(v){var t=spend(v);if(seenS.indexOf(t)>-1)return false;seenS.push(t);return true;});
+ pool.push("+ Other");
+ var h='<h1 class="q">In the next 5 minutes, how can you spend your time doing something that inspires you?</h1><div class="opts pills">'+pool.map(function(v,i){return '<button type="button" class="opt'+(F.final.indexOf(v)>-1?" on":"")+(v==="+ Other"?" other":"")+'" data-i="'+i+'">'+emo(spend(v))+esc(spend(v))+'</button>';}).join("")+'</div>'+(F.final.indexOf("+ Other")>-1?'<div class="own"><input type="text" maxlength="80" id="finoth" value="'+esc(F.finalOther||"")+'" aria-label="Other"></div>':'');
+ app.innerHTML=h+'<div class="row"><button class="btn" type="button" id="next"'+(nextPicks().length?'':' style="display:none"')+'>Continue</button></div>';
+ app.querySelectorAll(".opt").forEach(function(b){b.addEventListener("click",function(){var v=pool[+b.getAttribute("data-i")],i=F.final.indexOf(v);if(i>-1)F.final.splice(i,1);else F.final.push(v);save(MINE);finalPage();});});
+ var fo=document.getElementById("finoth");if(fo)fo.addEventListener("input",function(){F.finalOther=fo.value.trim();save(MINE);document.getElementById("next").style.display=nextPicks().length?"":"none";});
+ document.getElementById("next").addEventListener("click",function(){go(readyPage);});
+}
+var DOABLE=DOVERBS.concat(["Be in nature","Spend time with an animal","Spend time with something I believe in","Walk","Stretch","Garden","Cycle","Swim","Run","Dance"]);
+function readyPage(){
+ var mine=nextPicks(),choices=["Yes, I'm on it!","I need more of a nudge","I need to postpone this until later"],pages=[startYes,startNudge,startLater];
+ var fo=flow("needs").finalOther,said=mine.every(function(v){return v!==fo;}),w=mine.map(spend).join(" or ").toLowerCase();
+ app.innerHTML='<h1 class="q">'+(!mine.length?"Would you like to start now?":said?"Can you "+esc(w)+" within the next 5 minutes?":"Can you do this within the next 5 minutes?")+'</h1>'+(mine.length&&!said?'<p class="stmt" style="margin-bottom:0">'+esc(mine.join(" and "))+'</p>':'')+'<div class="stack"><button class="btn" type="button" data-i="0">'+esc(choices[0])+'</button></div><div class="invite"><div class="alts">'+[1,2].map(function(i){return '<button class="lnk" type="button" data-i="'+i+'">'+esc(choices[i])+'</button>';}).join("")+'</div></div>';
+ app.querySelectorAll(".stack .btn,.alts .lnk").forEach(function(b){b.addEventListener("click",function(){var i=+b.getAttribute("data-i");MINE.startChoice=choices[i];save(MINE);go(pages[i]);});});
+}
+function nextPicks(){var F=flow("needs");return F.final.filter(function(v){return v!=="+ Other";}).concat(F.finalOther?[F.finalOther]:[]);}
+function finish(){flush();markDone();}
+var MORECAT={connect:"cares",create:"skills",eat:"joys",move:"joys",play:"joys",rest:"joys"},MORENAME={joys:"Joys",cares:"Cares",skills:"Skills"};
+function moreEnd(){var R=load(),o=[];needsPicked().forEach(function(N){var c=MORECAT[N.k];if(o.indexOf(c)<0)o.push(c);});["joys","cares","skills"].forEach(function(c){if(o.indexOf(c)<0)o.push(c);});
+ var d=document.createElement("div");d.className="invite";d.style.marginTop="26px";d.innerHTML='<h2 class="ih">Would you like to explore more?</h2><div class="opts pills" style="margin-top:12px"><button type="button" class="opt" data-more-go="yes">Yes</button><button type="button" class="opt" data-more-go="no">Not now</button></div>';
+ app.appendChild(d);d.querySelectorAll("button[data-more-go]").forEach(function(b){b.addEventListener("click",function(){if(b.getAttribute("data-more-go")==="no"){d.remove();return;}flush();location.href="/ikigai/?step="+o[0];});});}
+function startYes(){finish();app.innerHTML='<div class="cheer" aria-hidden="true">🎉</div><h1 class="q">Yes! Way to go.</h1><p class="stmt">You said yes to yourself. Enjoy your next 5 minutes. Come back any day, one day at a time.</p>';moreEnd();}
+function startLater(){finish();app.innerHTML='<h1 class="q">You\'ve got this.</h1><p class="stmt">You know exactly when you\'ll be able to do this. It will be here when you\'re ready.</p><p class="stmt" style="margin-bottom:0">Would you like an email nudge for later?</p><div class="invite"><div class="alts"><button class="lnk" type="button" id="mailnudge">Email me a nudge</button></div></div>';document.getElementById("mailnudge").addEventListener("click",function(){go(remind);});moreEnd();}
+var NUDGES=[["An email reminder","Email"],["An accountability buddy","Buddy"],["A few kind words","Kind words"],["Make it smaller","Smaller"],["+ Other","Other"]];
+function setNudge(w){MINE.startChoice="I need more of a nudge: "+w;save(MINE);}
+function startNudge(){
+ app.innerHTML='<h1 class="q">What kind of nudge would help?</h1><div class="stack">'+NUDGES.map(function(n,i){return '<button class="btn ghost" type="button" data-i="'+i+'">'+esc(n[0])+'</button>';}).join("")+'</div>';
+ app.querySelectorAll(".stack .btn").forEach(function(b){b.addEventListener("click",function(){var w=NUDGES[+b.getAttribute("data-i")][1];if(w==="Other"){go(nudgeOther);return;}setNudge(w);if(w==="Email"){finish();go(remind);}else if(w==="Buddy")go(BUDDY_MATCH?nudgeBuddy:buddyScript);else if(w==="Smaller")go(nudgeSmaller);else go(nudgeKind);});});
+}
+function nudgeBuddy(){
+ app.innerHTML='<h1 class="q">Do you have someone in mind?</h1><div class="stack"><button class="btn" type="button" id="yes">Yes, I do</button><button class="btn ghost" type="button" id="match">No, I\'d like to be matched with someone</button></div>';
+ document.getElementById("yes").addEventListener("click",function(){go(buddyScript);});
+ document.getElementById("match").addEventListener("click",function(){go(buddyIdeal);});
+}
+function buddyScript(){finish();var mine=nextPicks(),t="My next 5 minutes: "+(mine.join(" and ")||"something for me")+". Will you ask me if I did it?";
+ app.innerHTML='<h1 class="q">Here is something you can send them</h1><p class="stmt">Copy this into a text to your friend or family member:</p><p class="stmt"><strong>'+esc(t)+'</strong></p><div class="stack"><button class="btn" type="button" id="cp">Copy this</button></div>';
+ var c=document.getElementById("cp");c.addEventListener("click",function(){try{navigator.clipboard.writeText(t).then(function(){c.textContent="Copied";}).catch(function(){c.textContent="Please select the words above";});}catch(e){c.textContent="Please select the words above";}});
+}
+function buddyIdeal(){
+ app.innerHTML='<h1 class="q">Who would be a helpful accountability buddy?</h1><p class="stmt" style="margin-bottom:12px">Ideas include: local, virtual, within your circle, within 2 degrees, open to anyone...</p><textarea id="ideal" maxlength="500" rows="4" aria-label="Who would be a helpful accountability buddy?" style="width:100%;box-sizing:border-box;font:inherit;padding:11px 14px;border:1.5px solid var(--brand);border-radius:12px">'+esc(MINE.buddyIdeal||"")+'</textarea><div class="stack"><button class="btn" type="button" id="ok">Continue</button></div>';
+ document.getElementById("ok").addEventListener("click",function(){var v=document.getElementById("ideal").value.trim();if(!v)return;MINE.buddyIdeal=v;save(MINE);go(buddyWilling);});
+}
+function buddyWilling(){
+ app.innerHTML='<h1 class="q">Would you be willing to be an accountability buddy for someone whose ideal person is you?</h1><div class="stack"><button class="btn" type="button" id="yes">Yes</button><button class="btn ghost" type="button" id="no">Not right now</button></div>';
+ function end(w){MINE.buddyWilling=w;save(MINE);finish();app.innerHTML='<h1 class="q">Thank you for telling us.</h1><p class="stmt">You asked for support, and that counts. Come back any day, one day at a time.</p>';}
+ document.getElementById("yes").addEventListener("click",function(){end("Yes");});
+ document.getElementById("no").addEventListener("click",function(){end("Not right now");});
+}
+function nudgeKind(){finish();app.innerHTML='<h1 class="q">You already took the first step.</h1><p class="stmt">You stopped to ask what you need. That counts. Five minutes is small enough to begin, and it is yours.</p>';moreEnd();}
+function nudgeSmaller(){finish();app.innerHTML='<h1 class="q">Try just one minute.</h1><p class="stmt">Set a timer and begin. One minute counts, and you can stop when it ends.</p>';moreEnd();}
+function nudgeOther(){
+ app.innerHTML='<h1 class="q">What would nudge you?</h1><input id="ot" class="oth" type="text" maxlength="200" aria-label="What would nudge you?" style="width:100%;box-sizing:border-box;font:inherit;padding:11px 14px;border:1.5px solid var(--brand);border-radius:12px"><div class="stack"><button class="btn" type="button" id="ok">Done</button></div>';
+ document.getElementById("ok").addEventListener("click",function(){var v=document.getElementById("ot").value.trim();if(!v)return;setNudge("Other: "+v);finish();app.innerHTML='<h1 class="q">Thank you for telling us.</h1><p class="stmt">This helps us build the nudges people want. You can come back any day, one day at a time.</p>';});
+}
+function feelPage(){
+ var R=load(),y=window.scrollY;
+ var h='<h1 class="q">How do you feel about…</h1>';
+ h+='<div class="qb">'+keyHTML()+'<div class="fscale">'+ROWS.map(function(r){var v=R.rate[r.k]||0;return '<div class="frow"><div class="flbl">'+esc(r.n)+'</div><div class="fseg">'+LV.map(function(lb,i){return '<button type="button" class="opt fbtn'+(v===i+1?" on":"")+'" data-r="'+r.k+'" data-v="'+(i+1)+'" aria-label="'+(i+1)+' '+esc(lb)+'">'+(i+1)+'</button>';}).join("")+'</div></div>';}).join("")+'</div></div>';
+ h+='<div class="row"><button class="btn" type="button" id="done">Continue</button></div>';
+ app.innerHTML=h;window.scrollTo(0,y);
+ app.querySelectorAll(".fbtn").forEach(function(b){b.addEventListener("click",function(){var k=b.getAttribute("data-r"),n=+b.getAttribute("data-v");R.rate[k]=(R.rate[k]===n?0:n);save(R);feelPage();});});
+ document.getElementById("done").addEventListener("click",function(){go(donePage);});
+}
+function donePage(){flush();markDone();app.innerHTML='<p class="stmt">Thank you for taking the time to explore. Whatever you noticed is a good place to begin. Come back any day, one day at a time.</p>'+(me()?'':'<p class="sub">Your answers are not saved because you are not signed in.</p>');}
+{var held=null;try{held=JSON.parse(localStorage.getItem(HELD)||"null");if(held&&(!me()||!(Date.now()-held.at<3600000))){localStorage.removeItem(HELD);held=null;}}catch(e){}
+ if(held&&held.when&&me()){MINE={when:held.when||{},rate:held.rate||{},dive:held.dive||{},start:held.start||"",picks:held.picks,flow:held.flow||{},asked:held.asked,look:held.look,exp:held.exp};hist=[[whenPage],[askedPage]];cur=explorePickPage;curArg="";}else cur=welcomePage;
+ render();lookUp();}
+})();
+</script>
+</body>
+</html>
