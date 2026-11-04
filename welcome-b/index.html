@@ -374,14 +374,14 @@ function savePage(){
  var C=MINE.conn||{},T=MINE.rt||{},cand=CONNP.filter(function(p){return !C[p[0]]||(T[p[0]]&&T[p[0]].v==="down");});
  app.innerHTML='<div class="invite"><h2 class="ih">Would you like us to save your answers?</h2><p class="il">'+(cand.length?'Sign in to save your answers and explore each of these a little more:':'Sign in to save your answers and explore a little more.')+'</p>'+(cand.length?'<ul class="plist">'+cand.map(function(p){return '<li><span class="pi">'+ico(p[0],20).replace(/color:[^;"]*/,"color:#000")+'</span><span>'+esc(p[1])+'</span>'+thumbMark(T[p[0]])+'</li>';}).join("")+'</ul>':'')+'<div class="acts"><button class="btn" type="button" id="up">Sign up to save</button><button class="btn ghost" type="button" id="no">No, thank you</button></div><div class="alts"><button class="lnk" type="button" id="in">I already have an account</button></div></div>';
  MINE.invitedFor="explore";
- document.getElementById("up").addEventListener("click",function(){hold();location.href="/signup/?next="+encodeURIComponent(here());});
- document.getElementById("in").addEventListener("click",function(){hold();location.href="/signin/?next="+encodeURIComponent(here());});
+ document.getElementById("up").addEventListener("click",function(){MINE.toAccount=Date.now();hold();location.href="/signup/?next="+encodeURIComponent(here());});
+ document.getElementById("in").addEventListener("click",function(){MINE.toAccount=Date.now();hold();location.href="/signin/?next="+encodeURIComponent(here());});
  document.getElementById("no").addEventListener("click",function(){go(notNow);});
 }
 function invite(){
  app.innerHTML='<div class="invite"><h2 class="ih">Would you like us to save your answers?</h2><p class="il">Your answers so far will be waiting for you. You can carry on from here after signing in.</p>'+(heldAns("Natural")||subjAll()||heldAns("expression")?'<p class="il">What comes most naturally to you, your subjects and what expresses you most are not kept until you sign in, so you will choose those again.</p>':'')+'<div class="acts"><button class="btn" type="button" id="up">Sign up</button><button class="btn ghost" type="button" id="no">No, thank you</button></div><div class="alts"><button class="lnk" type="button" id="in">I already have an account</button></div></div>';
- document.getElementById("up").addEventListener("click",function(){hold();location.href="/signup/?next="+encodeURIComponent(here());});
- document.getElementById("in").addEventListener("click",function(){hold();location.href="/signin/?next="+encodeURIComponent(here());});
+ document.getElementById("up").addEventListener("click",function(){MINE.toAccount=Date.now();hold();location.href="/signup/?next="+encodeURIComponent(here());});
+ document.getElementById("in").addEventListener("click",function(){MINE.toAccount=Date.now();hold();location.href="/signin/?next="+encodeURIComponent(here());});
  document.getElementById("no").addEventListener("click",function(){go(notNow);});
 }
 function notNow(){try{localStorage.removeItem(HELD);}catch(e){}app.innerHTML='<p class="stmt">If and when you\'re ready to begin, come back to explore how to tend to yourself. Start by exploring what you\'re good at, what lights you up, and where you get your energy.</p><div class="acts"><button class="btn" type="button" id="rem">Send me an email reminder</button></div>';
@@ -812,6 +812,7 @@ function feelPage(){
 }
 function donePage(){flush();markDone();app.innerHTML='<p class="stmt">Thank you for taking the time to explore. Whatever you noticed is a good place to begin. Come back any day, one day at a time.</p>'+(me()?'':'<p class="sub">Your answers are not saved because you are not signed in.</p>');}
 {var held=null;try{held=JSON.parse(localStorage.getItem(HELD)||"null");if(held&&!(Date.now()-held.at<3600000)){localStorage.removeItem(HELD);held=null;}}catch(e){}
+ if(held&&me()&&!(held.toAccount&&Date.now()-held.toAccount<3600000)){try{localStorage.removeItem(HELD);}catch(e){}held=null;}
  if(held&&held.when){MINE={when:held.when||{},rate:held.rate||{},dive:held.dive||{},start:held.start||"",picks:held.picks,flow:held.flow||{},asked:held.asked,look:held.look,exp:held.exp,conn:held.conn,connMore:held.connMore,rt:held.rt,rdone:held.rdone,ri:held.ri,invitedFor:held.invitedFor};if(me()&&held.invitedFor==="explore"){hist=[[welcomePage],[whenPage]];cur=explorePickPage;curArg="";}else cur=welcomePage;}else cur=welcomePage;
  render();lookUp();}
 })();
