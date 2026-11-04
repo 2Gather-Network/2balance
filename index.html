@@ -208,7 +208,7 @@ var FIRSTQ={"Connect":["howIConnect"],"Create":["methods","subjects","expression
 function finished(r){var p=String(r.exploreAreas||"").split("|").map(function(x){return x.trim();}).filter(function(x){return FIRSTQ[x];});return p.length>0&&p.every(function(n){return FIRSTQ[n].some(function(k){return String(r[k]==null?"":r[k]).trim()!=="";});});}
 function lookUp(){var id=me();if(!id)return;looking=true;wait(true);
  var ask=function(){return fetch(GS+"?action=getIntake&appearId="+encodeURIComponent(id)).then(function(r){return r.json();}).then(function(d){if(!d||d.status==="error")throw new Error("no");return d;});};
- ask().catch(function(){return new Promise(function(ok){setTimeout(ok,2000);}).then(ask);}).then(function(d){if(finished((d&&d.data)||{})&&!hist.length){location.replace("/start/");return;}fill(from1st((d&&d.data)||{}));readOk=!!(d&&d.data);if(ROWS.every(function(r){return MINE.when[r.k];}))markDone();looking=false;wait(false);if(cur){cur(curArg);drawCrumbs();}flush();}).catch(function(){looking=false;wait(false);note(holding(vals())?NOT_KEPT:"Your earlier answers could not be loaded.");});}
+ ask().catch(function(){return new Promise(function(ok){setTimeout(ok,2000);}).then(ask);}).then(function(d){if(finished(from1st((d&&d.data)||{}))&&!hist.length){location.replace("/start/");return;}fill(from1st((d&&d.data)||{}));readOk=!!(d&&d.data);if(ROWS.every(function(r){return MINE.when[r.k];}))markDone();looking=false;wait(false);if(cur){cur(curArg);drawCrumbs();}flush();}).catch(function(){looking=false;wait(false);note(holding(vals())?NOT_KEPT:"Your earlier answers could not be loaded.");});}
 document.addEventListener("visibilitychange",function(){if(document.hidden)flush();});
 window.addEventListener("pagehide",flush);
 var fwd=[];
