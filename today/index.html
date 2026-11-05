@@ -26,6 +26,7 @@
   body{margin:0;background:var(--brand);color:var(--ink);font-family:'Nunito Sans','DM Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;}
   .wrap{max-width:760px;margin:0 auto;padding:24px 18px 60px;}
   .card{background:#fff;border-radius:16px;padding:30px;min-height:360px;}
+  .tinote{margin:0 0 12px;padding:11px 14px;border-radius:10px;background:#FBE9E7;border:1px solid #E8B0A5;color:#7A2410;font-size:14px;line-height:1.5;}.tinote:empty{display:none;}
   h1{font-size:26px;font-weight:800;line-height:1.25;margin:0 0 8px;text-wrap:balance;}
   .sub{font-size:16px;line-height:1.55;color:var(--soft);margin:0 0 18px;}
   .kicker{font-size:13px;font-weight:800;letter-spacing:.06em;color:var(--brand);margin:0 0 10px;text-transform:uppercase;}
@@ -68,6 +69,7 @@
 </head>
 <body>
 <div class="wrap">
+  <p class="tinote" id="tinote" aria-live="polite"></p>
   <div class="card" id="app" aria-live="polite"></div>
   <div class="foot"><button class="link" id="back" type="button">Back</button><button class="link" id="restart" type="button">Start over</button></div>
 </div>
@@ -294,8 +296,9 @@ function saveT(t){try{localStorage.setItem(TKEY,JSON.stringify(t));}catch(e){}}
 var TI_GS="https://cw-api-gate.jessieupp.workers.dev",TI_MAP={move:"howIMove",rest:"howIRest",play:"1stEnergizesMeEnjoy"},tiHave=null,tiAsked=false,tiBusy=false,tiWant=false,tiAt=0;
 function tiMe(){try{var m=window.CW&&CW.me&&CW.me();if(!m||!m.id||m.viewing||!CW.passParam())return "";return m.id;}catch(e){return "";}}
 function tiRead(){var id=tiMe();if(!id||tiBusy)return;tiBusy=true;fetch(TI_GS+"?action=getIntake&appearId="+encodeURIComponent(id)).then(function(r){return r.json();}).then(function(d){tiBusy=false;if(d&&d.status!=="error"&&d.data){tiHave=d.data;tiAt=Date.now();if(tiWant){tiWant=false;tiPush();}}else tiWant=false;}).catch(function(){tiBusy=false;tiWant=false;});}
+function tiNote(t){var e=document.getElementById("tinote");if(e)e.textContent=t;}
 function tiSend(){if(!tiMe())return;if(!tiHave||Date.now()-tiAt>600000){tiHave=null;tiWant=true;tiRead();return;}tiPush();}
-function tiPush(){var id=tiMe();if(!id||!tiHave)return;var T=loadT(),base=TI_GS+"?action=saveBalanceAnswers&appearId="+encodeURIComponent(id)+"&answers=";Object.keys(TI_MAP).forEach(function(k){var f=TI_MAP[k],v=(T[k]||[]).filter(function(x){return x!=="+ Other";}).join("|");if(!v||String(tiHave[f]==null?"":tiHave[f]).trim())return;var o={};o[f]=v;var u=base+encodeURIComponent(JSON.stringify(o));if(u.length>5500)return;fetch(u,{keepalive:true}).then(function(r){return r.json();}).then(function(r){if(r&&r.status==="ok"&&!(r.missing&&r.missing.length))tiHave[f]=v;}).catch(function(){});});}
+function tiPush(){var id=tiMe();if(!id||!tiHave)return;var T=loadT(),base=TI_GS+"?action=saveBalanceAnswers&appearId="+encodeURIComponent(id)+"&answers=";Object.keys(TI_MAP).forEach(function(k){var f=TI_MAP[k],v=(T[k]||[]).filter(function(x){return x!=="+ Other";}).join("|");if(!v||String(tiHave[f]==null?"":tiHave[f]).trim())return;var o={};o[f]=v;var u=base+encodeURIComponent(JSON.stringify(o));if(u.length>5500)return;fetch(u,{keepalive:true}).then(function(r){return r.json();}).then(function(r){if(r&&r.status==="ok"&&!(r.missing&&r.missing.length)){tiHave[f]=v;tiNote("");}else tiNote("Not saved. Reload the page and try again.");}).catch(function(){tiNote("Not saved. Reload the page and try again.");});});}
 document.addEventListener("visibilitychange",function(){if(document.hidden)tiSend();});
 function todayPage(){if(!tiAsked){tiAsked=true;tiRead();}
  var T=loadT();if(!T.care)T.care=[];if(!T.play)T.play=[];if(!T.create)T.create=[];if(!T.own.play)T.own.play=[];if(!T.own.create)T.own.create=[];
